@@ -1,93 +1,66 @@
-
-import Alpine from 'alpinejs'
-
+import Alpine from 'alpinejs';
 declare global {
   interface Window {
     Alpine: typeof Alpine;
   }
 }
 
-// -------------------- Viewer Mode: If q.focusedImage is set, we hide the gallery and show the image full screen -----------------------
-const args = new URLSearchParams(location.search)
-const params = JSON.parse(args.get('q'))
-let focusedImage = null
-focusedImage = params?.focusedImage
-let viewerMode = focusedImage ? true : false
-
-
-const downloadImage = function(image) {
-
-  let fid = image.ticket.fid
-  const filename = image.fileName
-
-  fetch('/fid/' + fid + '?download=true')
-      .then(response => response.blob())
-      .then(blob => {
-
-          const url = URL.createObjectURL(blob);
-          const link = document.createElement('a');
-          link.href = url;
-          link.download = filename;
-
-          document.body.appendChild(link);
-          link.click();
-          document.body.removeChild(link);
-      })
-      .catch(error => console.error(error));
-}
-
-
+// -------------------- Viewer Mode: If q.focusedItem is set, we hide the gallery and show the item full screen -----------------------
+const args = new URLSearchParams(location.search);
+const params = JSON.parse(args.get('q'));
+let focusedItem = null;
+focusedItem = params?.focusedItem;
+let viewerMode = focusedItem ? true : false;
 
 const runExtensionScript = async (scriptName: string, payload: any) => {
-  const response = await fetch('/api/v1/mercenaries/runscript/omni-core-filemanager:' + scriptName,
+  const response = await fetch(
+    '/api/v1/mercenaries/runscript/omni-core-collectionmanager:' + scriptName,
     {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
       },
-      body: JSON.stringify(payload)
+      body: JSON.stringify(payload),
     }
   );
+  console.log('runExtensionScript response', response);
   const data = await response.json();
-    console.log(scriptName, data)
-  return data
-}
-
-
+  console.log(scriptName, data);
+  return data;
+};
 
 const copyToClipboardComponent = () => {
   return {
     copyText: '',
     copyNotification: false,
 
-    async copyToClipboard(img) {
-      const res = await fetch(img.url);
+    async copyToClipboard(item) {
+      const res = await fetch(item.url);
       const blob = await res.blob();
       const data = [new ClipboardItem({ [blob.type]: blob })];
       await navigator.clipboard.write(data);
-      //alert('Image copied to clipboard');
+      //alert('Item copied to clipboard');
       //navigator.clipboard.writeText(this.copyText);
       this.copyNotification = true;
       let that = this;
       setTimeout(function () {
         that.copyNotification = false;
       }, 3000);
-    }
-  }
-}
+    },
+  };
+};
 
-
-
-const createGallery = function (imagesPerPage: number, imageApi: string) {
-
+const createGallery = function (itemsPerPage: number, itemApi: string) {
   return {
     viewerMode: viewerMode,
     currentPage: 1,
-    imagesPerPage: imagesPerPage,
-    imageApi: imageApi,
-    images: viewerMode ? [] : Array(imagesPerPage + 1).fill({ url: '/ph_250.png', meta: {} }),
-    totalPages: () => Math.ceil(this.images.length / this.imagesPerPage),
-    multiSelectedImages: [],
+    itemsPerPage: itemsPerPage,
+    itemApi: itemApi,
+    items: viewerMode
+      ? []
+      : Array(itemsPerPage + 1).fill({ url: '/ph_250.png', meta: {} }),
+    totalPages: () => Math.ceil(this.items.length / this.itemsPerPage),
+    multiSelectedItems: [],
 
     cursor: null,
     showInfo: false,
@@ -95,219 +68,123 @@ const createGallery = function (imagesPerPage: number, imageApi: string) {
     scale: 1, // zoom
     x: 0, //pan
     y: 0,
-    focusedImage: focusedImage || null,
+    focusedItem: focusedItem || null,
     hover: false,
 
     async init() {
-
-      await this.fetchImages({replace:true, limit: imagesPerPage})
-
-
-
+      await this.fetchItems({ replace: true, limit: itemsPerPage });
     },
-    async handleUpload(files: FileList){
-      const uploaded = await this.uploadFiles(files)
 
-      await this.fetchImages({replace:true, limit: imagesPerPage})
-
-
-    },
-    async runRecipeWith(runFiles: any[])
-    {
-
-      // Todo: this should be a generic function
-      let files = Alpine.raw([...runFiles].filter(f => f?.mimeType.startsWith('image/') || f?.mimeType.startsWith('audio/') || f.mimeType == 'application/ogg' || f.mimeType == 'application/pdf' || f.mimeType == 'application/x-pdf'))
-      let images = files.filter(f => f?.mimeType.startsWith('image/'))
-      let audio = files.filter(f => f?.mimeType.startsWith('audio/') || f.mimeType == 'application/ogg')
-      let documents = files.filter(f => f.mimeType == 'application/pdf' || f.mimeType == 'application/x-pdf')
-
-      let args = {
-        images, audio, documents,
-      }
-
-      //@ts-ignore
-      window.parent.client.runScript('run', args)
-
-
-    },
-    async fileToDataUrl (file) {
+    async fileToDataUrl(file) {
       /* Encode content of file as https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/Data_URLs */
       return new Promise(function (resolve, reject) {
         /* Load file into javascript. */
-        const reader = new FileReader()
-        reader.onload = e => resolve(e.target.result)
-        reader.readAsDataURL(file)
-      })
+        const reader = new FileReader();
+        reader.onload = (e) => resolve(e.target.result);
+        reader.readAsDataURL(file);
+      });
     },
-    async uploadFiles(files: FileList) {
-      if (files?.length > 0) {
-        let result = await Promise.all(
-          Array.from(files).map(async (file) => {
-            const form = new FormData();
-            form.append('file', file, file.name || Date.now().toString());
-            this.imageUrl = await this.fileToDataUrl(file);
-
-            try {
-              const response = await fetch('/fid', {
-                method: 'POST',
-                body: form,
-              });
-
-              if (response.ok) {
-                const data = await response.json();
-
-                if (data.length > 0 && data[0].ticket && data[0].ticket.fid) {
-                  return data[0];
-                } else {
-                  console.warn('Failed to upload file', { data, file });
-                  return null;
-                }
-              } else {
-                console.warn('Failed to upload file', { response, file });
-                return null;
-              }
-            } catch (error) {
-              console.error('Failed to upload file', { error, file });
-              return null;
-            }
-          })
-        );
-
-        result = result.filter((r) => r);
-        return result;
-      }
-
-      return [];
-    },
-    getDisplayUrl(file, opts) {
-      if (!file) {
-        return '/404.png'
-      }
-      else if (file?.mimeType?.startsWith('audio/') || file.mimeType == 'application/ogg') {
-        return '/audio.png'
-      }
-      else if (file?.mimeType?.startsWith('application/json') || file.mimeType == 'text/json') {
-        return '/json.png'
-      }
-
-      else if (file?.mimeType?.startsWith('image/')) {
-
-        if (opts && (opts.width || opts.height)) {
-          let url = file.url
-          // add all provided opts into query string using UrlSearchParams
-          const params = new URLSearchParams()
-
-          if (opts.height) params.set('height', opts.height)
-          if (opts.width) params.set('width', opts.width)
-          if (opts.fit) params.set('fit', opts.fit)
-          url += '?' + params.toString()
-          return url
-        }
-
-        return file.url
-      }
-      else  if (file?.meta?.type === 'recipe') {
-        return '/recipe.png'
-      }
-      else {
-        console.log(Alpine.raw(file))
-        return '/ph_250.png'
-      }
-    },
-
-
-    async addItems(images, replace = false)
-    {
-
-      let lastCursor = this.cursor
-      if (images && images.length) {
-        this.images = this.images.filter(item => item.onclick == null)
-
-        images = images.map(f => {
-          if (f.mimeType.startsWith('audio/') || f.mimeType == 'application/ogg') {
-            f.isAudio = true
-          }
-          return f
-        })
-
-        this.cursor = images[images.length - 1].seq
-        if (replace) {
-          this.images = images
-        }
-        else
-        {
-          this.images = this.images.concat(images)
-
-        }
-
-
-        if (this.images.length) {
-          let self = this
-          if (lastCursor != this.cursor || replace) {
-            this.images.push({
-              onclick: async () => {
-                await self.fetchImages({ cursor: self.cursor })
-              }, url: '/more.png', meta: {}
-            })
-          }
-        }
-
-        this.totalPages = Math.ceil(this.images.length / this.imagesPerPage);
-
-      }
-    },
-
-
-
-    async fetchImages(opts?: { cursor?: string, limit?: number,  replace?: boolean}) {
-      if (this.viewerMode) {
-        return Promise.resolve()
-      }
-
-      const body: { limit: number, cursor?: string } = { limit: this.imagesPerPage }
-      if (opts?.cursor) {
-        body.cursor = opts?.cursor
-      }
-      if(opts?.limit && typeof(opts.limit) === 'number' &&  opts.limit > 0) {
-        body.limit = Math.max(opts.limit,2)
-      }
-      const data = await runExtensionScript('files', body)
-
-      this.addItems(data.images, opts?.replace)
-
-
-    },
-    selectImage(img) {
-      if (img.onclick) {
-        return
-      }
-      const idx = this.multiSelectedImages.indexOf(img);
-      if (idx > -1) {
-        this.multiSelectedImages.splice(idx, 1);  // Deselect the image if it's already selected
+    getDisplayUrl(item, opts) {
+      if (!item) {
+        return '<img src="/404.png" />';
+      } else if ( item.type === 'recipe' ) {
+        return `
+        <div>hello</div>
+        `
       } else {
-        this.multiSelectedImages.push(img);  // Select the image
+        console.log(Alpine.raw(item));
+        return '<img src="/ph_250.png" />'
+      }
+    },
+
+    async addItems(items, replace = false) {
+      let lastCursor = this.cursor;
+      if (items && items.length) {
+        this.items = this.items.filter((item) => item.onclick == null);
+
+        items = items.map((f) => {
+          if (f.type == 'block') {
+            f.url = '/amy.png';
+          }
+          return f;
+        });
+
+        this.cursor = items[items.length - 1].seq;
+        if (replace) {
+          this.items = items;
+        } else {
+          this.items = this.items.concat(items);
+        }
+
+        if (this.items.length) {
+          let self = this;
+          if (lastCursor != this.cursor || replace) {
+            this.items.push({
+              onclick: async () => {
+                await self.fetchItems({ cursor: self.cursor });
+              },
+              url: '/more.png',
+              meta: {},
+            });
+          }
+        }
+
+        this.totalPages = Math.ceil(this.items.length / this.itemsPerPage);
+      }
+    },
+
+    async fetchItems(opts?: {
+      cursor?: string;
+      limit?: number;
+      replace?: boolean;
+    }) {
+      if (this.viewerMode) {
+        return Promise.resolve();
+      }
+
+      const body: { limit: number; cursor?: string; type: string } = {
+        limit: this.itemsPerPage,
+        type: 'recipe'
+      };
+      if (opts?.cursor) {
+        body.cursor = opts?.cursor;
+      }
+      if (opts?.limit && typeof opts.limit === 'number' && opts.limit > 0) {
+        body.limit = Math.max(opts.limit, 2);
+      }
+      const data = await runExtensionScript('collection', body);
+
+      this.addItems(data.items, opts?.replace);
+    },
+    selectItem(item) {
+      if (item.onclick) {
+        return;
+      }
+      const idx = this.multiSelectedItems.indexOf(item);
+      if (idx > -1) {
+        this.multiSelectedItems.splice(idx, 1); // Deselect the item if it's already selected
+      } else {
+        this.multiSelectedItems.push(item); // Select the item
       }
     },
     paginate() {
-
       /*console.log('paginate')
-      const start = (this.currentPage - 1) * this.imagesPerPage;
-      const end = this.currentPage * this.imagesPerPage;
-      return this.images.slice(start, end);*/
-      return this.images
+      const start = (this.currentPage - 1) * this.itemsPerPage;
+      const end = this.currentPage * this.itemsPerPage;
+      return this.items.slice(start, end);*/
+      return this.items;
     },
 
-    async nextImage() {
-      const currentIndex = this.images.indexOf(this.focusedImage);
-      if (currentIndex < this.images.length - 1) {
-        await this.focusImage(this.images[currentIndex + 1]);
+    async nextItem() {
+      const currentIndex = this.items.indexOf(this.focusedItem);
+      if (currentIndex < this.items.length - 1) {
+        await this.focusItem(this.items[currentIndex + 1]);
       }
-
     },
 
     animateTransition() {
       if (this.loading) {
-        return
+        return;
       }
       this.loading = true;
       setTimeout(() => {
@@ -315,14 +192,12 @@ const createGallery = function (imagesPerPage: number, imageApi: string) {
       }, 200); // Adjust this delay as needed
     },
 
-    async previousImage() {
-      const currentIndex = this.images.indexOf(this.focusedImage);
+    async previousItem() {
+      const currentIndex = this.items.indexOf(this.focusedItem);
       if (currentIndex > 0) {
-        await this.focusImage(this.images[currentIndex - 1]);
+        await this.focusItem(this.items[currentIndex - 1]);
       }
-
     },
-
 
     nextPage() {
       if (this.currentPage < this.totalPages) {
@@ -337,17 +212,17 @@ const createGallery = function (imagesPerPage: number, imageApi: string) {
       this.hover = false;
     },
 
-    async focusImage(img) {
-      this.animateTransition()
-      this.x = 0
-      this.y = 0
-      this.scale = 1
-      if (img.onclick != null) {
-        await img.onclick.call(img)
-        return
+    async focusItem(item) {
+      this.animateTransition();
+      this.x = 0;
+      this.y = 0;
+      this.scale = 1;
+      if (item.onclick != null) {
+        await item.onclick.call(item);
+        return;
       }
-      this.focusedImage = img;
-      console.log('focusImage', img)
+      this.focusedItem = item;
+      console.log('focusItem', item);
     },
 
     previousPage() {
@@ -356,139 +231,104 @@ const createGallery = function (imagesPerPage: number, imageApi: string) {
       }
     },
 
-    async sendToChat(img) {
-
-      if (Array.isArray(img)) {
-        //@ts-expect-error
-        window.parent.client.sendSystemMessage(``, 'text/markdown', {
-          images: img, commands: [
-            { 'id': 'run', title: '🞂 Run', args: [null, img] }]
-        }, ['no-picture'])
-        this.multiSelectedImages = []
-      }
-      else {
-        //@ts-expect-error
-        window.parent.client.sendSystemMessage(``, 'text/markdown', {
-          images: [{ ...img }], commands: [
-            { 'id': 'run', title: '🞂 Run', args: [null, { ...img }] }]
-        }, ['no-picture'])
-      }
-
-    },
-    async exportImage(img) {
-
-      const imageFid = img
-      const action = 'export'
-      let args = {}
-      //@ts-ignore
-      const workflow = await window.parent.client.workbench.toJSON()
-
-      if (!workflow) {
-        alert('No active workflow')
-      }
-      const payload = { imageFid, action, args, recipe:workflow }
-      const resultImage = (<any>await runExtensionScript('export', payload)).image
-      await downloadImage(resultImage)
-      await this.fetchImages({replace:true, limit: imagesPerPage})
-
-
-    },
-
-    async importImage(img) {
-
+    async importItem(item) {
       let args = {
         action: 'import',
-        imageFid: img.ticket.fid,
-      }
-      const file = <any>(await runExtensionScript('export', args)).file
-      console.log('import', file)
-      window.parent.location.href = window.parent.location.protocol + "//" + window.parent.location.host + `/?rx=${encodeURIComponent(file.url)}`;
-
-
+        itemFid: item.ticket.fid,
+      };
+      const file = <any>(await runExtensionScript('export', args)).file;
+      console.log('import', file);
+      window.parent.location.href =
+        window.parent.location.protocol +
+        '//' +
+        window.parent.location.host +
+        `/?rx=${encodeURIComponent(file.url)}`;
     },
-    zoomImage(event) {
+    zoomItem(event) {
       // Determine whether the wheel was scrolled up or down
       const direction = event.deltaY < 0 ? 0.1 : -0.1;
 
-      // Get the current scale of the image
+      // Get the current scale of the item
       const currentScale = this.$refs.zoomImg.style.transform || 'scale(1)';
       const currentScaleValue = parseFloat(currentScale.slice(6, -1));
 
       // Calculate the new scale
-      const newScale = Math.min(Math.max(0.75, currentScaleValue + direction), 5.0);
-      this.scale = newScale
+      const newScale = Math.min(
+        Math.max(0.75, currentScaleValue + direction),
+        5.0
+      );
+      this.scale = newScale;
 
       // Set the new scale
       this.$refs.zoomImg.style.transform = `scale(${newScale})`;
     },
-    async deleteByFid(img) {
-      console.log('delete', img)
-      if (!Array.isArray(img)) {
-        img = [img]
+    async deleteByFid(item) {
+      console.log('delete', item);
+      if (!Array.isArray(item)) {
+        item = [item];
       }
 
-      if (img.length > 1)
-      {
-        if (!confirm(`Are you sure you want to delete ${img.length} items?`)) {
-          return
+      if (item.length > 1) {
+        if (!confirm(`Are you sure you want to delete ${item.length} items?`)) {
+          return;
         }
       }
 
-      let data = await runExtensionScript('delete', {delete: img})
+      let data = await runExtensionScript('delete', { delete: item });
 
       if (!data.ok) {
         //@ts-expect-error
-        window.parent.client.sendSystemMessage('Failed to delete image(s) ' + data.reason, 'text/plain', {}, ['error'])
-        return
+        window.parent.client.sendSystemMessage(
+          'Failed to delete item(s) ' + data.reason,
+          'text/plain',
+          {},
+          ['error']
+        );
+        return;
       }
 
-      this.multiSelectedImages = []
+      this.multiSelectedItems = [];
       if (data.deleted) {
+        this.items = this.items.filter((item) => {
+          console.log(item);
+          if (item.onclick != null) return true;
 
-        this.images = this.images.filter(img => {
-          console.log(img)
-          if (img.onclick != null) return true
+          let deleted = data.deleted.includes(item.ticket.fid);
+          return !deleted;
+        });
 
-          let deleted = data.deleted.includes(img.ticket.fid)
-          return !deleted
-        })
-
-        if (this.focusedImage) {
-          if (data.deleted.includes(this.focusedImage.ticket.fid)) {
-            this.focusedImage = null
-            // In viewer mode, we close the extension if the focused image is deleted
+        if (this.focusedItem) {
+          if (data.deleted.includes(this.focusedItem.ticket.fid)) {
+            this.focusedItem = null;
+            // In viewer mode, we close the extension if the focused item is deleted
             if (this.viewerMode === true) {
               //@ts-expect-error
-              window.parent.client.workbench.hideExtension()
+              window.parent.client.workbench.hideExtension();
             }
           }
         }
 
-        await this.fetchImages({cursor: this.cursor, limit: data.deleted.length})
-
+        await this.fetchItems({
+          cursor: this.cursor,
+          limit: data.deleted.length,
+        });
       }
+    },
+  };
+};
 
-    }
-  }
-
-}
-
-
-
-
-
-window.Alpine = Alpine
+window.Alpine = Alpine;
 document.addEventListener('alpine:init', async () => {
   Alpine.data('appState', () => ({
     copyToClipboardComponent,
     createGallery,
-    async copyToClipboard(imgUrl) {
+    async copyToClipboard(itemUrl) {
       try {
-        const res = await fetch(imgUrl);
+        const res = await fetch(itemUrl);
         const blob = await res.blob();
         const data = [new ClipboardItem({ [blob.type]: blob })];
         await navigator.clipboard.write(data);
-        alert('Image copied to clipboard');
+        alert('Item copied to clipboard');
       } catch (err) {
         console.error(err.name, err.message);
       }
@@ -510,21 +350,9 @@ document.addEventListener('alpine:init', async () => {
     stopMoving() {
       this.moving = false;
     },
+  }));
+});
 
+Alpine.start();
 
-  }
-
-  ))
-
-}
-)
-
-
-
-
-Alpine.start()
-
-
-
-
-export default {}
+export default {};

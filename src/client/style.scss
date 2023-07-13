@@ -1,0 +1,27 @@
+.block {
+  width: 14.375rem;
+  height: 14.5625rem;
+
+  .block-header {
+    display: inline-flex;
+    height: 1.875rem;
+    padding: 0rem 0.625rem;
+    justify-content: center;
+    align-items: center;
+    gap: 0.3125rem;
+    flex-shrink: 0;
+    background: #3b3e44;
+  }
+
+  .block-content {
+    display: flex;
+    width: 14.375rem;
+    height: 12.6875rem;
+    padding: 0.625rem;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.3125rem;
+    flex-shrink: 0;
+    background: #fff;
+  }
+}

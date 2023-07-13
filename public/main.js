@@ -2994,25 +2994,12 @@ var module_default = src_default;
 // main.ts
 var args = new URLSearchParams(location.search);
 var params = JSON.parse(args.get("q"));
-var focusedImage = null;
-focusedImage = params?.focusedImage;
-var viewerMode = focusedImage ? true : false;
-var downloadImage = function(image) {
-  let fid = image.ticket.fid;
-  const filename = image.fileName;
-  fetch("/fid/" + fid + "?download=true").then((response) => response.blob()).then((blob) => {
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement("a");
-    link.href = url;
-    link.download = filename;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-  }).catch((error2) => console.error(error2));
-};
+var focusedItem = null;
+focusedItem = params?.focusedItem;
+var viewerMode = focusedItem ? true : false;
 var runExtensionScript = async (scriptName, payload) => {
   const response = await fetch(
-    "/api/v1/mercenaries/runscript/omni-core-filemanager:" + scriptName,
+    "/api/v1/mercenaries/runscript/omni-core-collectionmanager:" + scriptName,
     {
       method: "POST",
       headers: {
@@ -3021,6 +3008,7 @@ var runExtensionScript = async (scriptName, payload) => {
       body: JSON.stringify(payload)
     }
   );
+  console.log("runExtensionScript response", response);
   const data2 = await response.json();
   console.log(scriptName, data2);
   return data2;
@@ -3029,8 +3017,8 @@ var copyToClipboardComponent = () => {
   return {
     copyText: "",
     copyNotification: false,
-    async copyToClipboard(img) {
-      const res = await fetch(img.url);
+    async copyToClipboard(item) {
+      const res = await fetch(item.url);
       const blob = await res.blob();
       const data2 = [new ClipboardItem({ [blob.type]: blob })];
       await navigator.clipboard.write(data2);
@@ -3042,15 +3030,15 @@ var copyToClipboardComponent = () => {
     }
   };
 };
-var createGallery = function(imagesPerPage, imageApi) {
+var createGallery = function(itemsPerPage, itemApi) {
   return {
     viewerMode,
     currentPage: 1,
-    imagesPerPage,
-    imageApi,
-    images: viewerMode ? [] : Array(imagesPerPage + 1).fill({ url: "/ph_250.png", meta: {} }),
-    totalPages: () => Math.ceil(this.images.length / this.imagesPerPage),
-    multiSelectedImages: [],
+    itemsPerPage,
+    itemApi,
+    items: viewerMode ? [] : Array(itemsPerPage + 1).fill({ url: "/ph_250.png", meta: {} }),
+    totalPages: () => Math.ceil(this.items.length / this.itemsPerPage),
+    multiSelectedItems: [],
     cursor: null,
     showInfo: false,
     loading: false,
@@ -3060,26 +3048,10 @@ var createGallery = function(imagesPerPage, imageApi) {
     x: 0,
     //pan
     y: 0,
-    focusedImage: focusedImage || null,
+    focusedItem: focusedItem || null,
     hover: false,
     async init() {
-      await this.fetchImages({ replace: true, limit: imagesPerPage });
-    },
-    async handleUpload(files) {
-      const uploaded = await this.uploadFiles(files);
-      await this.fetchImages({ replace: true, limit: imagesPerPage });
-    },
-    async runRecipeWith(runFiles) {
-      let files = module_default.raw([...runFiles].filter((f) => f?.mimeType.startsWith("image/") || f?.mimeType.startsWith("audio/") || f.mimeType == "application/ogg" || f.mimeType == "application/pdf" || f.mimeType == "application/x-pdf"));
-      let images = files.filter((f) => f?.mimeType.startsWith("image/"));
-      let audio = files.filter((f) => f?.mimeType.startsWith("audio/") || f.mimeType == "application/ogg");
-      let documents = files.filter((f) => f.mimeType == "application/pdf" || f.mimeType == "application/x-pdf");
-      let args2 = {
-        images,
-        audio,
-        documents
-      };
-      window.parent.client.runScript("run", args2);
+      await this.fetchItems({ replace: true, limit: itemsPerPage });
     },
     async fileToDataUrl(file) {
       return new Promise(function(resolve, reject) {
@@ -3088,132 +3060,84 @@ var createGallery = function(imagesPerPage, imageApi) {
         reader.readAsDataURL(file);
       });
     },
-    async uploadFiles(files) {
-      if (files?.length > 0) {
-        let result = await Promise.all(
-          Array.from(files).map(async (file) => {
-            const form = new FormData();
-            form.append("file", file, file.name || Date.now().toString());
-            this.imageUrl = await this.fileToDataUrl(file);
-            try {
-              const response = await fetch("/fid", {
-                method: "POST",
-                body: form
-              });
-              if (response.ok) {
-                const data2 = await response.json();
-                if (data2.length > 0 && data2[0].ticket && data2[0].ticket.fid) {
-                  return data2[0];
-                } else {
-                  console.warn("Failed to upload file", { data: data2, file });
-                  return null;
-                }
-              } else {
-                console.warn("Failed to upload file", { response, file });
-                return null;
-              }
-            } catch (error2) {
-              console.error("Failed to upload file", { error: error2, file });
-              return null;
-            }
-          })
-        );
-        result = result.filter((r) => r);
-        return result;
-      }
-      return [];
-    },
-    getDisplayUrl(file, opts) {
-      if (!file) {
-        return "/404.png";
-      } else if (file?.mimeType?.startsWith("audio/") || file.mimeType == "application/ogg") {
-        return "/audio.png";
-      } else if (file?.mimeType?.startsWith("application/json") || file.mimeType == "text/json") {
-        return "/json.png";
-      } else if (file?.mimeType?.startsWith("image/")) {
-        if (opts && (opts.width || opts.height)) {
-          let url = file.url;
-          const params2 = new URLSearchParams();
-          if (opts.height)
-            params2.set("height", opts.height);
-          if (opts.width)
-            params2.set("width", opts.width);
-          if (opts.fit)
-            params2.set("fit", opts.fit);
-          url += "?" + params2.toString();
-          return url;
-        }
-        return file.url;
-      } else if (file?.meta?.type === "recipe") {
-        return "/recipe.png";
+    getDisplayUrl(item, opts) {
+      if (!item) {
+        return '<img src="/404.png" />';
+      } else if (item.type === "recipe") {
+        return `
+        <div>hello</div>
+        `;
       } else {
-        console.log(module_default.raw(file));
-        return "/ph_250.png";
+        console.log(module_default.raw(item));
+        return '<img src="/ph_250.png" />';
       }
     },
-    async addItems(images, replace = false) {
+    async addItems(items, replace = false) {
       let lastCursor = this.cursor;
-      if (images && images.length) {
-        this.images = this.images.filter((item) => item.onclick == null);
-        images = images.map((f) => {
-          if (f.mimeType.startsWith("audio/") || f.mimeType == "application/ogg") {
-            f.isAudio = true;
+      if (items && items.length) {
+        this.items = this.items.filter((item) => item.onclick == null);
+        items = items.map((f) => {
+          if (f.type == "block") {
+            f.url = "/amy.png";
           }
           return f;
         });
-        this.cursor = images[images.length - 1].seq;
+        this.cursor = items[items.length - 1].seq;
         if (replace) {
-          this.images = images;
+          this.items = items;
         } else {
-          this.images = this.images.concat(images);
+          this.items = this.items.concat(items);
         }
-        if (this.images.length) {
+        if (this.items.length) {
           let self = this;
           if (lastCursor != this.cursor || replace) {
-            this.images.push({
+            this.items.push({
               onclick: async () => {
-                await self.fetchImages({ cursor: self.cursor });
+                await self.fetchItems({ cursor: self.cursor });
               },
               url: "/more.png",
               meta: {}
             });
           }
         }
-        this.totalPages = Math.ceil(this.images.length / this.imagesPerPage);
+        this.totalPages = Math.ceil(this.items.length / this.itemsPerPage);
       }
     },
-    async fetchImages(opts) {
+    async fetchItems(opts) {
       if (this.viewerMode) {
         return Promise.resolve();
       }
-      const body = { limit: this.imagesPerPage };
+      const body = {
+        limit: this.itemsPerPage,
+        type: "recipe"
+      };
       if (opts?.cursor) {
         body.cursor = opts?.cursor;
       }
       if (opts?.limit && typeof opts.limit === "number" && opts.limit > 0) {
         body.limit = Math.max(opts.limit, 2);
       }
-      const data2 = await runExtensionScript("files", body);
-      this.addItems(data2.images, opts?.replace);
+      const data2 = await runExtensionScript("collection", body);
+      this.addItems(data2.items, opts?.replace);
     },
-    selectImage(img) {
-      if (img.onclick) {
+    selectItem(item) {
+      if (item.onclick) {
         return;
       }
-      const idx = this.multiSelectedImages.indexOf(img);
+      const idx = this.multiSelectedItems.indexOf(item);
       if (idx > -1) {
-        this.multiSelectedImages.splice(idx, 1);
+        this.multiSelectedItems.splice(idx, 1);
       } else {
-        this.multiSelectedImages.push(img);
+        this.multiSelectedItems.push(item);
       }
     },
     paginate() {
-      return this.images;
+      return this.items;
     },
-    async nextImage() {
-      const currentIndex = this.images.indexOf(this.focusedImage);
-      if (currentIndex < this.images.length - 1) {
-        await this.focusImage(this.images[currentIndex + 1]);
+    async nextItem() {
+      const currentIndex = this.items.indexOf(this.focusedItem);
+      if (currentIndex < this.items.length - 1) {
+        await this.focusItem(this.items[currentIndex + 1]);
       }
     },
     animateTransition() {
@@ -3225,10 +3149,10 @@ var createGallery = function(imagesPerPage, imageApi) {
         this.loading = false;
       }, 200);
     },
-    async previousImage() {
-      const currentIndex = this.images.indexOf(this.focusedImage);
+    async previousItem() {
+      const currentIndex = this.items.indexOf(this.focusedItem);
       if (currentIndex > 0) {
-        await this.focusImage(this.images[currentIndex - 1]);
+        await this.focusItem(this.items[currentIndex - 1]);
       }
     },
     nextPage() {
@@ -3242,147 +3166,124 @@ var createGallery = function(imagesPerPage, imageApi) {
     mouseLeave() {
       this.hover = false;
     },
-    async focusImage(img) {
+    async focusItem(item) {
       this.animateTransition();
       this.x = 0;
       this.y = 0;
       this.scale = 1;
-      if (img.onclick != null) {
-        await img.onclick.call(img);
+      if (item.onclick != null) {
+        await item.onclick.call(item);
         return;
       }
-      this.focusedImage = img;
-      console.log("focusImage", img);
+      this.focusedItem = item;
+      console.log("focusItem", item);
     },
     previousPage() {
       if (this.currentPage > 1) {
         this.currentPage -= 1;
       }
     },
-    async sendToChat(img) {
-      if (Array.isArray(img)) {
-        window.parent.client.sendSystemMessage(``, "text/markdown", {
-          images: img,
-          commands: [
-            { "id": "run", title: "\u{1F782} Run", args: [null, img] }
-          ]
-        }, ["no-picture"]);
-        this.multiSelectedImages = [];
-      } else {
-        window.parent.client.sendSystemMessage(``, "text/markdown", {
-          images: [{ ...img }],
-          commands: [
-            { "id": "run", title: "\u{1F782} Run", args: [null, { ...img }] }
-          ]
-        }, ["no-picture"]);
-      }
-    },
-    async exportImage(img) {
-      const imageFid = img;
-      const action = "export";
-      let args2 = {};
-      const workflow = await window.parent.client.workbench.toJSON();
-      if (!workflow) {
-        alert("No active workflow");
-      }
-      const payload = { imageFid, action, args: args2, recipe: workflow };
-      const resultImage = (await runExtensionScript("export", payload)).image;
-      await downloadImage(resultImage);
-      await this.fetchImages({ replace: true, limit: imagesPerPage });
-    },
-    async importImage(img) {
+    async importItem(item) {
       let args2 = {
         action: "import",
-        imageFid: img.ticket.fid
+        itemFid: item.ticket.fid
       };
       const file = (await runExtensionScript("export", args2)).file;
       console.log("import", file);
       window.parent.location.href = window.parent.location.protocol + "//" + window.parent.location.host + `/?rx=${encodeURIComponent(file.url)}`;
     },
-    zoomImage(event) {
+    zoomItem(event) {
       const direction = event.deltaY < 0 ? 0.1 : -0.1;
       const currentScale = this.$refs.zoomImg.style.transform || "scale(1)";
       const currentScaleValue = parseFloat(currentScale.slice(6, -1));
-      const newScale = Math.min(Math.max(0.75, currentScaleValue + direction), 5);
+      const newScale = Math.min(
+        Math.max(0.75, currentScaleValue + direction),
+        5
+      );
       this.scale = newScale;
       this.$refs.zoomImg.style.transform = `scale(${newScale})`;
     },
-    async deleteByFid(img) {
-      console.log("delete", img);
-      if (!Array.isArray(img)) {
-        img = [img];
+    async deleteByFid(item) {
+      console.log("delete", item);
+      if (!Array.isArray(item)) {
+        item = [item];
       }
-      if (img.length > 1) {
-        if (!confirm(`Are you sure you want to delete ${img.length} items?`)) {
+      if (item.length > 1) {
+        if (!confirm(`Are you sure you want to delete ${item.length} items?`)) {
           return;
         }
       }
-      let data2 = await runExtensionScript("delete", { delete: img });
+      let data2 = await runExtensionScript("delete", { delete: item });
       if (!data2.ok) {
-        window.parent.client.sendSystemMessage("Failed to delete image(s) " + data2.reason, "text/plain", {}, ["error"]);
+        window.parent.client.sendSystemMessage(
+          "Failed to delete item(s) " + data2.reason,
+          "text/plain",
+          {},
+          ["error"]
+        );
         return;
       }
-      this.multiSelectedImages = [];
+      this.multiSelectedItems = [];
       if (data2.deleted) {
-        this.images = this.images.filter((img2) => {
-          console.log(img2);
-          if (img2.onclick != null)
+        this.items = this.items.filter((item2) => {
+          console.log(item2);
+          if (item2.onclick != null)
             return true;
-          let deleted = data2.deleted.includes(img2.ticket.fid);
+          let deleted = data2.deleted.includes(item2.ticket.fid);
           return !deleted;
         });
-        if (this.focusedImage) {
-          if (data2.deleted.includes(this.focusedImage.ticket.fid)) {
-            this.focusedImage = null;
+        if (this.focusedItem) {
+          if (data2.deleted.includes(this.focusedItem.ticket.fid)) {
+            this.focusedItem = null;
             if (this.viewerMode === true) {
               window.parent.client.workbench.hideExtension();
             }
           }
         }
-        await this.fetchImages({ cursor: this.cursor, limit: data2.deleted.length });
+        await this.fetchItems({
+          cursor: this.cursor,
+          limit: data2.deleted.length
+        });
       }
     }
   };
 };
 window.Alpine = module_default;
-document.addEventListener(
-  "alpine:init",
-  async () => {
-    module_default.data("appState", () => ({
-      copyToClipboardComponent,
-      createGallery,
-      async copyToClipboard(imgUrl) {
-        try {
-          const res = await fetch(imgUrl);
-          const blob = await res.blob();
-          const data2 = [new ClipboardItem({ [blob.type]: blob })];
-          await navigator.clipboard.write(data2);
-          alert("Image copied to clipboard");
-        } catch (err) {
-          console.error(err.name, err.message);
-        }
-      },
-      moving: false,
-      startMoving(e) {
-        this.moving = true;
-        this.lastX = e.clientX;
-        this.lastY = e.clientY;
-        e.preventDefault();
-      },
-      move(e) {
-        if (!this.moving)
-          return;
-        this.x += e.clientX - this.lastX;
-        this.y += e.clientY - this.lastY;
-        this.lastX = e.clientX;
-        this.lastY = e.clientY;
-      },
-      stopMoving() {
-        this.moving = false;
+document.addEventListener("alpine:init", async () => {
+  module_default.data("appState", () => ({
+    copyToClipboardComponent,
+    createGallery,
+    async copyToClipboard(itemUrl) {
+      try {
+        const res = await fetch(itemUrl);
+        const blob = await res.blob();
+        const data2 = [new ClipboardItem({ [blob.type]: blob })];
+        await navigator.clipboard.write(data2);
+        alert("Item copied to clipboard");
+      } catch (err) {
+        console.error(err.name, err.message);
       }
-    }));
-  }
-);
+    },
+    moving: false,
+    startMoving(e) {
+      this.moving = true;
+      this.lastX = e.clientX;
+      this.lastY = e.clientY;
+      e.preventDefault();
+    },
+    move(e) {
+      if (!this.moving)
+        return;
+      this.x += e.clientX - this.lastX;
+      this.y += e.clientY - this.lastY;
+      this.lastX = e.clientX;
+      this.lastY = e.clientY;
+    },
+    stopMoving() {
+      this.moving = false;
+    }
+  }));
+});
 module_default.start();
 var main_default = {};
 export {
