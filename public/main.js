@@ -3063,13 +3063,13 @@ var createGallery = function(itemsPerPage, itemApi) {
     getDisplayUrl(item, opts) {
       if (!item) {
         return '<img src="/404.png" />';
-      } else if (item.type === "recipe") {
-        return `
-        <div>hello</div>
-        `;
       } else {
-        console.log(module_default.raw(item));
-        return '<img src="/ph_250.png" />';
+        const renderer = window.parent.client.collectionRenderers.get(item.type);
+        if (renderer) {
+          return renderer.render(item.value);
+        } else {
+          return '<img src="/404.png" />';
+        }
       }
     },
     async addItems(items, replace = false) {

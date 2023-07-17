@@ -49,7 +49,7 @@ const script = {
             "An assistant that creates art and audio for children's books based on user input.",
           aiUsage: '',
           id: '750d1a3a-1c94-4bc6-bb02-d93e6aff2ac7',
-          canDelete: true,
+          canDelete: false,
           starred: false,
         },
       },
