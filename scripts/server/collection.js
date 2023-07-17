@@ -1,5 +1,3 @@
-import { result } from "lodash-es";
-
 const script = {
   name: 'collection',
 
@@ -9,19 +7,25 @@ const script = {
     let type = payload.type || undefined;
 
     if (type === 'recipe') {
-    const workflowIntegration = ctx.app.integrations.get('workflow')
-    const result = await workflowIntegration.getWorkflowsForUserPaginated(ctx.user, limit, 0, cursor, true)
-    const items = result.data.map(item => {
+      const workflowIntegration = ctx.app.integrations.get('workflow');
+      const result = await workflowIntegration.getWorkflowsForUserPaginated(
+        ctx.user,
+        limit,
+        0,
+        cursor,
+        true
+      );
+      const items = result.data.map((item) => {
+        return {
+          value: { ...item },
+          type: 'recipe',
+        };
+      });
       return {
-        value: {...item},
-        type: "recipe"
-      }})
-    return {
-      items,
-    };
-  } else if (type === 'block') {
-
-  }
+        items,
+      };
+    } else if (type === 'block') {
+    }
   },
 };
 
