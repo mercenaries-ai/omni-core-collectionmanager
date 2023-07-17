@@ -18,7 +18,7 @@
   padding-top: -5px;
   overflow-y: auto;
 }
-.recipe {
+.collection {
   position: relative;
   display: flex;
   width: 16.875rem;
@@ -29,7 +29,7 @@
   border-radius: 0.625rem;
   font-family: "Roboto", sans-serif;
 }
-.recipe .recipe-cover {
+.collection .collection-cover {
   position: absolute;
   object-fit: cover;
   width: 100%;
@@ -40,7 +40,7 @@
   mix-blend-mode: multiply;
   border-radius: 0.625rem;
 }
-.recipe .recipe-cover img {
+.collection .collection-cover img {
   position: absolute;
   object-fit: cover;
   width: 16.875rem;
@@ -51,7 +51,7 @@
   mix-blend-mode: multiply;
   border-radius: 0.625rem;
 }
-.recipe .recipe-text {
+.collection .collection-text {
   position: absolute;
   display: flex;
   width: 100%;
@@ -65,7 +65,7 @@
   flex-wrap: wrap;
   overflow: hidden;
 }
-.recipe .recipe-text .recipe-title {
+.collection .collection-text .collection-title {
   display: flex;
   width: 16.8125rem;
   height: 4.1875rem;
@@ -76,7 +76,7 @@
   gap: 0.625rem;
   flex-wrap: wrap;
 }
-.recipe .recipe-text .recipe-title h2 {
+.collection .collection-text .collection-title h2 {
   font-size: 1.25rem;
   font-style: normal;
   font-weight: 700;
@@ -90,7 +90,7 @@
   flex-shrink: 0;
   align-content: center;
 }
-.recipe .recipe-text .recipe-description {
+.collection .collection-text .collection-description {
   display: flex;
   width: 16.875rem;
   height: 3.1875rem;
@@ -101,7 +101,7 @@
   gap: 0.625rem;
   flex-wrap: wrap;
 }
-.recipe .recipe-text .recipe-description p {
+.collection .collection-text .collection-description p {
   font-size: 1rem;
   font-style: normal;
   font-weight: 400;
@@ -114,7 +114,7 @@
   flex-shrink: 0;
   text-overflow: ellipsis;
 }
-.recipe .recipe-action {
+.collection .collection-action {
   display: flex;
   align-items: center;
   width: 16.9375rem;
@@ -126,7 +126,7 @@
   bottom: -0.0625rem;
   flex-shrink: 0;
 }
-.recipe .recipe-action button {
+.collection .collection-action button {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -143,9 +143,9 @@
   transition: background-color 0.2s;
   cursor: pointer;
 }
-.recipe .recipe-action button:hover {
+.collection .collection-action button:hover {
   background-color: rgba(255, 255, 255, 0.2);
 }
-.recipe .recipe-action button svg {
+.collection .collection-action button svg {
   margin-right: 0.3125rem;
 }
