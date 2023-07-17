@@ -73,7 +73,7 @@ const createGallery = function (itemsPerPage: number, itemApi: string) {
     hover: false,
 
     async init() {
-      await this.fetchItems({ replace: true, limit: itemsPerPage });
+      await this.fetchItems({ replace: true, limit: itemsPerPage, cursor: '' });
     },
 
     async fileToDataUrl(file) {
@@ -89,6 +89,7 @@ const createGallery = function (itemsPerPage: number, itemApi: string) {
       if (!item) {
         return '<img src="/404.png" />';
       } else {
+        //@ts-expect-error
         const renderer = window.parent.client.collectionRenderers.get(item.type);
         if (renderer) {
             return renderer.render(item.value);
@@ -102,14 +103,6 @@ const createGallery = function (itemsPerPage: number, itemApi: string) {
       let lastCursor = this.cursor;
       if (items && items.length) {
         this.items = this.items.filter((item) => item.onclick == null);
-
-        items = items.map((f) => {
-          if (f.type == 'block') {
-            f.url = '/amy.png';
-          }
-          return f;
-        });
-
         this.cursor = items[items.length - 1].seq;
         if (replace) {
           this.items = items;
@@ -142,13 +135,13 @@ const createGallery = function (itemsPerPage: number, itemApi: string) {
       if (this.viewerMode) {
         return Promise.resolve();
       }
-
-      const body: { limit: number; cursor?: string; type: string } = {
+      const body: { limit: number; bookmark: string; type: string } = {
         limit: this.itemsPerPage,
-        type: 'recipe'
+        type: 'recipe',
+        bookmark: '',
       };
       if (opts?.cursor) {
-        body.cursor = opts?.cursor;
+        body.bookmark = opts?.cursor;
       }
       if (opts?.limit && typeof opts.limit === 'number' && opts.limit > 0) {
         body.limit = Math.max(opts.limit, 2);

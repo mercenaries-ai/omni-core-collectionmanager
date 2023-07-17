@@ -3051,7 +3051,7 @@ var createGallery = function(itemsPerPage, itemApi) {
     focusedItem: focusedItem || null,
     hover: false,
     async init() {
-      await this.fetchItems({ replace: true, limit: itemsPerPage });
+      await this.fetchItems({ replace: true, limit: itemsPerPage, cursor: "" });
     },
     async fileToDataUrl(file) {
       return new Promise(function(resolve, reject) {
@@ -3076,12 +3076,6 @@ var createGallery = function(itemsPerPage, itemApi) {
       let lastCursor = this.cursor;
       if (items && items.length) {
         this.items = this.items.filter((item) => item.onclick == null);
-        items = items.map((f) => {
-          if (f.type == "block") {
-            f.url = "/amy.png";
-          }
-          return f;
-        });
         this.cursor = items[items.length - 1].seq;
         if (replace) {
           this.items = items;
@@ -3109,10 +3103,11 @@ var createGallery = function(itemsPerPage, itemApi) {
       }
       const body = {
         limit: this.itemsPerPage,
-        type: "recipe"
+        type: "recipe",
+        bookmark: ""
       };
       if (opts?.cursor) {
-        body.cursor = opts?.cursor;
+        body.bookmark = opts?.cursor;
       }
       if (opts?.limit && typeof opts.limit === "number" && opts.limit > 0) {
         body.limit = Math.max(opts.limit, 2);
