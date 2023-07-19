@@ -1,5 +1,6 @@
 import Alpine from 'alpinejs';
 import './style.css';
+import { createContext } from 'vm';
 declare global {
   interface Window {
     Alpine: typeof Alpine;
@@ -308,6 +309,19 @@ const createGallery = function (itemsPerPage: number, itemApi: string) {
         });
       }
     },
+    async clickToAction(item, type: string) {
+      console.log(item)
+      if (type === 'recipe') {
+      const body: { recipeId: string; recipeVersion: string; type: string } = {
+        type: 'recipe',
+        recipeId: item.value.id,
+        recipeVersion: item.value.version,
+      };
+      console.log(body)
+      const data = await runExtensionScript('load', body);
+      console.log(data);
+    }
+    }
   };
 };
 

@@ -33,13 +33,6 @@
                 </svg>
               </span>
 
-              <label for="file-upload"   class="flex text-black items-center justify-center w-auto h-8 px-3 py-1 text-xs bg-green-500/60 border-0 rounded-md cursor-pointer  hover:bg-gray-500 active:bg-gray-600 focus:bg-gray-600 focus:outline-none hover:text-neutral-600 group">
-                <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="black" class="w-6 h-6"> >
-                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/>
-                </svg>
-                <input id="file-upload" type="file" multiple class="hidden" @change="await handleUpload($event.target.files)">
-              </label>
-
               <span @click="await deleteByFid(multiSelectedItems)" x-show="multiSelectedItems.length > 0" class="flex text-black items-center justify-center w-auto h-8 px-3 py-1 text-xs bg-red-500/60   rounded-md cursor-pointer  hover:bg-gray-500 active:bg-gray-600 focus:bg-gray-600 focus:outline-none  hover:text-neutral-600 group">
                 <span>Delete</span>
                 <svg class="w-5 h-5 ml-0.5" xmlns="http://www.w3.org/2000/svg" fill="red" viewBox="0 0 24 24" stroke-width="2" stroke="black" class="w-6 h-6"> >
@@ -56,15 +49,12 @@
                 <div class="flex flex-wrap justify-left items-start gap-1.5">
                   <template x-for="(item, idx) in (await paginate()) || []" :key="idx">
                     <div class="shadow-lg shadow-black drop-shadow-sm rounded-sm  ">
-                      <!-- TODO -->
                       <div 
                       @mouseenter='hoverItem = item'
                       @mouseleave='hoverItem = null'
                       @contextmenu.prevent="selectItem(item)" 
-                      @click="await focusItem(item)"
                       x-html="getDisplayUrl(item, {width: 256, height: 256, fit: 'contain'})"
-                      :class="{ 'border-4 border-yellow-300': multiSelectedItems.includes(item), 'border-4 border-white': focusedItem === item }" alt="item.meta.fileName"></div>
-                       <!-- TODO -->
+                      :class="{ 'border-2 border-yellow-300': multiSelectedItems.includes(item), 'border-2 border-white': focusedItem === item }" alt="item.meta.fileName"></div>
                     </div>
                   </template>
                 </div>

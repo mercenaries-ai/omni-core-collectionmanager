@@ -3240,6 +3240,19 @@ var createGallery = function(itemsPerPage, itemApi) {
           limit: data2.deleted.length
         });
       }
+    },
+    async clickToAction(item, type) {
+      console.log(item);
+      if (type === "recipe") {
+        const body = {
+          type: "recipe",
+          recipeId: item.value.id,
+          recipeVersion: item.value.version
+        };
+        console.log(body);
+        const data2 = await runExtensionScript("load", body);
+        console.log(data2);
+      }
     }
   };
 };
