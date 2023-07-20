@@ -10,7 +10,8 @@ const script = {
       return await workflowIntegration.getWorkflow(
         recipeId,
         recipeVersion,
-        ctx.user
+        ctx.user.id,
+        true
       );
     } else if (payload.type === 'block') {
     }
