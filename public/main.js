@@ -3251,6 +3251,7 @@ var createGallery = function(itemsPerPage, itemApi) {
         };
         console.log(body);
         const data2 = await runExtensionScript("load", body);
+        return data2;
         console.log(data2);
       }
     }
