@@ -312,16 +312,11 @@ const createGallery = function (itemsPerPage: number, itemApi: string) {
     async clickToAction(item, type: string) {
       console.log(item)
       if (type === 'recipe') {
-      const body: { recipeId: string; recipeVersion: string; type: string } = {
-        type: 'recipe',
-        recipeId: item.value.id,
-        recipeVersion: item.value.version,
-      };
-      console.log(body)
-      const data = await runExtensionScript('load', body);
-      return data;
-      console.log(data);
-    }
+        //@ts-expect-error
+        await window.parent.client.workbench.loadWorkflow(item.value.id, item.value.version);
+      }
+     //@ts-expect-error
+     window.parent.client.workbench.hideExtension();
     }
   };
 };
