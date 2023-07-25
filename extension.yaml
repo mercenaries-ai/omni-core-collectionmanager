@@ -4,4 +4,4 @@ description: No Description Yet
 author: Anonymous
 origin: https://github.com/mercenaries-ai/omni-core-collectionmanager.git
 client:
-  addToWorkbench: true
+  addToWorkbench: false
