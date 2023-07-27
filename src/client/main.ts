@@ -1,5 +1,5 @@
 import Alpine from 'alpinejs';
-import './style.css';
+import './style.scss';
 import { createContext } from 'vm';
 declare global {
   interface Window {
