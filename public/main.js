@@ -1635,7 +1635,7 @@ function resetTracking() {
   const last = trackStack.pop();
   shouldTrack = last === void 0 ? true : last;
 }
-function track(target, type, key) {
+function track(target, type2, key) {
   if (!shouldTrack || activeEffect === void 0) {
     return;
   }
@@ -1654,13 +1654,13 @@ function track(target, type, key) {
       activeEffect.options.onTrack({
         effect: activeEffect,
         target,
-        type,
+        type: type2,
         key
       });
     }
   }
 }
-function trigger(target, type, key, newValue, oldValue, oldTarget) {
+function trigger(target, type2, key, newValue, oldValue, oldTarget) {
   const depsMap = targetMap.get(target);
   if (!depsMap) {
     return;
@@ -1675,7 +1675,7 @@ function trigger(target, type, key, newValue, oldValue, oldTarget) {
       });
     }
   };
-  if (type === "clear") {
+  if (type2 === "clear") {
     depsMap.forEach(add2);
   } else if (key === "length" && isArray(target)) {
     depsMap.forEach((dep, key2) => {
@@ -1687,7 +1687,7 @@ function trigger(target, type, key, newValue, oldValue, oldTarget) {
     if (key !== void 0) {
       add2(depsMap.get(key));
     }
-    switch (type) {
+    switch (type2) {
       case "add":
         if (!isArray(target)) {
           add2(depsMap.get(ITERATE_KEY));
@@ -1719,7 +1719,7 @@ function trigger(target, type, key, newValue, oldValue, oldTarget) {
         effect: effect3,
         target,
         key,
-        type,
+        type: type2,
         newValue,
         oldValue,
         oldTarget
@@ -2002,13 +2002,13 @@ function createIterableMethod(method, isReadonly, isShallow) {
     };
   };
 }
-function createReadonlyMethod(type) {
+function createReadonlyMethod(type2) {
   return function(...args2) {
     if (true) {
       const key = args2[0] ? `on key "${args2[0]}" ` : ``;
-      console.warn(`${capitalize(type)} operation ${key}failed: target is readonly.`, toRaw(this));
+      console.warn(`${capitalize(type2)} operation ${key}failed: target is readonly.`, toRaw(this));
     }
-    return type === "delete" ? false : this;
+    return type2 === "delete" ? false : this;
   };
 }
 var mutableInstrumentations = {
@@ -2106,8 +2106,8 @@ var shallowReadonlyCollectionHandlers = {
 function checkIdentityKeys(target, has2, key) {
   const rawKey = toRaw(key);
   if (rawKey !== key && has2.call(target, rawKey)) {
-    const type = toRawType(target);
-    console.warn(`Reactive ${type} contains both the raw and reactive versions of the same object${type === `Map` ? ` as keys` : ``}, which can lead to inconsistencies. Avoid differentiating between the raw and reactive versions of an object and only use the reactive version if possible.`);
+    const type2 = toRawType(target);
+    console.warn(`Reactive ${type2} contains both the raw and reactive versions of the same object${type2 === `Map` ? ` as keys` : ``}, which can lead to inconsistencies. Avoid differentiating between the raw and reactive versions of an object and only use the reactive version if possible.`);
   }
 }
 var reactiveMap = /* @__PURE__ */ new WeakMap();
@@ -2997,6 +2997,7 @@ var params = JSON.parse(args.get("q"));
 var focusedItem = null;
 focusedItem = params?.focusedItem;
 var viewerMode = focusedItem ? true : false;
+var type = params?.type;
 var runExtensionScript = async (scriptName, payload) => {
   const response = await fetch(
     "/api/v1/mercenaries/runscript/omni-core-collectionmanager:" + scriptName,
@@ -3032,6 +3033,7 @@ var copyToClipboardComponent = () => {
 };
 var createGallery = function(itemsPerPage, itemApi) {
   return {
+    type,
     viewerMode,
     currentPage: 1,
     itemsPerPage,
@@ -3103,7 +3105,7 @@ var createGallery = function(itemsPerPage, itemApi) {
       }
       const body = {
         limit: this.itemsPerPage,
-        type: "recipe",
+        type: this.type,
         bookmark: ""
       };
       if (opts?.cursor) {
@@ -3241,9 +3243,9 @@ var createGallery = function(itemsPerPage, itemApi) {
         });
       }
     },
-    async clickToAction(item, type) {
+    async clickToAction(item, type2) {
       console.log(item);
-      if (type === "recipe") {
+      if (type2 === "recipe") {
         await window.parent.client.workbench.loadWorkflow(item.value.id, item.value.version);
       }
       window.parent.client.workbench.hideExtension();

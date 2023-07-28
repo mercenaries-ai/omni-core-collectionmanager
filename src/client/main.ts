@@ -13,6 +13,7 @@ const params = JSON.parse(args.get('q'));
 let focusedItem = null;
 focusedItem = params?.focusedItem;
 let viewerMode = focusedItem ? true : false;
+let type = params?.type;
 
 const runExtensionScript = async (scriptName: string, payload: any) => {
   const response = await fetch(
@@ -54,6 +55,7 @@ const copyToClipboardComponent = () => {
 
 const createGallery = function (itemsPerPage: number, itemApi: string) {
   return {
+    type: type,
     viewerMode: viewerMode,
     currentPage: 1,
     itemsPerPage: itemsPerPage,
@@ -138,7 +140,7 @@ const createGallery = function (itemsPerPage: number, itemApi: string) {
       }
       const body: { limit: number; bookmark: string; type: string } = {
         limit: this.itemsPerPage,
-        type: 'recipe',
+        type: this.type,
         bookmark: '',
       };
       if (opts?.cursor) {
