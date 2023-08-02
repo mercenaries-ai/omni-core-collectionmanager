@@ -18,6 +18,7 @@
   letter-spacing: 1px;
 }
 .omni-font-m-regular,
+.collection-loadmore,
 .collection-description {
   font-family: Roboto;
   font-size: 14px;
@@ -190,4 +191,31 @@
 }
 .collection-action .btn svg {
   margin-right: 0.5rem;
+}
+.collection-loadmore {
+  display: flex;
+  width: 15.5rem;
+  height: 23.75rem;
+  max-width: 15.5rem;
+  max-height: 23.75rem;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  flex-shrink: 0;
+  gap: 0.625rem;
+  align-self: stretch;
+  color: var(--neutral-grey, #808080);
+  text-align: center;
+  font-feature-settings: "clig" off, "liga" off;
+}
+.collection-loadmore svg {
+  width: 5rem;
+  height: 5rem;
+  flex-shrink: 0;
+}
+.collection-loadmore span {
+  display: flex;
+  padding: 1.5rem 0rem;
+  justify-content: center;
+  align-items: center;
 }

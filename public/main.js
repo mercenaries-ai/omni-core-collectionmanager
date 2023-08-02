@@ -3070,7 +3070,12 @@ var createGallery = function(itemsPerPage, itemApi) {
         if (renderer) {
           return renderer.render(item.value);
         } else {
-          return '<img src="/404.png" />';
+          const loadMore = window.parent.client.collectionRenderers.get("load-more");
+          if (loadMore) {
+            return loadMore.render(item.value);
+          } else {
+            return '<img src="/404.png" />';
+          }
         }
       }
     },
