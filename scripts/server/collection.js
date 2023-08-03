@@ -25,6 +25,18 @@ const script = {
         items,
       };
     } else if (type === 'block') {
+
+      // TODO
+      
+    } else if (type === 'extension') {
+      const allExtensions = ctx.app.extensions.all()
+      const items = allExtensions.map((item) => {
+        return {
+          value: item.id,
+          type: 'extension',
+        };
+      });
+      return {items,};
     }
   },
 };

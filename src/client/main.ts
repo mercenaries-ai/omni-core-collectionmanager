@@ -364,6 +364,15 @@ document.addEventListener('alpine:init', async () => {
     stopMoving() {
       this.moving = false;
     },
+    getTitle() {
+      if(type === 'recipe') {
+        return 'Recipe';
+      } else if (type === 'block') {
+        return 'Add Blocks';
+      } else if (type === 'extension') {
+        return 'Extension';
+      }
+    }
   }));
 });
 
