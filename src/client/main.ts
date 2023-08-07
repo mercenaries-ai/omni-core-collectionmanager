@@ -94,7 +94,7 @@ const createGallery = function (itemsPerPage: number, itemApi: string) {
       } else {
         //@ts-expect-error
         const renderer = window.parent.client.collectionRenderers.get(item.type);
-        
+
         if (renderer) {
             return renderer.render(item.value);
         } else {
@@ -105,7 +105,7 @@ const createGallery = function (itemsPerPage: number, itemApi: string) {
           } else {
             return '<img src="/404.png" />';
           }
-            
+
         }
      }
     },
@@ -239,7 +239,7 @@ const createGallery = function (itemsPerPage: number, itemApi: string) {
     async importItem(item) {
       let args = {
         action: 'import',
-        itemFid: item.ticket.fid,
+        itemFid: item.fid,
       };
       const file = <any>(await runExtensionScript('export', args)).file;
       console.log('import', file);
@@ -298,12 +298,12 @@ const createGallery = function (itemsPerPage: number, itemApi: string) {
           console.log(item);
           if (item.onclick != null) return true;
 
-          let deleted = data.deleted.includes(item.ticket.fid);
+          let deleted = data.deleted.includes(item.fid);
           return !deleted;
         });
 
         if (this.focusedItem) {
-          if (data.deleted.includes(this.focusedItem.ticket.fid)) {
+          if (data.deleted.includes(this.focusedItem.fid)) {
             this.focusedItem = null;
             // In viewer mode, we close the extension if the focused item is deleted
             if (this.viewerMode === true) {
