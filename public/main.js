@@ -3188,7 +3188,7 @@ var createGallery = function(itemsPerPage, itemApi) {
     async importItem(item) {
       let args2 = {
         action: "import",
-        itemFid: item.ticket.fid
+        itemFid: item.fid
       };
       const file = (await runExtensionScript("export", args2)).file;
       console.log("import", file);
@@ -3231,11 +3231,11 @@ var createGallery = function(itemsPerPage, itemApi) {
           console.log(item2);
           if (item2.onclick != null)
             return true;
-          let deleted = data2.deleted.includes(item2.ticket.fid);
+          let deleted = data2.deleted.includes(item2.fid);
           return !deleted;
         });
         if (this.focusedItem) {
-          if (data2.deleted.includes(this.focusedItem.ticket.fid)) {
+          if (data2.deleted.includes(this.focusedItem.fid)) {
             this.focusedItem = null;
             if (this.viewerMode === true) {
               window.parent.client.workbench.hideExtension();
@@ -3299,6 +3299,21 @@ document.addEventListener("alpine:init", async () => {
       } else if (type === "extension") {
         return "Extension";
       }
+    },
+    search: "",
+    get filteredItems() {
+      const search = this.search.replace(/ /g, "").toLowerCase();
+      if (search === "") {
+        return this.items;
+      }
+      return this.items.filter((c) => {
+        const nameMatches = c.value?.meta?.name?.replace(/ /g, "").toLowerCase().includes(search);
+        const titleMatches = c.value?.meta?.title?.replace(/ /g, "").toLowerCase().includes(search);
+        const descriptionMatches = c.value?.meta?.description?.replace(/ /g, "").toLowerCase().includes(search);
+        const summaryMatches = c.value?.meta?.summary?.replace(/ /g, "").toLowerCase().includes(search);
+        const categoryMatches = c.value?.meta?.category?.replace(/ /g, "").toLowerCase().includes(search);
+        return nameMatches || titleMatches || descriptionMatches || summaryMatches || categoryMatches;
+      });
     }
   }));
 });

@@ -32,6 +32,25 @@ const runExtensionScript = async (scriptName: string, payload: any) => {
   return data;
 };
 
+
+const runServerScript = async (scriptName: string, payload: any) => {
+  const response = await fetch(
+    '/api/v1/mercenaries/runscript/' + scriptName,
+    {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(payload),
+    }
+  );
+  console.log('runServerScript response', response);
+  const data = await response.json();
+  console.log(scriptName, data);
+  return data;
+};
+
+
 const copyToClipboardComponent = () => {
   return {
     copyText: '',
@@ -372,7 +391,34 @@ document.addEventListener('alpine:init', async () => {
       } else if (type === 'extension') {
         return 'Extension';
       }
-    }
+    },
+    search: '',
+    get filteredItems () {
+      const search = this.search.replace(/ /g, '').toLowerCase()
+      if (search === '') {
+        return this.items
+      }
+      return this.items.filter((c) => {
+        const nameMatches =
+          c.value?.meta?.name?.replace(/ /g, '').toLowerCase().includes(search) 
+        const titleMatches =
+          c.value?.meta?.title?.replace(/ /g, '').toLowerCase().includes(search)
+        const descriptionMatches =
+          c.value?.meta?.description?.replace(/ /g, '').toLowerCase().includes(search)
+        const summaryMatches =
+          c.value?.meta?.summary?.replace(/ /g, '').toLowerCase().includes(search)
+        const categoryMatches =
+          c.value?.meta?.category?.replace(/ /g, '').toLowerCase().includes(search)
+
+        return (
+          nameMatches ||
+          titleMatches ||
+          descriptionMatches ||
+          summaryMatches ||
+          categoryMatches
+        )
+      })
+    },
   }));
 });
 
