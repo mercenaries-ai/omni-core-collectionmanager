@@ -1,5 +1,6 @@
 /* style.scss */
-.omni-font-xl {
+.omni-font-xl,
+h2 {
   font-family: Roboto;
   font-size: 36px;
   font-style: normal;
@@ -229,11 +230,11 @@
   position: relative;
 }
 .search__field {
-  width: 28px;
-  height: 28px;
+  width: 32px;
+  height: 32px;
   background-color: transparent;
   color: transparent;
-  padding: 0.5em 28px 0.5em 0;
+  padding: 0.5em 32px 0.5em 0;
   border: 1px solid transparent;
   border-radius: 0;
   cursor: pointer;
@@ -257,8 +258,8 @@
   top: 0;
   right: 0;
   background-color: transparent;
-  width: 28px;
-  height: 28px;
+  width: 32px;
+  height: 32px;
   text-align: center;
   border-color: transparent;
   border-radius: 50%;
@@ -329,25 +330,25 @@
 }
 .search__field::-webkit-input-placeholder [style*=hidden] {
   color: #83b0c1;
-  top: -11px;
+  top: -13px;
   opacity: 1;
   visibility: visible !important;
 }
 .search__field:-moz-placeholder[style*=hidden] {
   color: #83b0c1;
-  top: -11px;
+  top: -13px;
   opacity: 1;
   visibility: visible !important;
 }
 .search__field::-moz-placeholder [style*=hidden] {
   color: #83b0c1;
-  top: -11px;
+  top: -13px;
   opacity: 1;
   visibility: visible !important;
 }
 .search__field:-ms-input-placeholder[style*=hidden] {
   color: #83b0c1;
-  top: -11px;
+  top: -13px;
   opacity: 1;
   visibility: visible !important;
 }

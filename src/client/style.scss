@@ -28,6 +28,10 @@
   }
 }
 
+h2 {
+  @extend .omni-font-xl;
+}
+
 .custom-scroll {
   max-height: calc(100vh - 7rem);
   padding-top: -5px;
