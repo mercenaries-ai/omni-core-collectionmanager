@@ -115,7 +115,7 @@ const createGallery = function (itemsPerPage: number, itemApi: string) {
         const renderer = window.parent.client.collectionRenderers.get(item.type);
 
         if (renderer) {
-            return renderer.render(item.value);
+          return renderer.render(item.value);  
         } else {
           //@ts-expect-error
           const loadMore = window.parent.client.collectionRenderers.get('load-more');
@@ -339,13 +339,17 @@ const createGallery = function (itemsPerPage: number, itemApi: string) {
       }
     },
     async clickToAction(item, type: string) {
-      console.log(item)
       if (type === 'recipe') {
         //@ts-expect-error
         await window.parent.client.workbench.loadWorkflow(item.value.id, item.value.version);
+        //@ts-expect-error
+        window.parent.client.workbench.hideExtension();
       }
-     //@ts-expect-error
-     window.parent.client.workbench.hideExtension();
+      else if (type == 'block') {
+        //@ts-expect-error
+        await window.parent.client.runScript('add', [item.value.name]);
+      }
+     
     }
   };
 };
@@ -385,11 +389,11 @@ document.addEventListener('alpine:init', async () => {
     },
     getTitle() {
       if(type === 'recipe') {
-        return 'Recipe';
+        return 'Recipes';
       } else if (type === 'block') {
         return 'Add Blocks';
       } else if (type === 'extension') {
-        return 'Extension';
+        return 'Extensions';
       }
     },
     search: '',

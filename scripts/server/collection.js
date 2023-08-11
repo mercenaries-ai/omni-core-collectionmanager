@@ -5,6 +5,7 @@ const script = {
     let limit = payload.limit || 50;
     let cursor = payload.cursor || '';
     let type = payload.type || undefined;
+    const blockManager = ctx.app.blocks;
 
     if (type === 'recipe') {
       const workflowIntegration = ctx.app.integrations.get('workflow');
@@ -25,18 +26,42 @@ const script = {
         items,
       };
     } else if (type === 'block') {
-
-      // TODO
-      
+      let items = blockManager.getFilteredBlocksAndPatches();
+      if (items != null && Array.isArray(items) && items.length > 0) {
+        items = items.map((n) => {
+          return {
+            value: { ...n },
+            type: 'block',
+          }
+        });
+        return { items }
+      }
     } else if (type === 'extension') {
-      const allExtensions = ctx.app.extensions.all()
+      // TODO
+      const allExtensions = ctx.app.extensions
+        .all()
+        .filter(
+          (e) =>
+            e.id !== 'omni-core-filemanager' && e.config?.client?.addToWorkbench
+        );
       const items = allExtensions.map((item) => {
         return {
-          value: item.id,
+          value: { ...item.config },
           type: 'extension',
         };
       });
-      return {items,};
+      return { items };
+    } else if (type === 'namespace') {
+      let items = blockManager.getAllNamespaces();
+      if (items != null && Array.isArray(items) && items.length > 0) {
+        items = items.map((n) => {
+          return {
+            value: { ...n.name },
+            type: 'namespace',
+          }
+        });
+        return { items }
+      }
     }
   },
 };

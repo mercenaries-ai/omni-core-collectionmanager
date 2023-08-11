@@ -48,7 +48,8 @@ h2 {
   font-weight: 700;
   line-height: 16px;
 }
-.omni-font-s-regular {
+.omni-font-s-regular,
+.collection-tags .tag {
   font-family: Roboto;
   font-size: 12px;
   font-style: normal;
@@ -112,7 +113,11 @@ h2 {
   align-self: stretch;
 }
 .collection-header .collection-credential {
+  display: flex;
   gap: 0.375rem;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: flex-start;
   flex-shrink: 0;
 }
 .collection-header .collection-fav {
@@ -158,6 +163,79 @@ h2 {
   color: var(--medium-grey, #505050);
   font-feature-settings: "clig" off, "liga" off;
   text-overflow: ellipsis;
+}
+.collection-tags {
+  display: flex;
+  padding-bottom: 0px;
+  align-items: center;
+  align-content: center;
+  gap: 4px;
+  align-self: stretch;
+  flex-wrap: wrap;
+  text-overflow: ellipsis;
+}
+.collection-tags .tag {
+  display: flex;
+  padding: 4px 8px;
+  justify-content: center;
+  align-items: center;
+  border-radius: 16px;
+  color: #000;
+  overflow: hidden;
+}
+.collection-tags .tag.namespace {
+  background: #C6C6C6;
+}
+.collection-tags .tag.default {
+  background: #C6C6C6;
+}
+.collection-tags .tag.computer-vision {
+  background: #fbf8cc;
+}
+.collection-tags .tag.image-generation {
+  background: #fde4cf;
+}
+.collection-tags .tag.image-manipulation {
+  background: #ffcfd2;
+}
+.collection-tags .tag.communication {
+  background: #f1c0e8;
+}
+.collection-tags .tag.input {
+  background: #f1c0e8;
+}
+.collection-tags .tag.output {
+  background: #f1c0e8;
+}
+.collection-tags .tag.audio-generation {
+  background: #cfbaf0;
+}
+.collection-tags .tag.audio-processing {
+  background: #cfbaf0;
+}
+.collection-tags .tag.document-processing {
+  background: #c0e8f1;
+}
+.collection-tags .tag.data-transformation {
+  background: #c0e8f1;
+}
+.collection-tags .tag.education {
+  background: #bae8cf;
+}
+.collection-tags .tag.utilities {
+  background: #bae8cf;
+}
+.collection-tags .tag.translation {
+  background: #c4a3bf;
+}
+.collection-tags .tag.text-generation {
+  background: rgb(255, 229, 125);
+}
+.collection-tags .tag.text-manipulation {
+  background: rgb(255, 229, 125);
+}
+.collection-tags .tag.security {
+  background: #ff7f50;
 }
 .collection-action {
   display: flex;

@@ -58,7 +58,11 @@ h2 {
     align-self: stretch;
 
     .collection-credential {
+      display: flex;
       gap: 0.375rem;
+      flex-direction: row;
+      justify-content: flex-start;
+      align-items: flex-start;
       flex-shrink: 0;
     }
 
@@ -111,6 +115,82 @@ h2 {
     font-feature-settings: 'clig' off, 'liga' off;
     text-overflow: ellipsis;
     @extend .omni-font-m-regular;
+  }
+
+  &-tags {
+    display: flex;
+    padding-bottom: 0px;
+    align-items: center;
+    align-content: center;
+    gap: 4px;
+    align-self: stretch;
+    flex-wrap: wrap; 
+    text-overflow: ellipsis;
+    
+    .tag {
+      display: flex;
+      padding: 4px 8px;
+      justify-content: center;
+      align-items: center; 
+      border-radius: 16px;
+      color: #000;
+      overflow: hidden;
+      @extend .omni-font-s-regular;
+      &.namespace {
+        background: #C6C6C6; 
+      }
+      &.default {
+        background: #C6C6C6; 
+      }
+      &.computer-vision {
+        background: #fbf8cc;
+      }
+      &.image-generation {
+        background: #fde4cf;
+      }
+      &.image-manipulation {
+        background: #ffcfd2;
+      }
+      &.communication {
+        background: #f1c0e8;
+      }
+      &.input {
+        background: #f1c0e8;
+      }
+      &.output {
+        background: #f1c0e8;
+      }
+      &.audio-generation {
+        background: #cfbaf0;
+      }
+      &.audio-processing {
+        background: #cfbaf0;
+      }
+      &.document-processing {
+        background: #c0e8f1;
+      }
+      &.data-transformation {
+        background: #c0e8f1;
+      }
+      &.education {
+        background: #bae8cf;
+      }
+      &.utilities {
+        background: #bae8cf;
+      }
+      &.translation {
+        background: #c4a3bf;
+      }
+      &.text-generation {
+        background: rgb(255, 229, 125);
+      }
+      &.text-manipulation {
+        background: rgb(255, 229, 125);
+      }
+      &.security {
+        background: #ff7f50;
+      }
+    }
   }
 
   &-action {

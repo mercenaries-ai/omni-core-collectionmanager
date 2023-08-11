@@ -3249,11 +3249,12 @@ var createGallery = function(itemsPerPage, itemApi) {
       }
     },
     async clickToAction(item, type2) {
-      console.log(item);
       if (type2 === "recipe") {
         await window.parent.client.workbench.loadWorkflow(item.value.id, item.value.version);
+        window.parent.client.workbench.hideExtension();
+      } else if (type2 == "block") {
+        await window.parent.client.runScript("add", [item.value.name]);
       }
-      window.parent.client.workbench.hideExtension();
     }
   };
 };
@@ -3293,11 +3294,11 @@ document.addEventListener("alpine:init", async () => {
     },
     getTitle() {
       if (type === "recipe") {
-        return "Recipe";
+        return "Recipes";
       } else if (type === "block") {
         return "Add Blocks";
       } else if (type === "extension") {
-        return "Extension";
+        return "Extensions";
       }
     },
     search: "",
