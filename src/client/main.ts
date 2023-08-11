@@ -400,16 +400,20 @@ document.addEventListener('alpine:init', async () => {
       }
       return this.items.filter((c) => {
         const nameMatches =
-          c.value?.meta?.name?.replace(/ /g, '').toLowerCase().includes(search) 
+          c.value?.meta?.name?.replace(/ /g, '').toLowerCase().includes(search)  || 
+          c.value?.name?.replace(/ /g, '').toLowerCase().includes(search)
         const titleMatches =
-          c.value?.meta?.title?.replace(/ /g, '').toLowerCase().includes(search)
+          c.value?.meta?.title?.replace(/ /g, '').toLowerCase().includes(search) ||
+          c.value?.title?.replace(/ /g, '').toLowerCase().includes(search)
         const descriptionMatches =
-          c.value?.meta?.description?.replace(/ /g, '').toLowerCase().includes(search)
+          c.value?.meta?.description?.replace(/ /g, '').toLowerCase().includes(search) || 
+          c.value?.description?.replace(/ /g, '').toLowerCase().includes(search)
         const summaryMatches =
-          c.value?.meta?.summary?.replace(/ /g, '').toLowerCase().includes(search)
+          c.value?.meta?.summary?.replace(/ /g, '').toLowerCase().includes(search) ||
+          c.value?.summary?.replace(/ /g, '').toLowerCase().includes(search)
         const categoryMatches =
-          c.value?.meta?.category?.replace(/ /g, '').toLowerCase().includes(search)
-
+          c.value?.meta?.category?.replace(/ /g, '').toLowerCase().includes(search) || 
+          c.value?.category?.replace(/ /g, '').toLowerCase().includes(search)
         return (
           nameMatches ||
           titleMatches ||
