@@ -54,7 +54,7 @@ h2 {
     display: flex;
     padding-bottom: 0px;
     justify-content: space-between;
-    align-items: flex-start;
+    align-items: flex-end;
     align-self: stretch;
 
     .collection-credential {
@@ -70,6 +70,7 @@ h2 {
       width: 0.9375rem;
       height: 0.83331rem;
       flex-shrink: 0;
+      align-items: flex-end;
     }
   }
 
@@ -276,23 +277,26 @@ h2 {
 }
 
 .searchWrapper {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
   position: relative;
 }
 .search__field {
-  width: $icon-size;
+  display: flex;
+  width: 30vw;
   height: $icon-size;
   background-color: transparent;
   color: transparent;
 	padding: .5em ($icon-size) .5em 0;
-  border: 1px solid transparent;
+  border: none;
+  outline: none;
+  border-bottom: 3px solid #333333;
   border-radius: 0;
   cursor: pointer;
   -webkit-transition: all 0.3s ease-in-out;
   transition: all 0.3s ease-in-out;
   &:focus {
-    background-color: #fff;
-    border-bottom-color: #ccc;
-    width: 50vw;
     color: #2b2b2b;
     cursor: default;
     ~ .search__icon {
@@ -301,12 +305,12 @@ h2 {
       pointer-events: auto;
 		}
   }
+  
   @extend .omni-font-m-regular;
 }
+
 .search__icon {
-  position: absolute;
-  top: 0;
-  right: 0;
+  display: flex;
   background-color: transparent;
   width: $icon-size;
   height: $icon-size;
@@ -314,12 +318,14 @@ h2 {
   border-color: transparent;
   border-radius: 50%;
   pointer-events: none;
-  display: inline-block;
   -webkit-transition: background-color 0.2s ease-in-out;
   transition: background-color 0.2s ease-in-out;
   @extend .omni-font-m-regular;
 }
 
+.search__field::placeholder {
+  color: #333333;
+}
 
 // FIELD LABELING
 .search__field::-webkit-input-placeholder {
