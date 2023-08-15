@@ -3082,8 +3082,8 @@ var createGallery = function(itemsPerPage, itemApi) {
     async addItems(items, replace = false) {
       let lastCursor = this.cursor;
       if (items && items.length) {
-        this.items = this.items.filter((item) => item.onclick == null);
-        this.cursor = items[items.length - 1].seq;
+        this.items = this.items.filter((item) => item.type !== "load-more");
+        this.cursor = this.items.length;
         if (replace) {
           this.items = items;
         } else {
@@ -3093,11 +3093,8 @@ var createGallery = function(itemsPerPage, itemApi) {
           let self = this;
           if (lastCursor != this.cursor || replace) {
             this.items.push({
-              onclick: async () => {
-                await self.fetchItems({ cursor: self.cursor });
-              },
-              url: "/more.png",
-              meta: {}
+              type: "load-more",
+              value: { cursor: self.cursor }
             });
           }
         }
@@ -3111,10 +3108,11 @@ var createGallery = function(itemsPerPage, itemApi) {
       const body = {
         limit: this.itemsPerPage,
         type: this.type,
-        bookmark: ""
+        cursor: 0,
+        filter: this.search
       };
       if (opts?.cursor) {
-        body.bookmark = opts?.cursor;
+        body.cursor = opts?.cursor;
       }
       if (opts?.limit && typeof opts.limit === "number" && opts.limit > 0) {
         body.limit = Math.max(opts.limit, 2);
@@ -3134,7 +3132,7 @@ var createGallery = function(itemsPerPage, itemApi) {
       }
     },
     paginate() {
-      return this.items;
+      return this.items.slice(this.cursor, this.cursor + this.itemsPerPage);
     },
     async nextItem() {
       const currentIndex = this.items.indexOf(this.focusedItem);
@@ -3299,6 +3297,8 @@ document.addEventListener("alpine:init", async () => {
         return "Add Blocks";
       } else if (type === "extension") {
         return "Extensions";
+      } else if (type == "namespace") {
+        return "Settings";
       }
     },
     search: "",

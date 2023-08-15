@@ -132,8 +132,8 @@ const createGallery = function (itemsPerPage: number, itemApi: string) {
     async addItems(items, replace = false) {
       let lastCursor = this.cursor;
       if (items && items.length) {
-        this.items = this.items.filter((item) => item.onclick == null);
-        this.cursor = items[items.length - 1].seq;
+        this.items = this.items.filter((item) => item.type !== 'load-more');
+        this.cursor = this.items.length;
         if (replace) {
           this.items = items;
         } else {
@@ -144,11 +144,8 @@ const createGallery = function (itemsPerPage: number, itemApi: string) {
           let self = this;
           if (lastCursor != this.cursor || replace) {
             this.items.push({
-              onclick: async () => {
-                await self.fetchItems({ cursor: self.cursor });
-              },
-              url: '/more.png',
-              meta: {},
+              type: 'load-more',
+              value: {cursor: self.cursor}
             });
           }
         }
@@ -158,20 +155,21 @@ const createGallery = function (itemsPerPage: number, itemApi: string) {
     },
 
     async fetchItems(opts?: {
-      cursor?: string;
+      cursor?: number;
       limit?: number;
       replace?: boolean;
     }) {
       if (this.viewerMode) {
         return Promise.resolve();
       }
-      const body: { limit: number; bookmark: string; type: string } = {
+      const body: { limit: number; cursor: number; type: string; filter: string } = {
         limit: this.itemsPerPage,
         type: this.type,
-        bookmark: '',
+        cursor: 0,
+        filter: this.search,
       };
       if (opts?.cursor) {
-        body.bookmark = opts?.cursor;
+        body.cursor = opts?.cursor;
       }
       if (opts?.limit && typeof opts.limit === 'number' && opts.limit > 0) {
         body.limit = Math.max(opts.limit, 2);
@@ -192,11 +190,7 @@ const createGallery = function (itemsPerPage: number, itemApi: string) {
       }
     },
     paginate() {
-      /*console.log('paginate')
-      const start = (this.currentPage - 1) * this.itemsPerPage;
-      const end = this.currentPage * this.itemsPerPage;
-      return this.items.slice(start, end);*/
-      return this.items;
+      return this.items.slice(this.cursor, this.cursor + this.itemsPerPage);
     },
 
     async nextItem() {
@@ -354,6 +348,18 @@ const createGallery = function (itemsPerPage: number, itemApi: string) {
   };
 };
 
+function orderByName(a, b) {
+  const name_a = a.value?.meta?.name?.toLowerCase() || a.value?.name?.toLowerCase();
+  const name_b = b.value?.meta?.name?.toLowerCase() || b.value?.name?.toLowerCase();
+  if (name_a > name_b) {
+    return 1;
+  } else if (name_a < name_b) {
+    return -1;
+  } else {
+    return 0;
+  }
+}
+
 window.Alpine = Alpine;
 document.addEventListener('alpine:init', async () => {
   Alpine.data('appState', () => ({
@@ -394,13 +400,15 @@ document.addEventListener('alpine:init', async () => {
         return 'Add Blocks';
       } else if (type === 'extension') {
         return 'Extensions';
+      } else if (type == 'namespace') {
+        return 'Settings';
       }
     },
     search: '',
     get filteredItems () {
       const search = this.search.replace(/ /g, '').toLowerCase()
       if (search === '') {
-        return this.items
+        return this.items;
       }
       return this.items.filter((c) => {
         const nameMatches =
