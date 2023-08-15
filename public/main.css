@@ -183,6 +183,7 @@ h2 {
   border-radius: 16px;
   color: #000;
   overflow: hidden;
+  cursor: pointer;
 }
 .collection-tags .tag.namespace {
   background: #C6C6C6;
