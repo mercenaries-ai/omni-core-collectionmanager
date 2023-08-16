@@ -14,6 +14,7 @@ let focusedItem = null;
 focusedItem = params?.focusedItem;
 let viewerMode = focusedItem ? true : false;
 let type = params?.type;
+let filter = params?.filter;
 
 const runExtensionScript = async (scriptName: string, payload: any) => {
   const response = await fetch(
@@ -404,7 +405,7 @@ document.addEventListener('alpine:init', async () => {
         return 'Settings';
       }
     },
-    search: '',
+    search: filter || '',
     get filteredItems () {
       const search = this.search.replace(/ /g, '').toLowerCase()
       if (search === '') {

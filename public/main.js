@@ -2998,6 +2998,7 @@ var focusedItem = null;
 focusedItem = params?.focusedItem;
 var viewerMode = focusedItem ? true : false;
 var type = params?.type;
+var filter = params?.filter;
 var runExtensionScript = async (scriptName, payload) => {
   const response = await fetch(
     "/api/v1/mercenaries/runscript/omni-core-collectionmanager:" + scriptName,
@@ -3301,7 +3302,7 @@ document.addEventListener("alpine:init", async () => {
         return "Settings";
       }
     },
-    search: "",
+    search: filter || "",
     get filteredItems() {
       const search = this.search.replace(/ /g, "").toLowerCase();
       if (search === "") {
