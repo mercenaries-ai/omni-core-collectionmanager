@@ -3065,18 +3065,13 @@ var createGallery = function(itemsPerPage, itemApi) {
     },
     getDisplayUrl(item, opts) {
       if (!item) {
-        return '<img src="/404.png" />';
+        return '<img src="/ph_250.png" />';
       } else {
         const renderer = window.parent.client.collectionRenderers.get(item.type);
         if (renderer) {
           return renderer.render(item.value);
         } else {
-          const loadMore = window.parent.client.collectionRenderers.get("load-more");
-          if (loadMore) {
-            return loadMore.render(item.value);
-          } else {
-            return '<img src="/404.png" />';
-          }
+          return '<img src="/ph_250.png" />';
         }
       }
     },
@@ -3298,8 +3293,8 @@ document.addEventListener("alpine:init", async () => {
         return "Add Blocks";
       } else if (type === "extension") {
         return "Extensions";
-      } else if (type == "namespace") {
-        return "Settings";
+      } else if (type === "api") {
+        return "API Management";
       }
     },
     search: filter || "",

@@ -55,13 +55,13 @@ const script = {
         };
       });
       return { items };
-    } else if (type === 'namespace') {
+    } else if (type === 'api') {
       let items = blockManager.getAllNamespaces();
       if (items != null && Array.isArray(items) && items.length > 0) {
         items = items.map((n) => {
           return {
-            value: { ...n.name },
-            type: 'namespace',
+            value: { ...n },
+            type: 'api',
           }
         });
         return { items }
