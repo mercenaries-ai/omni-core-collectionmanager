@@ -5,3 +5,4 @@ author: Mercenaries.ai team
 origin: https://github.com/mercenaries-ai/omni-core-collectionmanager.git
 client:
   addToWorkbench: false
+  singleton: true
