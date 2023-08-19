@@ -46,7 +46,7 @@ const script = {
         .all()
         .filter(
           (e) =>
-            e.id !== 'omni-core-filemanager' && e.config?.client?.addToWorkbench
+            e.id !== 'omni-core-filemanager'
         );
       const items = allExtensions.map((item) => {
         return {
