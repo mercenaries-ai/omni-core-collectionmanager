@@ -6,3 +6,6 @@ origin: https://github.com/mercenaries-ai/omni-core-collectionmanager.git
 client:
   addToWorkbench: false
   singleton: true
+  winbox:
+    right: 50%
+    max: true
