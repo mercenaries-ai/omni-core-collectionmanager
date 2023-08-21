@@ -97,7 +97,6 @@ h2 {
   overflow-y: auto;
 }
 .collection-block {
-  position: relative;
   display: flex;
   width: 26.25rem;
   height: 12.8rem;
@@ -147,7 +146,7 @@ h2 {
 }
 .collection-api {
   display: flex;
-  width: 48rem;
+  width: 60rem;
   height: 10rem;
   padding: 1rem 1rem;
   align-items: flex-start;
@@ -196,7 +195,6 @@ h2 {
   background: #505050;
 }
 .collection {
-  position: relative;
   display: flex;
   width: 17rem;
   height: 23.75rem;
@@ -412,7 +410,6 @@ h2 {
   display: flex;
   flex-direction: row;
   justify-content: flex-start;
-  position: relative;
 }
 .search__field {
   display: flex;
@@ -451,7 +448,6 @@ h2 {
   color: #333333;
 }
 .search__field::-webkit-input-placeholder {
-  position: relative;
   top: 0;
   left: 0;
   -webkit-transition-property: top, color;
@@ -466,7 +462,6 @@ h2 {
   perspective: 1000;
 }
 .search__field:-moz-placeholder {
-  position: relative;
   top: 0;
   left: 0;
   -webkit-transition-property: top, color;
@@ -481,7 +476,6 @@ h2 {
   perspective: 1000;
 }
 .search__field::-moz-placeholder {
-  position: relative;
   top: 0;
   left: 0;
   -webkit-transition-property: top, color;
@@ -496,7 +490,6 @@ h2 {
   perspective: 1000;
 }
 .search__field:-ms-input-placeholder {
-  position: relative;
   top: 0;
   left: 0;
   -webkit-transition-property: top, color;
