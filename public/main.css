@@ -27,7 +27,6 @@ h2 {
 .search__icon,
 .search__field,
 .collection-loadmore,
-.collection-description,
 .collection-block-description {
   font-family: Roboto;
   font-size: 14px;
@@ -52,7 +51,8 @@ h2 {
   line-height: 16px;
 }
 .omni-font-s-regular,
-.collection-tags .tag {
+.collection-tags .tag,
+.collection-description {
   font-family: Roboto;
   font-size: 12px;
   font-style: normal;
@@ -194,6 +194,10 @@ h2 {
 .collection-api .collection-content .collection-action .btn-revoke:hover {
   background: #505050;
 }
+.collection-extensions {
+  width: 400px !important;
+  height: 250px !important;
+}
 .collection {
   display: flex;
   width: 17rem;
@@ -241,29 +245,24 @@ h2 {
   border-radius: 0.25rem;
   object-fit: cover;
 }
-.collection-title {
+.collection-title,
+.collectiondescription {
   display: -webkit-box;
   -webkit-box-orient: vertical;
-  -webkit-line-clamp: 2;
-  align-items: center;
   align-self: stretch;
   overflow: hidden;
   align-content: flex-start;
   color: var(--medium-grey, #505050);
   text-overflow: ellipsis;
+  align-items: center;
+}
+.collection-title {
+  -webkit-line-clamp: 2;
 }
 .collection-description {
-  display: -webkit-box;
-  -webkit-box-orient: vertical;
   -webkit-line-clamp: 3;
   flex: 1 0 0;
-  align-items: center;
-  align-content: flex-start;
-  align-self: stretch;
-  overflow: hidden;
-  color: var(--medium-grey, #505050);
   font-feature-settings: "clig" off, "liga" off;
-  text-overflow: ellipsis;
 }
 .collection-tags {
   display: flex;

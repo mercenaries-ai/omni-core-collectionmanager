@@ -112,8 +112,8 @@ h2 {
       align-items: center;
       align-content: center;
       gap: 0.28875rem;
-      flex-wrap: nowrap; 
-  
+      flex-wrap: nowrap;
+
       .btn {
         display: inline-flex;
         flex-direction: row;
@@ -128,25 +128,31 @@ h2 {
         &-add {
           background: var(--accent-colour, #67BE61);
           color: var(--white, #FFF);
-  
+
           &:hover {
             background: #505050;
-          }       
+          }
         }
-  
+
         &-revoke {
           background: var(--light-grey-300, #EF4036);
           color: var(--medium-grey, #fff);
-  
+
           &:hover {
             background: #505050;
-          }    
+          }
         }
       }
     }
   }
 
-  
+
+}
+
+.collection-extensions
+{
+  width: 400px !important;
+  height: 250px !important;
 }
 
 .collection {
@@ -159,6 +165,8 @@ h2 {
   border-radius: 0.5rem;
   background-color: #F7F7F8;
   padding: 0.5rem 0.75rem 1rem 0.75rem;
+
+
 
   &-header {
     display: flex;
@@ -192,7 +200,7 @@ h2 {
     border-radius: 0.25rem;
     flex-direction: column;
     align-items: center;
-    
+
     img {
       width: 15.75rem;
       height: 10rem;
@@ -200,32 +208,29 @@ h2 {
       object-fit: cover;
     }
   }
-  
-  &-title {
+
+  &-title, &description {
+
     display: -webkit-box;
     -webkit-box-orient: vertical;
-    -webkit-line-clamp: 2;
-    align-items: center;
     align-self: stretch;
     overflow: hidden;
     align-content: flex-start;
     color: var(--medium-grey, #505050);
     text-overflow: ellipsis;
+    align-items: center;
+  }
+
+  &-title {
+    -webkit-line-clamp: 2;
     @extend .omni-font-l-medium;
   }
+
   &-description {
-    display: -webkit-box;
-    -webkit-box-orient: vertical;
     -webkit-line-clamp: 3;
     flex: 1 0 0;
-    align-items: center;
-    align-content: flex-start;
-    align-self: stretch;
-    overflow: hidden;
-    color: var(--medium-grey, #505050);
     font-feature-settings: 'clig' off, 'liga' off;
-    text-overflow: ellipsis;
-    @extend .omni-font-m-regular;
+    @extend .omni-font-s-regular;
   }
 
   &-tags {
@@ -235,24 +240,24 @@ h2 {
     align-content: center;
     gap: 4px;
     align-self: stretch;
-    flex-wrap: wrap; 
+    flex-wrap: wrap;
     text-overflow: ellipsis;
-    
+
     .tag {
       display: flex;
       padding: 4px 8px;
       justify-content: center;
-      align-items: center; 
+      align-items: center;
       border-radius: 16px;
       color: #000;
       overflow: hidden;
       cursor: pointer;
       @extend .omni-font-s-regular;
       &.namespace {
-        background: #C6C6C6; 
+        background: #C6C6C6;
       }
       &.default {
-        background: #C6C6C6; 
+        background: #C6C6C6;
       }
       &.computer-vision {
         background: #fbf8cc;
@@ -333,7 +338,7 @@ h2 {
 
         &:hover {
           background: #505050;
-        }       
+        }
       }
 
       &-secondary {
@@ -344,13 +349,13 @@ h2 {
           background: #e8e9eb;
           border: #505050;
           color: var(--accent-colour, #505050);
-        }    
+        }
       }
 
       svg {
         margin-right: 0.5rem;
       }
-      
+
     }
   }
   &-loadmore {
@@ -381,7 +386,7 @@ h2 {
       padding: 1.5rem 0rem;
       justify-content: center;
       align-items: center;
-      
+
     }
 
   }
@@ -412,7 +417,7 @@ h2 {
       pointer-events: auto;
 		}
   }
-  
+
   @extend .omni-font-m-regular;
 }
 
