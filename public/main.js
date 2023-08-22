@@ -3248,6 +3248,12 @@ var createGallery = function(itemsPerPage, itemApi) {
         window.parent.client.workbench.hideExtension();
       } else if (type2 == "block") {
         await window.parent.client.runScript("add", [item.value.name]);
+      } else if (type2 == "extension") {
+        if (item.value.installed === "true") {
+          window.parent.client.workbench.showExtension(item.value.id);
+        } else {
+          window.parent.client.runScript("extensions", ["add", item.value.url]);
+        }
       }
     }
   };

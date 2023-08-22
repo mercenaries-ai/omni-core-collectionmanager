@@ -11,7 +11,8 @@ h2 {
 }
 .omni-font-l-medium,
 .collection-title,
-.collection-block-title {
+.collection-block-title,
+.collection-extension-header-title {
   font-family: Roboto;
   font-size: 20px;
   font-style: normal;
@@ -95,6 +96,43 @@ h2 {
   max-height: calc(100vh - 7rem);
   padding-top: -5px;
   overflow-y: auto;
+}
+.collection-extension {
+  display: flex;
+  width: 32.8125rem;
+  height: 16.8125rem;
+  min-width: 25rem;
+  max-width: 38.75rem;
+  min-height: 15.625rem;
+  max-height: 20rem;
+  padding: 0.5rem 0.75rem 1rem 0.75rem;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+}
+.collection-extension-header {
+  display: flex;
+  padding: 0.75rem;
+  align-self: stretch;
+  background: var(--light-grey-300, #DEDEDF);
+}
+.collection-extension-header-title {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  align-self: stretch;
+  overflow: hidden;
+  align-content: flex-start;
+  color: var(--medium-grey, #505050);
+  text-overflow: ellipsis;
+}
+.collection-extension-body {
+  display: flex;
+  padding: 0.5rem 0rem 1rem 0rem;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 0.625rem;
+  align-self: stretch;
 }
 .collection-block {
   display: flex;
@@ -193,10 +231,6 @@ h2 {
 }
 .collection-api .collection-content .collection-action .btn-revoke:hover {
   background: #505050;
-}
-.collection-extensions {
-  width: 400px !important;
-  height: 250px !important;
 }
 .collection {
   display: flex;

@@ -337,6 +337,15 @@ const createGallery = function (itemsPerPage: number, itemApi: string) {
         //@ts-expect-error
         await window.parent.client.runScript('add', [item.value.name]);
       }
+      else if (type == 'extension') {
+        if (item.value.installed === 'true') {
+          //@ts-expect-error
+          window.parent.client.workbench.showExtension(item.value.id);
+        } else {
+          //@ts-expect-error
+          window.parent.client.runScript('extensions',['add', item.value.url]);
+        }
+      }
      
     }
   };
