@@ -27,7 +27,7 @@ h2 {
 .search__field::-webkit-input-placeholder [style*=hidden],
 .search__icon,
 .search__field,
-.collection-loadmore,
+.loadmore,
 .collection-block-description {
   font-family: Roboto;
   font-size: 14px;
@@ -44,7 +44,8 @@ h2 {
 }
 .omni-font-s-medium,
 .collection-action .btn,
-.collection-api .collection-content .collection-action .btn {
+.collection-api .collection-content .collection-action .btn,
+.collection-extension-body span {
   font-family: Roboto;
   font-size: 12px;
   font-style: normal;
@@ -53,7 +54,8 @@ h2 {
 }
 .omni-font-s-regular,
 .collection-tags .tag,
-.collection-description {
+.collection-description,
+.collection-extension-body {
   font-family: Roboto;
   font-size: 12px;
   font-style: normal;
@@ -128,10 +130,10 @@ h2 {
 }
 .collection-extension-body {
   display: flex;
-  padding: 0.5rem 0rem 1rem 0rem;
-  justify-content: center;
-  align-items: flex-start;
-  gap: 0.625rem;
+  max-height: 8.75rem;
+  padding: 0.25rem 0rem 0.5rem 0rem;
+  flex-direction: column;
+  gap: 0.25rem;
   align-self: stretch;
 }
 .collection-block {
@@ -412,28 +414,17 @@ h2 {
 .collection-action .btn svg {
   margin-right: 0.5rem;
 }
-.collection-loadmore {
-  display: flex;
-  width: 15.5rem;
-  height: 23.75rem;
-  max-width: 15.5rem;
-  max-height: 23.75rem;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  flex-shrink: 0;
-  gap: 0.625rem;
-  align-self: stretch;
+.loadmore {
   color: var(--neutral-grey, #808080);
-  text-align: center;
   font-feature-settings: "clig" off, "liga" off;
+  justify-content: center;
 }
-.collection-loadmore svg {
+.loadmore svg {
   width: 5rem;
   height: 5rem;
   flex-shrink: 0;
 }
-.collection-loadmore span {
+.loadmore span {
   display: flex;
   padding: 1.5rem 0rem;
   justify-content: center;

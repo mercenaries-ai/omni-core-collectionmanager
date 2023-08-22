@@ -3090,7 +3090,7 @@ var createGallery = function(itemsPerPage, itemApi) {
           if (lastCursor != this.cursor || replace) {
             this.items.push({
               type: "load-more",
-              value: { cursor: self.cursor }
+              value: { cursor: self.cursor, type: self.type }
             });
           }
         }
