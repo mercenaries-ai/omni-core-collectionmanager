@@ -51,9 +51,9 @@ const script = {
       const items = knownFile.known_extensions.filter(e=>!e.deprecated).map(e => {
         if(ctx.app.extensions.has(e.id)) {
           const extension = ctx.app.extensions.get(e.id)
-          debugger;
           return {type: 'extension', value: {installed: `${ctx.app.extensions.has(e.id)}`, id: `${e.id}`, title: `${e.title}`, description: `${extension.config.description}`, url: `${e.url}`, author: `${extension.config.author}`}};
         } else {
+          
           return {type: 'extension', value: {installed: `${ctx.app.extensions.has(e.id)}`, id: `${e.id}`, title: `${e.title}`, description: `${e.description}`, url: `${e.url}`, author: `${e.author}`}};
         }
       })
