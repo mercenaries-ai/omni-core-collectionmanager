@@ -9,3 +9,5 @@ client:
   winbox:
     right: 50%
     max: true
+    width: 400
+    height: 300
