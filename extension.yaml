@@ -7,7 +7,7 @@ client:
   addToWorkbench: false
   singleton: true
   winbox:
-    x: "center",
-    y: "center",
-    width: "50%",
-    height: "50%"
+    x: center
+    y: center
+    width: 400
+    height: 300
