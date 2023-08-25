@@ -65,7 +65,7 @@
               
               <div class="overflow-hidden py-2 px-2 w-full">
                 <div class="flex flex-wrap justify-left items-start gap-1.5">
-                  <template x-for="(item, idx) in filteredItems || []" :key="idx">
+                  <template x-for="(item, idx) in filteredItems() || []" :key="idx">
                     <div class="shadow-lg shadow-black drop-shadow-sm rounded-sm  ">
                       <div 
                       @mouseenter='hoverItem = item'
@@ -80,7 +80,7 @@
             </div>
             <div class="absolute bottom-0 left-0 right-0 p-2 gap-5 z-10 font-semibold drop-shadow shadow-white bg-white bg-opacity-50 text-sm flex justify-between items-center h-8">
               <span class="font-semibold"></span>
-              <span x-text="filteredItems.length+' items.'"></span>
+              <span x-text="items.length+' items.'"></span>
               <span x-text="multiSelectedItems.length+' selected'"></span>
               <span class="flex-grow"></span>
 

@@ -30,10 +30,8 @@ const script = {
         items,
       };
     } else if (type === 'block') {
-      let start = cursor;
-      let end = cursor+limit;
       const opts = { filter: filter };
-      let items = blockManager.getFilteredBlocksAndPatches(opts);
+      let items = blockManager.getFilteredBlocksAndPatches(limit, cursor, opts);
       if (items != null && Array.isArray(items) && items.length > 0) {
         items = items.map((n) => {
           return {
@@ -53,7 +51,7 @@ const script = {
           const extension = ctx.app.extensions.get(e.id)
           return {type: 'extension', value: {installed: `${ctx.app.extensions.has(e.id)}`, id: `${e.id}`, title: `${e.title}`, description: `${extension.config.description}`, url: `${e.url}`, author: `${extension.config.author}`}};
         } else {
-          
+
           return {type: 'extension', value: {installed: `${ctx.app.extensions.has(e.id)}`, id: `${e.id}`, title: `${e.title}`, description: `${e.description}`, url: `${e.url}`, author: `${e.author}`}};
         }
       })

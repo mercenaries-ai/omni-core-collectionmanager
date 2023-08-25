@@ -86,7 +86,7 @@ const createGallery = function (itemsPerPage: number, itemApi: string) {
     totalPages: () => Math.ceil(this.items.length / this.itemsPerPage),
     multiSelectedItems: [],
 
-    cursor: null,
+    cursor: 0,
     showInfo: false,
     loading: false, // for anims
     scale: 1, // zoom
@@ -96,7 +96,7 @@ const createGallery = function (itemsPerPage: number, itemApi: string) {
     hover: false,
 
     async init() {
-      await this.fetchItems({ replace: true, limit: itemsPerPage, cursor: '' });
+      await this.fetchItems({ replace: true, limit: itemsPerPage, cursor: 0 });
     },
 
     async fileToDataUrl(file) {
@@ -133,7 +133,6 @@ const createGallery = function (itemsPerPage: number, itemApi: string) {
         } else {
           this.items = this.items.concat(items);
         }
-
         if (this.items.length) {
           let self = this;
           if (lastCursor != this.cursor || replace) {
@@ -184,7 +183,7 @@ const createGallery = function (itemsPerPage: number, itemApi: string) {
       }
     },
     paginate() {
-      return this.items.slice(this.cursor, this.cursor + this.itemsPerPage);
+      return this.items;
     },
 
     async nextItem() {
@@ -408,35 +407,18 @@ document.addEventListener('alpine:init', async () => {
       }
     },
     search: filter || '',
-    get filteredItems () {
-      const search = this.search.replace(/ /g, '').toLowerCase()
-      if (search === '') {
-        return this.items;
-      }
-      return this.items.filter((c) => {
-        const nameMatches =
-          c.value?.meta?.name?.replace(/ /g, '').toLowerCase().includes(search)  || 
-          c.value?.name?.replace(/ /g, '').toLowerCase().includes(search)
-        const titleMatches =
-          c.value?.meta?.title?.replace(/ /g, '').toLowerCase().includes(search) ||
-          c.value?.title?.replace(/ /g, '').toLowerCase().includes(search)
-        const descriptionMatches =
-          c.value?.meta?.description?.replace(/ /g, '').toLowerCase().includes(search) || 
-          c.value?.description?.replace(/ /g, '').toLowerCase().includes(search)
-        const summaryMatches =
-          c.value?.meta?.summary?.replace(/ /g, '').toLowerCase().includes(search) ||
-          c.value?.summary?.replace(/ /g, '').toLowerCase().includes(search)
-        const categoryMatches =
-          c.value?.meta?.category?.replace(/ /g, '').toLowerCase().includes(search) || 
-          c.value?.category?.replace(/ /g, '').toLowerCase().includes(search)
-        return (
-          nameMatches ||
-          titleMatches ||
-          descriptionMatches ||
-          summaryMatches ||
-          categoryMatches
-        )
-      })
+    async filteredItems () {
+      console.log('filteredItems', this.search);
+      const body: { limit: number; cursor: number; type: string; filter: string } = {
+        limit: this.itemsPerPage,
+        type: this.type,
+        cursor: 0,
+        filter: this.search.replace(/ /g, '').toLowerCase()
+      };
+      const data = await runExtensionScript('collection', body);
+      this.addItems(data.items, true);
+      this.cursor = this.items.length;
+      return this.items;
     },
   }));
 });
