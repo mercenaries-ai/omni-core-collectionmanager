@@ -9,5 +9,5 @@ client:
   winbox:
     x: center
     y: center
-    width: 400
-    height: 300
+    width: 50%
+    height: 50%
