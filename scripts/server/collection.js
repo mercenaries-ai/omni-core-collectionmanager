@@ -41,6 +41,8 @@ const script = {
         });
         return { items }
       }
+      // TODO handle when items is empty
+      return { items: [{type: 'block'}] }
     } else if (type === 'extension') {
       // TODO
       const knownFilePath = path.join(process.cwd(), 'etc', 'extensions', 'known_extensions.yaml')
