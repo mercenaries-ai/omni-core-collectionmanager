@@ -413,7 +413,7 @@ document.addEventListener('alpine:init', async () => {
         limit: this.itemsPerPage,
         type: this.type,
         cursor: 0,
-        filter: this.search.replace(/ /g, '').toLowerCase()
+        filter: this.search
       };
       const data = await runExtensionScript('collection', body);
       this.addItems(data.items, true);

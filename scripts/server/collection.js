@@ -8,7 +8,7 @@ const script = {
     let limit = payload.limit || 50;
     let cursor = payload.cursor || 0;
     let type = payload.type || undefined;
-    let filter = payload.filter?.toLowerCase() || '';
+    let filter = payload.filter || '';
     const blockManager = ctx.app.blocks;
 
     if (type === 'recipe') {
@@ -30,8 +30,8 @@ const script = {
         items,
       };
     } else if (type === 'block') {
-      const opts = { filter: filter };
-      let items = blockManager.getFilteredBlocksAndPatches(limit, cursor, opts);
+      const opts = { contentMatch: filter, tags: '' };
+      let items = blockManager.getFilteredBlocksAndPatches(limit, cursor, filter, opts);
       if (items != null && Array.isArray(items) && items.length > 0) {
         items = items.map((n) => {
           return {
