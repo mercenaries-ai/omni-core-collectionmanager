@@ -48,14 +48,22 @@ const script = {
       const knownFilePath = path.join(process.cwd(), 'etc', 'extensions', 'known_extensions.yaml')
       const knownFileContents = await fs.readFile(knownFilePath, 'utf8')
       const knownFile = yaml.load(knownFileContents)
-      
-      const items = knownFile.known_extensions.filter(e=>!e.deprecated && e.title.toLowerCase().includes(filter)).map(e => {
+      const knownKeys =knownFile.known_extensions.map(k=>k.id)
+
+
+      const privateExtensions =ctx.app.extensions.all().map(e=>JSON.parse(JSON.stringify({...e.config} ))).filter(e=>!knownKeys.includes(e.id))
+      console.log(privateExtensions)
+
+      const allExtensions = knownFile.known_extensions.concat(privateExtensions).sort((a,b)=>a.title.localeCompare(b.title))
+
+
+      const items = allExtensions.filter(e=>!e.deprecated && e.title.toLowerCase().includes(filter)).map(e => {
         if(ctx.app.extensions.has(e.id)) {
           const extension = ctx.app.extensions.get(e.id)
           return {type: 'extension', value: {installed: `${ctx.app.extensions.has(e.id)}`, id: `${e.id}`, title: `${e.title}`, description: `${extension.config.description}`, url: `${e.url}`, author: `${extension.config.author}`}};
         } else {
 
-          return {type: 'extension', value: {installed: `${ctx.app.extensions.has(e.id)}`, id: `${e.id}`, title: `${e.title}`, description: `${e.description}`, url: `${e.url}`, author: `${e.author}`}};
+          return {type: 'extension', value: {installed: `${ctx.app.extensions.has(e.id)}`, id: `${e.id}`, title: `${e.title}`, description: `${e.description}`, url: `${e.url}`, author: `${e.author || 'Anonymous'}`}};
         }
       })
       return { items };

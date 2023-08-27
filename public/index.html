@@ -24,8 +24,8 @@
         <!-- Gallery Nav  -->
         <div x-show="!viewerMode && !focusedItem" class="fixed top-0 left-0 w-full h-full flex flex-col items-center justify-center bg-neutral-400 opacity-100 overflow-hidden" >
           <div x-data="{hoverItem: null}" class="relative p-2 flex flex-row items-top justify-center" style="width: 98vw; height: 98.9vh; overflow: hidden" >
-            <div class="absolute text-lg top-0 left-6 mx-auto p-2  flex justify-between items-center gap-2 h-12 text-black drop-shadow-md shadow-black">
-              <h2 x-text="getTitle()">Title</h2>
+            <div class="absolute text-lg top-0 left-6 mx-auto p-2  flex justify-between items-center gap-2 h-12 text-black drop-shadow-md shadow-black w-full">
+              <!--h3 x-text="getTitle()">Title</h3-->
               <span @click="await fetchItems({limit: itemsPerPage,replace:true}); multiSelectedItems=[]; window.scrollTo({ top: 0, behavior: 'smooth' }); "  class="flex text-black items-center justify-center w-auto h-8 px-3 py-1 text-xs bg-red-500/60  border-0 rounded-md cursor-pointer  hover:bg-gray-500 active:bg-gray-600 focus:bg-gray-600 focus:outline-none  hover:text-neutral-600 group">
                 <span></span>
                 <svg class="w-5 h-5 " xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="black" class="w-6 h-6"> >
@@ -42,7 +42,9 @@
                   <line x1="14" y1="11" x2="14" y2="17" />
                 </svg>
               </span>
-              <div class="searchWrapper">
+              <div class="flex-grow"></div>
+
+              <div class="searchWrapper text-sm pr-10">
                 <input
                   autocomplete="off"
                   x-ref="search"
@@ -56,23 +58,26 @@
                   <label class="sr-only" for="search"> Search </label>
                   <svg width="25" height="25" viewBox="0 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M24 24L18.3221 18.3221M21.2941 11.1471C21.2941 5.54299 16.7511 1 11.1471 1C5.54299 1 1 5.54299 1 11.1471C1 16.7511 5.54299 21.2941 11.1471 21.2941C16.7511 21.2941 21.2941 16.7511 21.2941 11.1471Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                    </svg> 
-                  </div>
+                  </svg>
+                </div>
+                <div class="flex-grow"></div>
+
               </div>
             </div>
             <!-- Gallery -->
             <div class="relative custom-scroll  mt-14" >
-              
+
               <div class="overflow-hidden py-2 px-2 w-full">
                 <div class="flex flex-wrap justify-left items-start gap-1.5">
                   <template x-for="(item, idx) in filteredItems()" :key="idx">
-                    <div class="shadow-lg shadow-black drop-shadow-sm rounded-sm  ">
-                      <div 
+                    <div class="shadow-lg shadow-black drop-shadow-sm rounded-sm ">
+                      <div
                       @mouseenter='hoverItem = item'
                       @mouseleave='hoverItem = null'
-                      @contextmenu.prevent="selectItem(item)" 
+                      @contextmenu.prevent="selectItem(item)"
                       x-html="getDisplayUrl(item, {width: 256, height: 256, fit: 'contain'})"
-                      :class="{ 'border-2 border-yellow-300': multiSelectedItems.includes(item), 'border-2 border-white': focusedItem === item }" alt="item.meta.fileName"></div>
+                      class="border-2"
+                      :class="{ ' border-yellow-300': multiSelectedItems.includes(item), ' border-white': focusedItem === item }" alt="item.meta.fileName"></div>
                     </div>
                   </template>
                 </div>
