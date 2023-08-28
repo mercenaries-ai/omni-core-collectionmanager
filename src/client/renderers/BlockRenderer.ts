@@ -1,8 +1,6 @@
 import { omnilog } from 'mercs_shared'
 import CollectionRenderer from './CollectionRenderer'
 
-// An extension to render sanitized plain text in a chat message
-
 class BlockRenderer extends CollectionRenderer {
   
   render (content: any): string {

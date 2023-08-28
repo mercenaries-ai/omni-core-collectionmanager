@@ -1,17 +1,15 @@
 import CollectionRenderer from './CollectionRenderer'
 import { marked } from 'marked'
 import DOMPurify from 'dompurify'
-// TODO: no reason to do this on the client, move to server extension import
 const mdRenderer = new marked.Renderer();
 mdRenderer.link = function(href, title, text) {
   const link = marked.Renderer.prototype.link.apply(this, arguments as any);
   return link.replace("<a", "<a target='_blank'");
 };
 
-// An extension to render sanitized plain text in a chat message
-
 class ExtensionRenderer extends CollectionRenderer {
   render(content: any): string {
+    const canOpen = content.canOpen === "true" || content.canOpen === "undefined"
     const buttonText = content.installed === "true" ? 'Open' : 'Install'
     return `
     <div class="collection-extension"  >
@@ -32,7 +30,7 @@ class ExtensionRenderer extends CollectionRenderer {
       ${content.author ? `<span>Author:</span> ${content.author}` : ''}
       </div>
     <div class="collection-action">
-  <button class="btn btn-primary" @click='await clickToAction(item, "extension")'><svg xmlns="http://www.w3.org/2000/svg" width="13" height="14" viewBox="0 0 13 14" fill="none">
+  <button class="btn btn-primary" x-show="${canOpen}" @click='await clickToAction(item, "extension")'><svg xmlns="http://www.w3.org/2000/svg" width="13" height="14" viewBox="0 0 13 14" fill="none">
     <path d="M12.5 7.75V11.5C12.5 12.3284 11.8284 13 11 13H2C1.17157 13 0.5 12.3284 0.5 11.5V7.75M9.5 4L6.5 1M6.5 1L3.5 4M6.5 1V10" stroke="white" stroke-width="0.96" stroke-linecap="round" stroke-linejoin="round"/>
     </svg>
     <span>${buttonText}</span>
