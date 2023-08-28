@@ -6101,8 +6101,8 @@ var RecipeRenderer = class extends CollectionRenderer_default {
     const description = content.meta.description;
     const canDelete = content?.canDelete ?? true;
     const starred = content?.starred ?? false;
-    return `<div class="collection">
-    <div class="collection-header">
+    return `<div class="collection-recipe">
+    <div class="collection-recipe-header">
 <div class="collection-fav" @click="clickToAction(item, 'toggleRecipeStar')">
 <svg x-show="!${starred}" xmlns="http://www.w3.org/2000/svg" width="17" height="15" viewBox="0 0 17 15" fill="none">
 <path d="M2.1095 7.70617L8.5 14.3333L14.8905 7.70617C15.6009 6.96942 16 5.97024 16 4.92838C16 2.75879 14.304 1 12.2119 1C11.2073 1 10.2437 1.41388 9.53333 2.15059L8.5 3.22222L7.46667 2.15059C6.75624 1.41388 5.79273 1 4.78807 1C2.69597 1 1 2.75879 1 4.92838C1 5.97024 1.3991 6.96942 2.1095 7.70617Z" stroke="#505050" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -6112,16 +6112,16 @@ var RecipeRenderer = class extends CollectionRenderer_default {
 </svg>
 </div>
     </div>
-  <div class="collection-cover">
+  <div class="collection-recipe-cover">
   <img src="/${imageUrl}" alt="${title}" onerror="this.onerror=null;this.src='/omni.png';">
   </div>
-  <div class="collection-title">
+  <div class="collection-recipe-title">
   ${title}
   </div>
-  <div class="collection-description">
+  <div class="collection-recipe-description">
   ${description}
   </div>
-  <div class="collection-action">
+  <div class="collection-recipe-action">
   <button class="btn btn-primary" @click="await clickToAction(item, 'recipe');"><svg xmlns="http://www.w3.org/2000/svg" width="13" height="14" viewBox="0 0 13 14" fill="none">
   <path d="M12.5 7.75V11.5C12.5 12.3284 11.8284 13 11 13H2C1.17157 13 0.5 12.3284 0.5 11.5V7.75M9.5 4L6.5 1M6.5 1L3.5 4M6.5 1V10" stroke="white" stroke-width="0.96" stroke-linecap="round" stroke-linejoin="round"/>
   </svg><span>Load Recipe</span></button>
@@ -6168,18 +6168,18 @@ var BlockRenderer = class extends CollectionRenderer_default {
     const op = oid.join(".");
     const names = [ns, op];
     const description = content.description;
-    return `<div class='collection'>
-    <div class='collection-header'>
+    return `<div class='collection-block'>
+    <div class='collection-block-header'>
 <div class='collection-fav'>
 <svg xmlns='http://www.w3.org/2000/svg' width='17' height='15' viewBox='0 0 17 15' fill='none'>
 <path d='M2.1095 7.70617L8.5 14.3333L14.8905 7.70617C15.6009 6.96942 16 5.97024 16 4.92838C16 2.75879 14.304 1 12.2119 1C11.2073 1 10.2437 1.41388 9.53333 2.15059L8.5 3.22222L7.46667 2.15059C6.75624 1.41388 5.79273 1 4.78807 1C2.69597 1 1 2.75879 1 4.92838C1 5.97024 1.3991 6.96942 2.1095 7.70617Z' stroke='#505050' stroke-width='1.2' stroke-linecap='round' stroke-linejoin='round'/>
 </svg>
 </div>
     </div>
-  <div class='collection-title'>
+  <div class='collection-block-title'>
   ${title} 
   </div>
-  <div class='collection-tags' x-data='{names: ${JSON.stringify(names)}}'>
+  <div class='collection-block-tags' x-data='{names: ${JSON.stringify(names)}}'>
   <template x-for='(name, index) in names' :key='index'>
   <div class='tag namespace' x-text='name' @click.stop.prevent='search = name; $refs.search.focus();'>
   </div>
@@ -6189,10 +6189,10 @@ var BlockRenderer = class extends CollectionRenderer_default {
   ${category}
   </div>
   </div>
-  <div class='collection-description'>
+  <div class='collection-block-description'>
   ${description} 
   </div>
-  <div class='collection-action'>
+  <div class='collection-block-action'>
     <button class='btn btn-primary' @click='await clickToAction(item, "block");'><svg width='13' height='14' viewBox='0 0 13 14' fill='none' xmlns='http://www.w3.org/2000/svg'>
     <path d='M10.2689 5.95853L10.2689 3.0614C10.2689 2.05545 9.45863 1.23997 8.45908 1.23997L3.02961 1.23996C2.03006 1.23996 1.21977 2.05544 1.21977 3.06138L1.21973 8.37566C1.21972 9.38161 2.03002 10.1971 3.02956 10.1971H6.05121M8.27809 10.1971H10.2689M10.2689 10.1971H12.2597M10.2689 10.1971V8.19352M10.2689 10.1971V12.5649' stroke='white' stroke-width='0.96' stroke-linecap='round'/>
     </svg> <span>Add Block</span></button>
@@ -6236,8 +6236,8 @@ var APIManagementRenderer_default = APIManagementRenderer;
 var LoadMoreRenderer = class extends CollectionRenderer_default {
   render(content) {
     const opts = { cursor: content?.cursor };
-    console.log(opts);
-    return `<div class="collection cursor-pointer" @click='fetchItems(${JSON.stringify({ opts })})'>
+    console.log(content, opts);
+    return `<div class="collection-${content.type} cursor-pointer" @click='fetchItems(${JSON.stringify({ opts })})'>
     <div class="loadmore">
     <svg xmlns="http://www.w3.org/2000/svg" width="80" height="80" viewBox="0 0 80 80" fill="none">
 <path d="M40 6.40002V76.8M8 40H72" stroke="#DEDEDF" stroke-width="6.4" stroke-linecap="round" stroke-linejoin="round"/>
