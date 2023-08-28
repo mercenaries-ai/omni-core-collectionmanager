@@ -142,10 +142,13 @@ h2 {
 }
 .collection-extension {
   display: flex;
-  width: 25rem;
-  min-height: 13rem;
-
-  padding: 0.5rem 0.75rem 0.75rem 0.75rem;
+  width: 30rem;
+  height: 16.8125rem;
+  min-width: 25rem;
+  max-width: 38.75rem;
+  min-height: 15.625rem;
+  max-height: 20rem;
+  padding: 0.5rem 0.75rem 1rem 0.75rem;
   flex-direction: column;
   justify-content: space-between;
   align-items: center;

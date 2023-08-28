@@ -1,6 +1,12 @@
 import Alpine from 'alpinejs';
 import './style.scss';
-import { createContext } from 'vm';
+import type CollectionRenderer from './renderers/CollectionRenderer';
+import RecipeRenderer from './renderers/RecipeRenderer'
+import BlockRenderer from './renderers/BlockRenderer'
+import APIManagementRenderer from './renderers/APIManagementRenderer'
+import LoadMoreRenderer from './renderers/LoadMoreRenderer'
+import ExtensionRenderer from './renderers/ExtensionRenderer'
+
 declare global {
   interface Window {
     Alpine: typeof Alpine;
@@ -15,6 +21,13 @@ focusedItem = params?.focusedItem;
 let viewerMode = focusedItem ? true : false;
 let type = params?.type;
 let filter = params?.filter;
+
+const renderers = new Map<string, CollectionRenderer>()
+renderers.set('recipe', new RecipeRenderer())
+renderers.set('block', new BlockRenderer())
+renderers.set('api', new APIManagementRenderer())
+renderers.set('load-more', new LoadMoreRenderer())
+renderers.set('extension', new ExtensionRenderer())
 
 const runExtensionScript = async (scriptName: string, payload: any) => {
   const response = await fetch(
@@ -112,9 +125,7 @@ const createGallery = function (itemsPerPage: number, itemApi: string) {
       if (!item) {
         return '<img src="/ph_250.png" />';
       } else {
-        //@ts-expect-error
-        const renderer = window.parent.client.collectionRenderers.get(item.type);
-
+        const renderer = renderers.get(item.type);
         if (renderer) {
           return renderer.render(item.value);  
         } else {
