@@ -59,7 +59,7 @@ class BlockRenderer extends CollectionRenderer {
   <div class='collection-block-description'>
   ${description} 
   </div>
-  <div class='collection-block-action'>
+  <div class='collection-action'>
     <button class='btn btn-primary' @click='await clickToAction(item, "block");'><svg width='13' height='14' viewBox='0 0 13 14' fill='none' xmlns='http://www.w3.org/2000/svg'>
     <path d='M10.2689 5.95853L10.2689 3.0614C10.2689 2.05545 9.45863 1.23997 8.45908 1.23997L3.02961 1.23996C2.03006 1.23996 1.21977 2.05544 1.21977 3.06138L1.21973 8.37566C1.21972 9.38161 2.03002 10.1971 3.02956 10.1971H6.05121M8.27809 10.1971H10.2689M10.2689 10.1971H12.2597M10.2689 10.1971V8.19352M10.2689 10.1971V12.5649' stroke='white' stroke-width='0.96' stroke-linecap='round'/>
     </svg> <span>Add Block</span></button>

@@ -46,7 +46,7 @@ class RecipeRenderer extends CollectionRenderer {
   <div class="collection-recipe-description">
   ${description}
   </div>
-  <div class="collection-recipe-action">
+  <div class="collection-action">
   <button class="btn btn-primary" @click="await clickToAction(item, 'recipe');"><svg xmlns="http://www.w3.org/2000/svg" width="13" height="14" viewBox="0 0 13 14" fill="none">
   <path d="M12.5 7.75V11.5C12.5 12.3284 11.8284 13 11 13H2C1.17157 13 0.5 12.3284 0.5 11.5V7.75M9.5 4L6.5 1M6.5 1L3.5 4M6.5 1V10" stroke="white" stroke-width="0.96" stroke-linecap="round" stroke-linejoin="round"/>
   </svg><span>Load Recipe</span></button>
