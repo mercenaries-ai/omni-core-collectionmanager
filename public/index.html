@@ -6,24 +6,25 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Collection Manager</title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-    <link href="main.css" rel="stylesheet">
+    
     <style>
       [x-cloak] {
         display: none !important;
       }
 
     </style>
-    <script src="./main.js" type="module" defer></script>
+    
+    <script type="module" crossorigin src="/extensions/omni-core-collectionmanager/assets/main-c109c596.js"></script>
+    <link rel="stylesheet" href="/extensions/omni-core-collectionmanager/assets/index-7eb2f066.css">
   </head>
 
-  <body class="p-6 select-none overflow-hidden "
+  <body class="p-6 select-none overflow-hidden bg-white"
   >
-    <div class="m-h-screen bg-neutral-400" x-data="appState"  @keydown.window.prevent.stop.ctrl.shift.f="window.parent.client.workbench.activeExtension ? window.parent.client.workbench.hideExtension() :  window.parent.client.workbench.showExtension('omni-core-filemanager', {})">
+    <div class="m-h-screen bg-white" x-data="appState"  @keydown.window.prevent.stop.ctrl.shift.f="window.parent.client.workbench.activeExtension ? window.parent.client.workbench.hideExtension() :  window.parent.client.workbench.showExtension('omni-core-filemanager', {})">
       <div id="container" class="" x-data="createGallery(50 , '')" @keydown.escape.window="viewerMode ? window.parent.client.workbench.hideExtension() : multiSelectedItems.length>0 ? multiSelectedItems = [] :  focusedItem ? focusedItem = null :  window.parent.client.workbench.hideExtension()">
         <!-- Gallery Nav  -->
         <div x-show="!viewerMode && !focusedItem" class="fixed top-0 left-0 w-full h-full flex flex-col items-center justify-center bg-neutral-400 opacity-100 overflow-hidden" >
-          <div x-data="{hoverItem: null}" class="relative p-2 flex flex-row items-top justify-center" style="width: 98vw; height: 98.9vh; overflow: hidden" >
+          <div x-data="{hoverItem: null}" class=" relative p-2 flex flex-row items-top justify-center" style="width: 98vw; height: 98.9vh; overflow: hidden" >
             <div class="absolute text-lg top-0 left-6 mx-auto p-2  flex justify-between items-center gap-2 h-12 text-black drop-shadow-md shadow-black w-full">
               <!--h3 x-text="getTitle()">Title</h3-->
               <span @click="await fetchItems({limit: itemsPerPage,replace:true}); multiSelectedItems=[]; window.scrollTo({ top: 0, behavior: 'smooth' }); "  class="flex text-black items-center justify-center w-auto h-8 px-3 py-1 text-xs bg-red-500/60  border-0 rounded-md cursor-pointer  hover:bg-gray-500 active:bg-gray-600 focus:bg-gray-600 focus:outline-none  hover:text-neutral-600 group">
@@ -56,7 +57,7 @@
                 />
                 <div class="search__icon">
                   <label class="sr-only" for="search"> Search </label>
-                  <svg width="25" height="25" viewBox="0 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <svg width="25px" height="25px" viewBox="0 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M24 24L18.3221 18.3221M21.2941 11.1471C21.2941 5.54299 16.7511 1 11.1471 1C5.54299 1 1 5.54299 1 11.1471C1 16.7511 5.54299 21.2941 11.1471 21.2941C16.7511 21.2941 21.2941 16.7511 21.2941 11.1471Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                   </svg>
                 </div>
@@ -65,23 +66,185 @@
               </div>
             </div>
             <!-- Gallery -->
-            <div class="relative custom-scroll  mt-14" >
+            <div class="relative custom-scroll w-full h-full mt-14" >
+              <template x-if="type ==='block'">
+                  <table class="w-full border-collapse  border-gray-200 bg-white text-left text-sm text-gray-500 border-2">
+                     <template x-for="(item, idx) in filteredItems()" :key="idx">
+                        <tr class="w-full h-10  border-2 border-collapse border-gray-200 bg-white text-left text-gray-500">
+                        
+                            <td class="px-1 border-2 border-collapse border-gray-200 bg-white text-left font-semibold text-xs text-gray-500"><span x-text="item.value.title"></span></td>
+                            <td class="px-1 border-2 border-collapse border-gray-200 bg-white text-left text-xs text-gray-500" ><span x-text="item.value.category"> </span></td>
+                            <td class="px-1  border-2 border-collapse border-gray-200 bg-white text-left text-xs text-gray-500"><span x-text="item.value.description"> </span></td>
+                            <td class="px-1  bg-white text-left text-xs text-gray-500"><button class="btn color-primary cursor-pointer h-6 w-10 pt-2"  @click="await clickToAction(item, item.type)">
+                              <svg viewBox='0 0 13 14' fill='none' xmlns='http://www.w3.org/2000/svg'>
+                            <path d='M10.2689 5.95853L10.2689 3.0614C10.2689 2.05545 9.45863 1.23997 8.45908 1.23997L3.02961 1.23996C2.03006 1.23996 1.21977 2.05544 1.21977 3.06138L1.21973 8.37566C1.21972 9.38161 2.03002 10.1971 3.02956 10.1971H6.05121M8.27809 10.1971H10.2689M10.2689 10.1971H12.2597M10.2689 10.1971V8.19352M10.2689 10.1971V12.5649' stroke='white' stroke-width='0.96' stroke-linecap='round'/>
+                            </svg></button></td>
+                        </tr>
+                        
+                        <!--
+                        
+                        <div class='collection-block'>
+                            <div class='collection-block-header'>
+                        <div class='collection-fav'>
+                        <svg xmlns='http://www.w3.org/2000/svg' width='17' height='15' viewBox='0 0 17 15' fill='none'>
+                        <path d='M2.1095 7.70617L8.5 14.3333L14.8905 7.70617C15.6009 6.96942 16 5.97024 16 4.92838C16 2.75879 14.304 1 12.2119 1C11.2073 1 10.2437 1.41388 9.53333 2.15059L8.5 3.22222L7.46667 2.15059C6.75624 1.41388 5.79273 1 4.78807 1C2.69597 1 1 2.75879 1 4.92838C1 5.97024 1.3991 6.96942 2.1095 7.70617Z' stroke='#505050' stroke-width='1.2' stroke-linecap='round' stroke-linejoin='round'/>
+                        </svg>
+                        </div>
+                            </div>
+                          <div class='collection-block-title' x-text="item.value.title">
+                        
+                          </div>
+                          <div class='collection-block-tags' x-data='{names: ${JSON.stringify(names)}}'>
+                          <template x-for='(name, index) in names' :key='index'>
+                          <div class='tag namespace' x-text='name' @click.stop.prevent='search = name; $refs.search.focus();'>
+                          </div>
+                          </template>
+                          <div class='tag ${categoryStyle}'
+                          @click.stop.prevent='search = "${category}"; $refs.search.focus();'
+                          x-text="item.value.category"
+                          >
+                          </div>
+                          </div>
+                          <div class='collection-block-description'
+                          x-text="item.value.description"
+                          >
+                          </div>
+                          <div class='collection-action'>
+                            <button class='btn btn-primary' @click='await clickToAction(item.val, "block");'><svg width='13' height='14' viewBox='0 0 13 14' fill='none' xmlns='http://www.w3.org/2000/svg'>
+                            <path d='M10.2689 5.95853L10.2689 3.0614C10.2689 2.05545 9.45863 1.23997 8.45908 1.23997L3.02961 1.23996C2.03006 1.23996 1.21977 2.05544 1.21977 3.06138L1.21973 8.37566C1.21972 9.38161 2.03002 10.1971 3.02956 10.1971H6.05121M8.27809 10.1971H10.2689M10.2689 10.1971H12.2597M10.2689 10.1971V8.19352M10.2689 10.1971V12.5649' stroke='white' stroke-width='0.96' stroke-linecap='round'/>
+                            </svg> <span>Add Block</span></button>
+                            <button class='btn btn-secondary' @click='await focusItem(item)'><svg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 14 14' fill='none'>
+                            <path d='M7 3.67333V3.66667M7 10.3333V5.66667M13 7C13 10.3137 10.3137 13 7 13C3.68629 13 1 10.3137 1 7C1 3.68629 3.68629 1 7 1C10.3137 1 13 3.68629 13 7Z' stroke='#505050' stroke-width='0.96' stroke-linecap='round' stroke-linejoin='round'/>
+                            </svg><span>Block info</span></button>
+                          </div>
+                          -->   </template>
+                  </table>
+              </template>
+              <template x-if="type !=='block'">
+                <div class=" py-2 px-2 w-full h-full">
+                  <div class="flex flex-wrap justify-left items-start gap-1.5 w-full">
+                    <template x-for="(item, idx) in filteredItems()" :key="idx">
+                
+                         <div class="shadow-lg shadow-black drop-shadow-sm rounded-sm ">
+                
+                          <template x-if="item.type === 'recipe'">
+                             <div class="shadow-lg shadow-black drop-shadow-sm rounded-sm ">
+                             <div @mouseenter='hoverItem = item.value' @mouseleave='hoverItem = null' @contextmenu.prevent="selectItem(item.value)" class="border-2" :class="{ ' border-yellow-300': multiSelectedItems.includes(item.value), ' border-white': focusedItem === item.value.value }" alt="item.value.meta.fileName">
+                             
+                             <div class="collection-recipe" class="flex" >
+                               <div class="collection-recipe-header">
+                                 <div class="collection-fav" @click="clickToAction(item, 'toggleRecipeStar')">
+                                   <svg x-show="!item.value.starred" xmlns="http://www.w3.org/2000/svg" width="17" height="15" viewBox="0 0 17 15" fill="none">
+                                     <path d="M2.1095 7.70617L8.5 14.3333L14.8905 7.70617C15.6009 6.96942 16 5.97024 16 4.92838C16 2.75879 14.304 1 12.2119 1C11.2073 1 10.2437 1.41388 9.53333 2.15059L8.5 3.22222L7.46667 2.15059C6.75624 1.41388 5.79273 1 4.78807 1C2.69597 1 1 2.75879 1 4.92838C1 5.97024 1.3991 6.96942 2.1095 7.70617Z" stroke="#505050" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" />
+                                   </svg>
+                                   <svg x-show="!!item.value.starred" xmlns="http://www.w3.org/2000/svg" width="17" height="15" viewBox="0 0 17 15" fill="red">
+                                     <path d="M2.1095 7.70617L8.5 14.3333L14.8905 7.70617C15.6009 6.96942 16 5.97024 16 4.92838C16 2.75879 14.304 1 12.2119 1C11.2073 1 10.2437 1.41388 9.53333 2.15059L8.5 3.22222L7.46667 2.15059C6.75624 1.41388 5.79273 1 4.78807 1C2.69597 1 1 2.75879 1 4.92838C1 5.97024 1.3991 6.96942 2.1095 7.70617Z" stroke="#505050" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" />
+                                   </svg>
+                                 </div>
+                               </div>
+                               <div class="collection-recipe-cover">
+                                 <img :src="'/'+item.value.meta.pictureUrl" :alt="item.value.name" onerror="this.onerror=null;this.src='/omni.png';">
+                               </div>
+                               <div class="text-sm font-semibold" x-text="item.value.name">
+                               </div>
+                               <div class="collection-recipe-description" x-text="item.value.meta.description">
+                               </div>
+                               <div class='flex-grow'></div>
+                               <div class="h-8 flex">
+                                 <button class="btn btn-primary" @click="await clickToAction(item, 'recipe');"><svg xmlns="http://www.w3.org/2000/svg" width="13" height="14" viewBox="0 0 13 14" fill="none">
+                                     <path d="M12.5 7.75V11.5C12.5 12.3284 11.8284 13 11 13H2C1.17157 13 0.5 12.3284 0.5 11.5V7.75M9.5 4L6.5 1M6.5 1L3.5 4M6.5 1V10" stroke="white" stroke-width="0.96" stroke-linecap="round" stroke-linejoin="round" />
+                                   </svg><span>Open</span></button>
+                                 <button x-show="item.value.canDelete" class="btn" @click="window.parent.clickDeleteRecipe(item);"><span>Recipe</span></button>
+                                 <button class="btn btn-secondary" @click="await focusItem(item)"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 14 14" fill="none">
+                                     <path d="M7 3.67333V3.66667M7 10.3333V5.66667M13 7C13 10.3137 10.3137 13 7 13C3.68629 13 1 10.3137 1 7C1 3.68629 3.68629 1 7 1C10.3137 1 13 3.68629 13 7Z" stroke="#505050" stroke-width="0.96" stroke-linecap="round" stroke-linejoin="round" />
+                                   </svg><span>Learn More</span></button>
+                               </div>
+                             </div>
+                             </div>
+                             </div>          </template>
+                          <template x-if="item.type === 'extension'">
+                             
+                             <div @mouseenter='hoverItem = item.value' @mouseleave='hoverItem = null' @contextmenu.prevent="selectItem(item.value)" class="border-2" :class="{ ' border-yellow-300': multiSelectedItems.includes(item.value), ' border-white': focusedItem === item.value.value }" alt="item.value.meta.fileName">
+                               <div class="collection-extension" class="flex">
+                                 <div class="collection-extension-header">
+                                   <div class="collection-extension-header-title" x-text="item.value.title"></div>
+                                   <div class="flex-grow"></div>
+                                   <img x-src="'/extensions/'+item.value.id+'/logo.png'" class="collection-extension-header-logo" onerror="this.onerror=null;this.src='/omni.png'" />
+                                 </div>
+                                 <div class="collection-extension-body">
+                                   <span>Author:</span> <span x-text="item.value.author"></span>
+                                   <span x-text="item.value.description"></span>
+                                 </div>
+                                 <div class="collection-action">
+                                   <button class="btn btn-primary" x-show="item.value.canOpen" @click='await clickToAction(item, "extension")'><svg xmlns="http://www.w3.org/2000/svg" width="13" height="14" viewBox="0 0 13 14" fill="none">
+                                       <path d="M12.5 7.75V11.5C12.5 12.3284 11.8284 13 11 13H2C1.17157 13 0.5 12.3284 0.5 11.5V7.75M9.5 4L6.5 1M6.5 1L3.5 4M6.5 1V10" stroke="white" stroke-width="0.96" stroke-linecap="round" stroke-linejoin="round" />
+                                     </svg>
+                                     <span x-show="item.value.installed">Open</span>
+                                     <span x-show="!item.value.installed">Install</span>
+                                   </button>
+                                   <span class="flex-grow"></span>
+                                   <button class="btn btn-secondary" @click="await focusItem(item)"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 14 14" fill="none">
+                                       <path d="M7 3.67333V3.66667M7 10.3333V5.66667M13 7C13 10.3137 10.3137 13 7 13C3.68629 13 1 10.3137 1 7C1 3.68629 3.68629 1 7 1C10.3137 1 13 3.68629 13 7Z" stroke="#505050" stroke-width="0.96" stroke-linecap="round" stroke-linejoin="round" />
+                                     </svg><span>Details</span></button>
+                                 </div>
+                               </div>
+                             </div>          </template>
+                
+                          <template x-if="item.type === 'block'">
+                             <tr class="w-full h-10  border-2 border-collapse border-gray-200 bg-white text-left text-gray-500">
+                             
+                                 <td class="px-1 border-2 border-collapse border-gray-200 bg-white text-left font-semibold text-xs text-gray-500"><span x-text="item.value.title"></span></td>
+                                 <td class="px-1 border-2 border-collapse border-gray-200 bg-white text-left text-xs text-gray-500" ><span x-text="item.value.category"> </span></td>
+                                 <td class="px-1  border-2 border-collapse border-gray-200 bg-white text-left text-xs text-gray-500"><span x-text="item.value.description"> </span></td>
+                                 <td class="px-1  bg-white text-left text-xs text-gray-500"><button class="btn color-primary cursor-pointer h-6 w-10 pt-2"  @click="await clickToAction(item, item.type)">
+                                   <svg viewBox='0 0 13 14' fill='none' xmlns='http://www.w3.org/2000/svg'>
+                                 <path d='M10.2689 5.95853L10.2689 3.0614C10.2689 2.05545 9.45863 1.23997 8.45908 1.23997L3.02961 1.23996C2.03006 1.23996 1.21977 2.05544 1.21977 3.06138L1.21973 8.37566C1.21972 9.38161 2.03002 10.1971 3.02956 10.1971H6.05121M8.27809 10.1971H10.2689M10.2689 10.1971H12.2597M10.2689 10.1971V8.19352M10.2689 10.1971V12.5649' stroke='white' stroke-width='0.96' stroke-linecap='round'/>
+                                 </svg></button></td>
+                             </tr>
+                             
+                             <!--
+                             
+                             <div class='collection-block'>
+                                 <div class='collection-block-header'>
+                             <div class='collection-fav'>
+                             <svg xmlns='http://www.w3.org/2000/svg' width='17' height='15' viewBox='0 0 17 15' fill='none'>
+                             <path d='M2.1095 7.70617L8.5 14.3333L14.8905 7.70617C15.6009 6.96942 16 5.97024 16 4.92838C16 2.75879 14.304 1 12.2119 1C11.2073 1 10.2437 1.41388 9.53333 2.15059L8.5 3.22222L7.46667 2.15059C6.75624 1.41388 5.79273 1 4.78807 1C2.69597 1 1 2.75879 1 4.92838C1 5.97024 1.3991 6.96942 2.1095 7.70617Z' stroke='#505050' stroke-width='1.2' stroke-linecap='round' stroke-linejoin='round'/>
+                             </svg>
+                             </div>
+                                 </div>
+                               <div class='collection-block-title' x-text="item.value.title">
+                             
+                               </div>
+                               <div class='collection-block-tags' x-data='{names: ${JSON.stringify(names)}}'>
+                               <template x-for='(name, index) in names' :key='index'>
+                               <div class='tag namespace' x-text='name' @click.stop.prevent='search = name; $refs.search.focus();'>
+                               </div>
+                               </template>
+                               <div class='tag ${categoryStyle}'
+                               @click.stop.prevent='search = "${category}"; $refs.search.focus();'
+                               x-text="item.value.category"
+                               >
+                               </div>
+                               </div>
+                               <div class='collection-block-description'
+                               x-text="item.value.description"
+                               >
+                               </div>
+                               <div class='collection-action'>
+                                 <button class='btn btn-primary' @click='await clickToAction(item.val, "block");'><svg width='13' height='14' viewBox='0 0 13 14' fill='none' xmlns='http://www.w3.org/2000/svg'>
+                                 <path d='M10.2689 5.95853L10.2689 3.0614C10.2689 2.05545 9.45863 1.23997 8.45908 1.23997L3.02961 1.23996C2.03006 1.23996 1.21977 2.05544 1.21977 3.06138L1.21973 8.37566C1.21972 9.38161 2.03002 10.1971 3.02956 10.1971H6.05121M8.27809 10.1971H10.2689M10.2689 10.1971H12.2597M10.2689 10.1971V8.19352M10.2689 10.1971V12.5649' stroke='white' stroke-width='0.96' stroke-linecap='round'/>
+                                 </svg> <span>Add Block</span></button>
+                                 <button class='btn btn-secondary' @click='await focusItem(item)'><svg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 14 14' fill='none'>
+                                 <path d='M7 3.67333V3.66667M7 10.3333V5.66667M13 7C13 10.3137 10.3137 13 7 13C3.68629 13 1 10.3137 1 7C1 3.68629 3.68629 1 7 1C10.3137 1 13 3.68629 13 7Z' stroke='#505050' stroke-width='0.96' stroke-linecap='round' stroke-linejoin='round'/>
+                                 </svg><span>Block info</span></button>
+                               </div>
+                               -->          </template>
+                
+                         </div>
+                    </template>
+                  </div>
+                </div>            </template>
 
-              <div class="overflow-hidden py-2 px-2 w-full">
-                <div class="flex flex-wrap justify-left items-start gap-1.5">
-                  <template x-for="(item, idx) in filteredItems()" :key="idx">
-                    <div class="shadow-lg shadow-black drop-shadow-sm rounded-sm ">
-                      <div
-                      @mouseenter='hoverItem = item'
-                      @mouseleave='hoverItem = null'
-                      @contextmenu.prevent="selectItem(item)"
-                      x-html="getDisplayUrl(item, {width: 256, height: 256, fit: 'contain'})"
-                      class="border-2"
-                      :class="{ ' border-yellow-300': multiSelectedItems.includes(item), ' border-white': focusedItem === item }" alt="item.meta.fileName"></div>
-                    </div>
-                  </template>
-                </div>
-              </div>
             </div>
             <div class="absolute bottom-0 left-0 right-0 p-2 gap-5 z-10 font-semibold drop-shadow shadow-white bg-white bg-opacity-50 text-sm flex justify-between items-center h-8">
               <span class="font-semibold"></span>
@@ -96,7 +259,7 @@
         <!-- Item Viewer -->
         <div x-cloak x-show="viewerMode || focusedItem" class="fixed  top-0 left-0 w-full h-full flex items-center justify-center bg-gray-300 opacity-100 z-10" @click="viewerMode ? window.parent.client.workbench.activeScreen ='editor' : focusedItem = null" @keydown.window.escape="viewerMode ? window.parent.client.workbench.activeScreen ='editor' : focusedItem = null" @keydown.window.arrow-right="nextItem()" @keydown.window.arrow-left="previousItem()">
           <div class="relative flex items-center justify-center bg-black bg-opacity-40" style="width: 98vw; height: 98vh; overflow: hidden;" @click.stop @contextmenu.prevent @mouseenter="showInfo = true" @mouseleave="showInfo = false">
-            <img x-show="focusedItem" :src="getDisplayUrl(focusedItem)" :style="{ transform: `scale(${scale}) translate(${x}px, ${y}px)`}" class="object-contain transition-opacity duration-200" :class="{ 'opacity-0': loading }" @wheel.prevent="zoomItem" @mousedown="startMoving" @mousemove="move" @mouseup="stopMoving" @mouseleave="stopMoving" x-ref="zoomImg" />
+            <img x-show="focusedItem" :src="renderItem(focusedItem)" :style="{ transform: `scale(${scale}) translate(${x}px, ${y}px)`}" class="object-contain transition-opacity duration-200" :class="{ 'opacity-0': loading }" @wheel.prevent="zoomItem" @mousedown="startMoving" @mousemove="move" @mouseup="stopMoving" @mouseleave="stopMoving" x-ref="zoomImg" />
             <div @click.stop="previousItem()" x-show="!viewerMode" class="w-10 h-full absolute top-0 left-0 flex items-center justify-center  text-white text-4xl cursor-pointer">‹</div>
             <div x-show="showInfo" class="absolute text-lg top-0 left-0 right-0 p-2  flex justify-between items-center gap-5 bg-black bg-opacity-50 h-12 text-white drop-shadow-md shadow-black">
 

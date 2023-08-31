@@ -1,0 +1,21 @@
+<div class=" py-2 px-2 w-full h-full">
+  <div class="flex flex-wrap justify-left items-start gap-1.5 w-full">
+    <template x-for="(item, idx) in filteredItems()" :key="idx">
+
+         <div class="shadow-lg shadow-black drop-shadow-sm rounded-sm ">
+
+          <template x-if="item.type === 'recipe'">
+             {{>recipe}}
+          </template>
+          <template x-if="item.type === 'extension'">
+             {{>extension}}
+          </template>
+
+          <template x-if="item.type === 'block'">
+             {{>block}}
+          </template>
+
+         </div>
+    </template>
+  </div>
+</div>

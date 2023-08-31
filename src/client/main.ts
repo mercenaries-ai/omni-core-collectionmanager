@@ -1,5 +1,5 @@
 import Alpine from 'alpinejs';
-import './style.scss';
+
 import type CollectionRenderer from './renderers/CollectionRenderer';
 import RecipeRenderer from './renderers/RecipeRenderer'
 import BlockRenderer from './renderers/BlockRenderer'
@@ -99,6 +99,11 @@ const createGallery = function (itemsPerPage: number, itemApi: string) {
     totalPages: () => Math.ceil(this.items.length / this.itemsPerPage),
     multiSelectedItems: [],
 
+    style: () => {
+
+      return type == 'block' ? 'list' : 'grid';
+    },
+
     cursor: 0,
     showInfo: false,
     loading: false, // for anims
@@ -121,13 +126,13 @@ const createGallery = function (itemsPerPage: number, itemApi: string) {
         reader.readAsDataURL(file);
       });
     },
-    getDisplayUrl(item, opts) {
+    renderItem(item, opts) {
       if (!item) {
         return '<img src="/ph_250.png" />';
       } else {
         const renderer = renderers.get(item.type);
         if (renderer) {
-          return renderer.render(item.value);  
+          return renderer.render(item.value);
         } else {
           return '<img src="/ph_250.png" />';
         }
@@ -356,7 +361,7 @@ const createGallery = function (itemsPerPage: number, itemApi: string) {
           window.parent.client.runScript('extensions',['add', item.value.url]);
         }
       }
-     
+
     }
   };
 };
@@ -375,6 +380,7 @@ function orderByName(a, b) {
 
 window.Alpine = Alpine;
 document.addEventListener('alpine:init', async () => {
+
   Alpine.data('appState', () => ({
     copyToClipboardComponent,
     createGallery,
@@ -389,6 +395,7 @@ document.addEventListener('alpine:init', async () => {
         console.error(err.name, err.message);
       }
     },
+
     moving: false,
     startMoving(e) {
       this.moving = true;
