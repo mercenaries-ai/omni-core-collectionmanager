@@ -18,7 +18,7 @@ declare global {
 
 // -------------------- Viewer Mode: If q.focusedItem is set, we hide the gallery and show the item full screen -----------------------
 const args = new URLSearchParams(location.search);
-const params = JSON.parse(args.get('q'));
+const params = sdk.args
 let focusedItem = null;
 focusedItem = params?.focusedItem;
 let viewerMode = focusedItem ? true : false;
@@ -297,8 +297,7 @@ const createGallery = function (itemsPerPage: number, itemApi: string) {
             this.focusedItem = null;
             // In viewer mode, we close the extension if the focused item is deleted
             if (this.viewerMode === true) {
-              //@ts-expect-error
-              window.parent.client.workbench.hideExtension();
+              sdk.hide()
             }
           }
         }
@@ -313,20 +312,18 @@ const createGallery = function (itemsPerPage: number, itemApi: string) {
       if (type === 'recipe') {
         //@ts-expect-error
         await window.parent.client.workbench.loadWorkflow(item.value.id, item.value.version);
-        //@ts-expect-error
-        window.parent.client.workbench.hideExtension();
+
+        sdk.close();
       }
       else if (type == 'block') {
-        //@ts-expect-error
-        await window.parent.client.runScript('add', [item.value.name]);
+        console.log(await sdk.runClientScript('add', [item.value.name]))
       }
       else if (type == 'extension') {
         if (item.value.installed === 'true') {
           //@ts-expect-error
-          window.parent.client.workbench.showExtension(item.value.id);
+          sdk.signalIntent(item.value.id,"show");
         } else {
-          //@ts-expect-error
-          window.parent.client.runScript('extensions',['add', item.value.url]);
+          sdk.runClientScript('extensions',['add', item.value.url]);
         }
       }
 
