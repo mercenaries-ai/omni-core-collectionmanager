@@ -14,14 +14,14 @@
 
     </style>
     
-    <script type="module" crossorigin src="/extensions/omni-core-collectionmanager/assets/main-754fd6c8.js"></script>
+    <script type="module" crossorigin src="/extensions/omni-core-collectionmanager/assets/main-bc3d86ad.js"></script>
     <link rel="stylesheet" href="/extensions/omni-core-collectionmanager/assets/index-7eb2f066.css">
   </head>
 
   <body class="p-6 select-none overflow-hidden bg-white"
   >
     <div class="m-h-screen bg-white" x-data="appState"  @keydown.window.prevent.stop.ctrl.shift.f="window.parent.client.workbench.activeExtension ? window.parent.client.workbench.hideExtension() :  window.parent.client.workbench.showExtension('omni-core-filemanager', {})">
-      <div id="container" class="" x-data="createGallery(50 , '')" @keydown.escape.window="viewerMode ? window.parent.client.workbench.hideExtension() : multiSelectedItems.length>0 ? multiSelectedItems = [] :  focusedItem ? focusedItem = null :  window.parent.client.workbench.hideExtension()">
+      <div id="container" class="bg-white" x-data="createGallery(50 , '')" @keydown.escape.window="viewerMode ? window.parent.client.workbench.hideExtension() : multiSelectedItems.length>0 ? multiSelectedItems = [] :  focusedItem ? focusedItem = null :  window.parent.client.workbench.hideExtension()">
         <!-- Gallery Nav  -->
         <div x-show="!viewerMode && !focusedItem" class="fixed top-0 left-0 w-full h-full flex flex-col items-center justify-center bg-neutral-400 opacity-100 overflow-hidden" >
           <div x-data="{hoverItem: null}" class=" relative p-2 flex flex-row items-top justify-center" style="width: 98vw; height: 98.9vh; overflow: hidden" >
