@@ -273,8 +273,7 @@ const createGallery = function (itemsPerPage: number, itemApi: string) {
       let data = await sdk.runExtensionScript('delete', { delete: item });
 
       if (!data.ok) {
-        //@ts-expect-error
-        window.parent.client.sendSystemMessage(
+        sdk.sendChatMessage(
           'Failed to delete item(s) ' + data.reason,
           'text/plain',
           {},
