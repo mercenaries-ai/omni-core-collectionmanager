@@ -18,6 +18,7 @@
   },
   "dependencies": {
     "alpinejs": "^3.12.3",
-    "flip-js": "^0.0.4"
+    "flip-js": "^0.0.4",
+    "omni-sdk": "link:../../../../../omni-sdk/"
   }
 }

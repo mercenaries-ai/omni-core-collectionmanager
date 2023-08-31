@@ -6,6 +6,9 @@ import BlockRenderer from './renderers/BlockRenderer'
 import APIManagementRenderer from './renderers/APIManagementRenderer'
 import LoadMoreRenderer from './renderers/LoadMoreRenderer'
 import ExtensionRenderer from './renderers/ExtensionRenderer'
+import {OmniSDKClient} from 'omni-sdk';
+
+const sdk = new OmniSDKClient("omni-core-collectionmanager").init();
 
 declare global {
   interface Window {
@@ -29,40 +32,6 @@ renderers.set('api', new APIManagementRenderer())
 renderers.set('load-more', new LoadMoreRenderer())
 renderers.set('extension', new ExtensionRenderer())
 
-const runExtensionScript = async (scriptName: string, payload: any) => {
-  const response = await fetch(
-    '/api/v1/mercenaries/runscript/omni-core-collectionmanager:' + scriptName,
-    {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(payload),
-    }
-  );
-  console.log('runExtensionScript response', response);
-  const data = await response.json();
-  console.log(scriptName, data);
-  return data;
-};
-
-
-const runServerScript = async (scriptName: string, payload: any) => {
-  const response = await fetch(
-    '/api/v1/mercenaries/runscript/' + scriptName,
-    {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(payload),
-    }
-  );
-  console.log('runServerScript response', response);
-  const data = await response.json();
-  console.log(scriptName, data);
-  return data;
-};
 
 
 const copyToClipboardComponent = () => {
@@ -183,7 +152,7 @@ const createGallery = function (itemsPerPage: number, itemApi: string) {
       if (opts?.limit && typeof opts.limit === 'number' && opts.limit > 0) {
         body.limit = Math.max(opts.limit, 2);
       }
-      const data = await runExtensionScript('collection', body);
+      const data = await sdk.runExtensionScript('collection', body);
 
       this.addItems(data.items, opts?.replace);
     },
@@ -263,7 +232,7 @@ const createGallery = function (itemsPerPage: number, itemApi: string) {
         action: 'import',
         itemFid: item.fid,
       };
-      const file = <any>(await runExtensionScript('export', args)).file;
+      const file = <any>(await sdk.runExtensionScript('export', args)).file;
       console.log('import', file);
       window.parent.location.href =
         window.parent.location.protocol +
@@ -301,7 +270,7 @@ const createGallery = function (itemsPerPage: number, itemApi: string) {
         }
       }
 
-      let data = await runExtensionScript('delete', { delete: item });
+      let data = await sdk.runExtensionScript('delete', { delete: item });
 
       if (!data.ok) {
         //@ts-expect-error
@@ -433,7 +402,7 @@ document.addEventListener('alpine:init', async () => {
         cursor: 0,
         filter: this.search
       };
-      const data = await runExtensionScript('collection', body);
+      const data = await sdk.runExtensionScript('collection', body);
       this.addItems(data.items, true);
       this.cursor = this.items.length;
       return this.items;
