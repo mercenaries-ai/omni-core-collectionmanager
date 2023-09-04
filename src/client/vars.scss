@@ -1,2 +1,18 @@
 $icon-size: 32px;
 $main-color: #e9f1f4;
+$default-padding: 0.5rem;
+$default-radius: 0.375rem;
+
+
+@mixin content-flex-start {
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-start;
+}
+
+@mixin common-text {
+    overflow: hidden;
+    align-content: flex-start;
+    color: var(--medium-grey, #505050);
+    text-overflow: ellipsis;
+}
