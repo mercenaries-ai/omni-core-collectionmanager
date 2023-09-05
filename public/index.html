@@ -14,8 +14,8 @@
 
     </style>
     
-    <script type="module" crossorigin src="/extensions/omni-core-collectionmanager/assets/main-01c23206.js"></script>
-    <link rel="stylesheet" href="/extensions/omni-core-collectionmanager/assets/index-54002a2f.css">
+    <script type="module" crossorigin src="/extensions/omni-core-collectionmanager/assets/main-5e2a0932.js"></script>
+    <link rel="stylesheet" href="/extensions/omni-core-collectionmanager/assets/index-c897832a.css">
   </head>
 
   <body class="p-6 select-none overflow-hidden bg-white"
@@ -130,15 +130,15 @@
                              <div @mouseenter='hoverItem = item.value' @mouseleave='hoverItem = null' @contextmenu.prevent="selectItem(item.value)"
                                :class="{ ' border-yellow-300': multiSelectedItems.includes(item.value), ' border-white': focusedItem === item.value.value }"
                                alt="item.value.meta.fileName">
-                               <div class="collection-recipe">
+                               <div class="collection-recipe" x-data="{meta: item.value.meta}">
                                  <div class="collection-recipe-header">
                                    <div class="collection-recipe-cover">
-                                     <img :src="'/'+item.value.meta.pictureUrl" :alt="item.value.name"
+                                     <img :src="'/'+ meta.pictureUrl" :alt="item.value.name"
                                        onerror="this.onerror=null;this.src='/omni.png';">
                                    </div>
                                    <div class="collection-recipe-action">
                                      <div class="collection-recipe-title">
-                                       <div class="text-sm font-semibold" x-text="item.value.meta.name || item.value.id"></div>
+                                       <div class="text-sm font-semibold" x-text="meta.name || item.value.id"></div>
                                        <div class="collection-fav" @click="clickToAction(item, 'toggleRecipeStar')">
                                          <svg x-show="!item.value.starred" xmlns="http://www.w3.org/2000/svg" width="17" height="15"
                                            viewBox="0 0 17 15" fill="none">
@@ -172,7 +172,20 @@
                                      </div>
                                    </div>
                                  </div>
-                                 <div class="collection-recipe-description" x-text="item.value.meta.description">
+                                 <div class="collection-recipe-description">
+                                   <span class="desc-title">
+                                     About the recipe:
+                                   </span> 
+                                   <span x-text="meta.description"></span>
+                                   <span class="desc-title">
+                                     Authors:
+                                   </span> 
+                                   <span x-text="meta.author"></span>
+                                   <div class="collection-recipe-tags">
+                                   <template x-for="(tag, idx) in meta.tags" :key="idx">
+                                     <div class="tag default" x-text="tag"></div>
+                                   </template>
+                                   </div>
                                  </div>
                                </div>
                              </div>

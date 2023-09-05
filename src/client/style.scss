@@ -352,7 +352,7 @@ h2 {
 .collection-recipe {
   @include content-flex-start;
   width: 26rem;
-  height: 12rem;
+  height: 12.5rem;
   padding: $default-padding;
   flex-direction: column;
   gap: 0.25rem;
@@ -442,15 +442,11 @@ h2 {
   }
 
   &-title,
-  &description {
-
+  &-description {
+    @include common-text;
     display: -webkit-box;
     -webkit-box-orient: vertical;
     align-self: stretch;
-    overflow: hidden;
-    align-content: flex-start;
-    color: var(--medium-grey, #505050);
-    text-overflow: ellipsis;
     align-items: center;
   }
 
@@ -464,6 +460,10 @@ h2 {
     flex: 1 0 0;
     font-feature-settings: 'clig' off, 'liga' off;
     @extend .omni-font-s-regular;
+
+    .desc-title {
+      @extend .omni-font-s-medium;
+    }
   }
 
   &-tags {
@@ -472,9 +472,8 @@ h2 {
     align-items: center;
     align-content: center;
     gap: 4px;
-    align-self: stretch;
     flex-wrap: wrap;
-    text-overflow: ellipsis;
+    justify-content: flex-end;
 
     .tag {
       display: flex;
