@@ -18,7 +18,8 @@ const script = {
         limit,
         0,
         cursor,
-        true
+        true,
+        filter
       );
       const items = result.data.map((item) => {
         return {
