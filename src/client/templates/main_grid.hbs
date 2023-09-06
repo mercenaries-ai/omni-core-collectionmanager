@@ -1,17 +1,16 @@
-<div class="w-full h-full">
-  <div class="flex flex-wrap justify-left items-start gap-1.5 w-full">
-    <template x-for="(item, idx) in filteredItems()" :key="idx">
-         <div class="drop-shadow-md rounded-md">
-          <template x-if="item.type === 'recipe'">
-             {{>recipe_grid}}
-          </template>
-          <template x-if="item.type === 'extension'">
-             {{>extension}}
-          </template>
-          <template x-if="item.type === 'block'">
-             {{>block_grid}}
-          </template>
-         </div>
-    </template>
-  </div>
+
+<div class="flex flex-wrap justify-left items-start gap-2 w-full h-full">
+   <template x-for="(item, idx) in filteredItems()" :key="idx">
+      <div class="drop-shadow-md rounded-md">
+         <template x-if="item.type === 'recipe'">
+            {{>recipe_grid}}
+         </template>
+         <template x-if="item.type === 'extension'">
+            {{>extension}}
+         </template>
+         <template x-if="item.type === 'block'">
+            {{>block_grid}}
+         </template>
+      </div>
+   </template>
 </div>
