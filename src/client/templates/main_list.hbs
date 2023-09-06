@@ -1,5 +1,25 @@
-<table class="w-full border-collapse  border-gray-200 bg-white text-left text-sm text-gray-500 border-2">
+<table class="w-full border-collapse divide-y-2 divide-gray-200 bg-white text-sm table-auto">
+   <thead>
+      <tr>
+         <th class="px-4 py-2">
+            <label for="SelectAll" class="sr-only">Select All</label>
+         <input
+            type="checkbox"
+            id="SelectAll"
+            class="h-5 w-5 rounded border-gray-300"
+         />
+         </th>
+         <th class="px-4 py-2 font-medium text-gray-900">
+            Name
+         </th>
+         <th class="px-4 py-2 font-medium text-gray-900">Category</th>
+         <th class="px-4 py-2 font-medium text-gray-900">Description</th>
+         <th class="px-4 py-2 font-medium text-gray-900"></th>
+      </tr>
+   </thead>
+   <tbody class="divide-y divide-gray-200">
    <template x-for="(item, idx) in filteredItems()" :key="idx">
-      {{>block}}
+      {{>general_list}}
    </template>
+   </tbody>
 </table>
