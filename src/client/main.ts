@@ -261,9 +261,11 @@ const createGallery = function (itemsPerPage: number, itemApi: string) {
       // Set the new scale
       this.$refs.zoomImg.style.transform = `scale(${newScale})`;
     },
-    async deleteByFid(item) {
-      console.log('delete', item);
-      if (!Array.isArray(item)) {
+    async deleteItem(item) {
+      const type = item.type;
+      const payload = Alpine.raw(item.value);
+      /*
+      if (!Array.isArray(payload)) {
         item = [item];
       }
 
@@ -272,19 +274,19 @@ const createGallery = function (itemsPerPage: number, itemApi: string) {
           return;
         }
       }
-
-      let data = await sdk.runExtensionScript('delete', { delete: item });
-
-      if (!data.ok) {
+*/
+      let response = await sdk.runExtensionScript('delete', { type: type, id: payload.id, version: payload.version });
+      console.log(response)
+      if (!response.result) {
         sdk.sendChatMessage(
-          'Failed to delete item(s) ' + data.reason,
+          'Failed to delete item(s) ' + payload.id + ' of type ' + type,
           'text/plain',
           {},
           ['error']
         );
         return;
       }
-
+/*
       this.multiSelectedItems = [];
       if (data.deleted) {
         this.items = this.items.filter((item) => {
@@ -309,7 +311,8 @@ const createGallery = function (itemsPerPage: number, itemApi: string) {
           cursor: this.cursor,
           limit: data.deleted.length,
         });
-      }
+        
+      }*/
     },
     async clickToAction(item, type: string) {
       if (type === 'recipe') {

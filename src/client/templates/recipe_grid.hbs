@@ -34,7 +34,7 @@
                 stroke="white" stroke-width="0.96" stroke-linecap="round" stroke-linejoin="round" />
             </svg><span>Open</span></button>
           <button x-show="canDelete" class="btn btn-delete"
-            @click="window.parent.clickDeleteRecipe(item);"><span>Delete</span></button>
+            @click="deleteItem(item)"><span>Delete</span></button>
           <button class="btn btn-secondary" @click="await focusItem(item)"><svg xmlns="http://www.w3.org/2000/svg"
               width="14" height="14" viewBox="0 0 14 14" fill="none">
               <path
