@@ -1,4 +1,7 @@
-import Alpine from 'alpinejs';
+import Alpine from 'alpinejs'
+import tippy from 'tippy.js'
+import 'tippy.js/dist/tippy.css'
+import DOMPurify from 'dompurify'
 
 import type CollectionRenderer from './renderers/CollectionRenderer';
 import RecipeRenderer from './renderers/RecipeRenderer'
@@ -404,6 +407,28 @@ document.addEventListener('alpine:init', async () => {
       return this.items;
     },
   }));
+
+  Alpine.magic('tooltip', (el: HTMLElement) => (message) => {
+    const instance = tippy(el, { content: message, trigger: 'manual' })
+
+    instance.show()
+
+    setTimeout(() => {
+      instance.hide()
+
+      setTimeout(() => instance.destroy(), 150)
+    }, 2000)
+  })
+
+  // Directive: x-tooltip or x-tooltip:reactive
+  Alpine.directive('tooltip', (el: HTMLElement, { value, expression }, { evaluate }) => {
+    let text: unknown = expression
+    if (value === 'reactive') {
+      text = evaluate(expression)
+    }
+    // @ts-ignore
+    tippy(el, { content: DOMPurify.sanitize(text, { ALLOWED_TAGS: [] }) })
+  })
 });
 
 Alpine.start();

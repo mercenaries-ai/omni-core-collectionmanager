@@ -13,8 +13,8 @@
     }
   </style>
   
-  <script type="module" crossorigin src="/extensions/omni-core-collectionmanager/assets/main-d5fdd985.js"></script>
-  <link rel="stylesheet" href="/extensions/omni-core-collectionmanager/assets/index-166e2839.css">
+  <script type="module" crossorigin src="/extensions/omni-core-collectionmanager/assets/main-d24a7eef.js"></script>
+  <link rel="stylesheet" href="/extensions/omni-core-collectionmanager/assets/index-a215ed44.css">
 </head>
 
 <body class="p-6 select-none overflow-hidden bg-white">
@@ -162,8 +162,8 @@
                                     onerror="this.onerror=null;this.src='/omni.png';">
                                 </div>
                                 <div class="collection-recipe-action">
-                                  <div class="collection-recipe-title">
-                                    <div class="text-sm font-semibold" x-text="meta.name || item.value.id"></div>
+                                  <div class="collection-recipe-title" x-tooltip:reactive="item.value.id">
+                                    <div class="text-sm font-semibold" x-text="meta.name"></div>
                                     <div class="collection-fav" @click="clickToAction(item, 'toggleRecipeStar')">
                                       <svg x-show="!item.value.starred" xmlns="http://www.w3.org/2000/svg" width="17" height="15"
                                         viewBox="0 0 17 15" fill="none">
