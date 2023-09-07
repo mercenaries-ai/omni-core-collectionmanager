@@ -348,6 +348,40 @@ function orderByName(a, b) {
 
 window.Alpine = Alpine;
 document.addEventListener('alpine:init', async () => {
+  Alpine.data('collection', () => ({
+    id: '',
+    name: '',
+    title: '',
+    description: '',
+    pictureUrl: '',
+    type: '',
+    category: '',
+    author: '',
+    tags: [],
+    starred: false,
+    canDelete: false,
+    canOpen: false,
+    installed: false,
+    created: null,
+    updated: null,
+    setData(data) {
+      this.id = data.id;
+      this.name = data.meta?.name ?? data.name;
+      this.title = data.meta?.title ?? data.title;
+      this.description = data.meta?.description ?? data.description;
+      this.pictureUrl = data.meta?.pictureUrl ?? data.pictureUrl;
+      this.type = data.type;
+      this.category = data.category;
+      this.author = data.meta?.author;
+      this.tags = data.meta?.tags ?? data.tags;
+      this.starred = data.starred;
+      this.canDelete = data.canDelete;
+      this.created = data.meta?.created;
+      this.updated = data.meta?.updated;   
+      this.installed = data.installed;
+      this.canOpen = data.canOpen;   
+    },
+  }));
 
   Alpine.data('appState', () => ({
     copyToClipboardComponent,

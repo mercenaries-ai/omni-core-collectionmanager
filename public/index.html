@@ -13,7 +13,7 @@
     }
   </style>
   
-  <script type="module" crossorigin src="/extensions/omni-core-collectionmanager/assets/main-d24a7eef.js"></script>
+  <script type="module" crossorigin src="/extensions/omni-core-collectionmanager/assets/main-1e43b458.js"></script>
   <link rel="stylesheet" href="/extensions/omni-core-collectionmanager/assets/index-a215ed44.css">
 </head>
 
@@ -122,21 +122,16 @@
                  </thead>
                  <tbody class="divide-y divide-gray-200">
                  <template x-for="(item, idx) in filteredItems()" :key="idx">
-                    <tr x-data="{
-                      col1: item.value?.title ?? item.value?.meta?.name ?? '',
-                      col2: item.value?.category ?? item.value?.meta?.tags.join(', ') ?? '',
-                      col3: item.value?.description ?? item.value?.meta?.description ?? '',
-                      }"
-                      >
-                      <td class="px-4 py-2"><label class="sr-only" for="item.value.id"></label>
+                    <tr x-data="collection" x-init="setData(item.value)"> 
+                      <td class="px-4 py-2"><label class="sr-only" for="id"></label>
                               <input
                                 class="h-5 w-5 rounded border-gray-300"
                                 type="checkbox"
-                                id="item.value.id"
+                                id="id"
                               /></td>
-                        <td class="px-4 py-2 font-medium text-gray-900"><span x-text="col1"></span></td>
-                        <td class="px-4 py-2 font-medium text-gray-900" ><span x-text="col2"> </span></td>
-                        <td class="px-4 py-2 font-medium text-gray-900"><span x-text="col3"> </span></td>
+                        <td class="px-4 py-2 font-medium text-gray-900"><span x-text="title ?? name"></span></td>
+                        <td class="px-4 py-2 font-medium text-gray-900" ><span x-text="category"> </span></td>
+                        <td class="px-4 py-2 font-medium text-gray-900"><span x-text="description"> </span></td>
                         <td class="px-4 py-2 font-medium text-gray-900">
                           <button class="btn color-primary cursor-pointer h-6 w-10 pt-2"  @click="await clickToAction(item, item.type)">
                           <svg viewBox='0 0 13 14' fill='none' xmlns='http://www.w3.org/2000/svg'>
@@ -155,23 +150,23 @@
                           <div @mouseenter='hoverItem = item.value' @mouseleave='hoverItem = null' @contextmenu.prevent="selectItem(item.value)"
                             :class="{ ' border-yellow-300': multiSelectedItems.includes(item.value), ' border-white': focusedItem === item.value.value }"
                             alt="item.value.meta.fileName">
-                            <div class="collection-recipe" x-data="{meta: item.value.meta}">
+                            <div class="collection-recipe" x-data="collection" x-init="setData(item.value)">
                               <div class="collection-recipe-header">
                                 <div class="collection-recipe-cover">
-                                  <img :src="'/'+ meta.pictureUrl" :alt="item.value.name"
+                                  <img :src="'/'+ pictureUrl" :alt="name"
                                     onerror="this.onerror=null;this.src='/omni.png';">
                                 </div>
                                 <div class="collection-recipe-action">
-                                  <div class="collection-recipe-title" x-tooltip:reactive="item.value.id">
-                                    <div class="text-sm font-semibold" x-text="meta.name"></div>
+                                  <div class="collection-recipe-title" x-tooltip:reactive="id">
+                                    <div class="text-sm font-semibold" x-text="name"></div>
                                     <div class="collection-fav" @click="clickToAction(item, 'toggleRecipeStar')">
-                                      <svg x-show="!item.value.starred" xmlns="http://www.w3.org/2000/svg" width="17" height="15"
+                                      <svg x-show="!starred" xmlns="http://www.w3.org/2000/svg" width="17" height="15"
                                         viewBox="0 0 17 15" fill="none">
                                         <path
                                           d="M2.1095 7.70617L8.5 14.3333L14.8905 7.70617C15.6009 6.96942 16 5.97024 16 4.92838C16 2.75879 14.304 1 12.2119 1C11.2073 1 10.2437 1.41388 9.53333 2.15059L8.5 3.22222L7.46667 2.15059C6.75624 1.41388 5.79273 1 4.78807 1C2.69597 1 1 2.75879 1 4.92838C1 5.97024 1.3991 6.96942 2.1095 7.70617Z"
                                           stroke="#505050" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" />
                                       </svg>
-                                      <svg x-show="item.value.starred" xmlns="http://www.w3.org/2000/svg" width="17" height="15"
+                                      <svg x-show="starred" xmlns="http://www.w3.org/2000/svg" width="17" height="15"
                                         viewBox="0 0 17 15" fill="red">
                                         <path
                                           d="M2.1095 7.70617L8.5 14.3333L14.8905 7.70617C15.6009 6.96942 16 5.97024 16 4.92838C16 2.75879 14.304 1 12.2119 1C11.2073 1 10.2437 1.41388 9.53333 2.15059L8.5 3.22222L7.46667 2.15059C6.75624 1.41388 5.79273 1 4.78807 1C2.69597 1 1 2.75879 1 4.92838C1 5.97024 1.3991 6.96942 2.1095 7.70617Z"
@@ -186,7 +181,7 @@
                                           d="M12.5 7.75V11.5C12.5 12.3284 11.8284 13 11 13H2C1.17157 13 0.5 12.3284 0.5 11.5V7.75M9.5 4L6.5 1M6.5 1L3.5 4M6.5 1V10"
                                           stroke="white" stroke-width="0.96" stroke-linecap="round" stroke-linejoin="round" />
                                       </svg><span>Open</span></button>
-                                    <button x-show="item.value.canDelete" class="btn btn-delete"
+                                    <button x-show="canDelete" class="btn btn-delete"
                                       @click="window.parent.clickDeleteRecipe(item);"><span>Delete</span></button>
                                     <button class="btn btn-secondary" @click="await focusItem(item)"><svg xmlns="http://www.w3.org/2000/svg"
                                         width="14" height="14" viewBox="0 0 14 14" fill="none">
@@ -201,13 +196,13 @@
                                 <span class="desc-title">
                                   About the recipe:
                                 </span> 
-                                <span x-text="meta.description"></span>
+                                <span x-text="description"></span>
                                 <span class="desc-title">
                                   Authors:
                                 </span> 
-                                <span x-text="meta.author"></span>
+                                <span x-text="author"></span>
                                 <div class="collection-recipe-tags">
-                                <template x-for="(tag, idx) in meta.tags" :key="idx">
+                                <template x-for="(tag, idx) in tags" :key="idx">
                                   <div class="tag default" x-text="tag"></div>
                                 </template>
                                 </div>
@@ -218,22 +213,22 @@
                        <template x-if="item.type === 'extension'">
                           
                           <div @mouseenter='hoverItem = item.value' @mouseleave='hoverItem = null' @contextmenu.prevent="selectItem(item.value)" class="border-2" :class="{ ' border-yellow-300': multiSelectedItems.includes(item.value), ' border-white': focusedItem === item.value.value }" alt="item.value.meta.fileName">
-                            <div class="collection-extension" class="flex">
+                            <div class="collection-extension" class="flex" x-data="collection" x-init="setData(item.value)">
                               <div class="collection-extension-header">
-                                <div class="collection-extension-header-title" x-text="item.value.title"></div>
+                                <div class="collection-extension-header-title" x-text="title"></div>
                                 <div class="flex-grow"></div>
-                                <img x-src="'/extensions/'+item.value.id+'/logo.png'" class="collection-extension-header-logo" onerror="this.onerror=null;this.src='/omni.png'" />
+                                <img x-src="'/extensions/'+id+'/logo.png'" class="collection-extension-header-logo" onerror="this.onerror=null;this.src='/omni.png'" />
                               </div>
                               <div class="collection-extension-body">
-                                <span>Author:</span> <span x-text="item.value.author"></span>
-                                <span x-text="item.value.description"></span>
+                                <span>Author:</span> <span x-text="author"></span>
+                                <span x-text="description"></span>
                               </div>
                               <div class="btn-group">
-                                <button class="btn btn-primary" x-show="item.value.canOpen" @click='await clickToAction(item, "extension")'><svg xmlns="http://www.w3.org/2000/svg" width="13" height="14" viewBox="0 0 13 14" fill="none">
+                                <button class="btn btn-primary" x-show="canOpen" @click='await clickToAction(item, "extension")'><svg xmlns="http://www.w3.org/2000/svg" width="13" height="14" viewBox="0 0 13 14" fill="none">
                                     <path d="M12.5 7.75V11.5C12.5 12.3284 11.8284 13 11 13H2C1.17157 13 0.5 12.3284 0.5 11.5V7.75M9.5 4L6.5 1M6.5 1L3.5 4M6.5 1V10" stroke="white" stroke-width="0.96" stroke-linecap="round" stroke-linejoin="round" />
                                   </svg>
-                                  <span x-show="item.value.installed">Open</span>
-                                  <span x-show="!item.value.installed">Install</span>
+                                  <span x-show="installed">Open</span>
+                                  <span x-show="!installed">Install</span>
                                 </button>
                                 <span class="flex-grow"></span>
                                 <button class="btn btn-secondary" @click="await focusItem(item)"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 14 14" fill="none">
@@ -243,44 +238,43 @@
                             </div>
                           </div>         </template>
                        <template x-if="item.type === 'block'">
-                          <div @mouseenter='hoverItem = item.value' @mouseleave='hoverItem = null' @contextmenu.prevent="selectItem(item.value)"
-                            :class="{ ' border-yellow-300': multiSelectedItems.includes(item.value), ' border-white': focusedItem === item.value.value }"
-                            alt="item.value.meta.fileName">
-                          <div class='collection-block'>
-                            <div class='collection-block-header'>
-                              <div class='collection-fav'>
-                                <svg xmlns='http://www.w3.org/2000/svg' width='17' height='15' viewBox='0 0 17 15' fill='none'>
+                          <div @mouseenter="hoverItem = item.value" @mouseleave="hoverItem = null" @contextmenu.prevent="selectItem(item.value)"
+                            :class="{ ' border-yellow-300': multiSelectedItems.includes(item.value), ' border-white': focusedItem === item.value.value }">
+                          <div class="collection-block" x-data="collection" x-init="setData(item.value)">
+                            <div class="collection-block-header">
+                              <div class="collection-fav">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="17" height="15" viewBox="0 0 17 15" fill="none">
                                   <path
-                                    d='M2.1095 7.70617L8.5 14.3333L14.8905 7.70617C15.6009 6.96942 16 5.97024 16 4.92838C16 2.75879 14.304 1 12.2119 1C11.2073 1 10.2437 1.41388 9.53333 2.15059L8.5 3.22222L7.46667 2.15059C6.75624 1.41388 5.79273 1 4.78807 1C2.69597 1 1 2.75879 1 4.92838C1 5.97024 1.3991 6.96942 2.1095 7.70617Z'
-                                    stroke='#505050' stroke-width='1.2' stroke-linecap='round' stroke-linejoin='round' />
+                                    d="M2.1095 7.70617L8.5 14.3333L14.8905 7.70617C15.6009 6.96942 16 5.97024 16 4.92838C16 2.75879 14.304 1 12.2119 1C11.2073 1 10.2437 1.41388 9.53333 2.15059L8.5 3.22222L7.46667 2.15059C6.75624 1.41388 5.79273 1 4.78807 1C2.69597 1 1 2.75879 1 4.92838C1 5.97024 1.3991 6.96942 2.1095 7.70617Z"
+                                    stroke="#505050" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" />
                                 </svg>
                               </div>
                             </div>
-                            <div class='collection-block-title' x-text="item.value.title">
+                            <div class="collection-block-title" x-text="title">
                             </div>
-                            <div class='collection-block-tags' x-data="{names: item.value.name?.split('.')}">
-                              <template x-for='(name, index) in names' :key='index'>
-                                <div class='tag namespace' x-text='name' @click.stop.prevent='search = name; $refs.search.focus();'>
+                            <div class="collection-block-tags" x-data="{names: name?.split('.')}">
+                              <template x-for="(name, index) in names" :key="index">
+                                <div class="tag namespace" x-text="name" @click.stop.prevent="search = name; $refs.search.focus();">
                                 </div>
                               </template>
-                              <div class='tag default' @click.stop.prevent='search = item.value.category; $refs.search.focus();'
-                                x-text="item.value.category">
+                              <div class="tag default" @click.stop.prevent="search = category; $refs.search.focus();"
+                                x-text="category">
                               </div>
                             </div>
-                            <div class='collection-block-description' x-text="item.value.description">
+                            <div class="collection-block-description" x-text="description">
                             </div>
-                            <div class='btn-group'>
-                              <button class='btn btn-primary' @click='await clickToAction(item, "block");'><svg width='13' height='14'
-                                  viewBox='0 0 13 14' fill='none' xmlns='http://www.w3.org/2000/svg'>
+                            <div class="btn-group">
+                              <button class="btn btn-primary" @click="await clickToAction(item, 'block');"><svg width="13" height="14"
+                                  viewBox="0 0 13 14" fill="none" xmlns="http://www.w3.org/2000/svg">
                                   <path
-                                    d='M10.2689 5.95853L10.2689 3.0614C10.2689 2.05545 9.45863 1.23997 8.45908 1.23997L3.02961 1.23996C2.03006 1.23996 1.21977 2.05544 1.21977 3.06138L1.21973 8.37566C1.21972 9.38161 2.03002 10.1971 3.02956 10.1971H6.05121M8.27809 10.1971H10.2689M10.2689 10.1971H12.2597M10.2689 10.1971V8.19352M10.2689 10.1971V12.5649'
-                                    stroke='white' stroke-width='0.96' stroke-linecap='round' />
+                                    d="M10.2689 5.95853L10.2689 3.0614C10.2689 2.05545 9.45863 1.23997 8.45908 1.23997L3.02961 1.23996C2.03006 1.23996 1.21977 2.05544 1.21977 3.06138L1.21973 8.37566C1.21972 9.38161 2.03002 10.1971 3.02956 10.1971H6.05121M8.27809 10.1971H10.2689M10.2689 10.1971H12.2597M10.2689 10.1971V8.19352M10.2689 10.1971V12.5649"
+                                    stroke="white" stroke-width="0.96" stroke-linecap="round" />
                                 </svg> <span>Add Block</span></button>
-                              <button class='btn btn-secondary' @click='await focusItem(item)'><svg xmlns='http://www.w3.org/2000/svg' width='14'
-                                  height='14' viewBox='0 0 14 14' fill='none'>
+                              <button class="btn btn-secondary" @click="await focusItem(item)"><svg xmlns="http://www.w3.org/2000/svg" width="14"
+                                  height="14" viewBox="0 0 14 14" fill="none">
                                   <path
-                                    d='M7 3.67333V3.66667M7 10.3333V5.66667M13 7C13 10.3137 10.3137 13 7 13C3.68629 13 1 10.3137 1 7C1 3.68629 3.68629 1 7 1C10.3137 1 13 3.68629 13 7Z'
-                                    stroke='#505050' stroke-width='0.96' stroke-linecap='round' stroke-linejoin='round' />
+                                    d="M7 3.67333V3.66667M7 10.3333V5.66667M13 7C13 10.3137 10.3137 13 7 13C3.68629 13 1 10.3137 1 7C1 3.68629 3.68629 1 7 1C10.3137 1 13 3.68629 13 7Z"
+                                    stroke="#505050" stroke-width="0.96" stroke-linecap="round" stroke-linejoin="round" />
                                 </svg><span>Block info</span></button>
                             </div>
                           </div>

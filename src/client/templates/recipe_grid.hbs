@@ -2,23 +2,23 @@
 <div @mouseenter='hoverItem = item.value' @mouseleave='hoverItem = null' @contextmenu.prevent="selectItem(item.value)"
   :class="{ ' border-yellow-300': multiSelectedItems.includes(item.value), ' border-white': focusedItem === item.value.value }"
   alt="item.value.meta.fileName">
-  <div class="collection-recipe" x-data="{meta: item.value.meta}">
+  <div class="collection-recipe" x-data="collection" x-init="setData(item.value)">
     <div class="collection-recipe-header">
       <div class="collection-recipe-cover">
-        <img :src="'/'+ meta.pictureUrl" :alt="item.value.name"
+        <img :src="'/'+ pictureUrl" :alt="name"
           onerror="this.onerror=null;this.src='/omni.png';">
       </div>
       <div class="collection-recipe-action">
-        <div class="collection-recipe-title" x-tooltip:reactive="item.value.id">
-          <div class="text-sm font-semibold" x-text="meta.name"></div>
+        <div class="collection-recipe-title" x-tooltip:reactive="id">
+          <div class="text-sm font-semibold" x-text="name"></div>
           <div class="collection-fav" @click="clickToAction(item, 'toggleRecipeStar')">
-            <svg x-show="!item.value.starred" xmlns="http://www.w3.org/2000/svg" width="17" height="15"
+            <svg x-show="!starred" xmlns="http://www.w3.org/2000/svg" width="17" height="15"
               viewBox="0 0 17 15" fill="none">
               <path
                 d="M2.1095 7.70617L8.5 14.3333L14.8905 7.70617C15.6009 6.96942 16 5.97024 16 4.92838C16 2.75879 14.304 1 12.2119 1C11.2073 1 10.2437 1.41388 9.53333 2.15059L8.5 3.22222L7.46667 2.15059C6.75624 1.41388 5.79273 1 4.78807 1C2.69597 1 1 2.75879 1 4.92838C1 5.97024 1.3991 6.96942 2.1095 7.70617Z"
                 stroke="#505050" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" />
             </svg>
-            <svg x-show="item.value.starred" xmlns="http://www.w3.org/2000/svg" width="17" height="15"
+            <svg x-show="starred" xmlns="http://www.w3.org/2000/svg" width="17" height="15"
               viewBox="0 0 17 15" fill="red">
               <path
                 d="M2.1095 7.70617L8.5 14.3333L14.8905 7.70617C15.6009 6.96942 16 5.97024 16 4.92838C16 2.75879 14.304 1 12.2119 1C11.2073 1 10.2437 1.41388 9.53333 2.15059L8.5 3.22222L7.46667 2.15059C6.75624 1.41388 5.79273 1 4.78807 1C2.69597 1 1 2.75879 1 4.92838C1 5.97024 1.3991 6.96942 2.1095 7.70617Z"
@@ -33,7 +33,7 @@
                 d="M12.5 7.75V11.5C12.5 12.3284 11.8284 13 11 13H2C1.17157 13 0.5 12.3284 0.5 11.5V7.75M9.5 4L6.5 1M6.5 1L3.5 4M6.5 1V10"
                 stroke="white" stroke-width="0.96" stroke-linecap="round" stroke-linejoin="round" />
             </svg><span>Open</span></button>
-          <button x-show="item.value.canDelete" class="btn btn-delete"
+          <button x-show="canDelete" class="btn btn-delete"
             @click="window.parent.clickDeleteRecipe(item);"><span>Delete</span></button>
           <button class="btn btn-secondary" @click="await focusItem(item)"><svg xmlns="http://www.w3.org/2000/svg"
               width="14" height="14" viewBox="0 0 14 14" fill="none">
@@ -48,13 +48,13 @@
       <span class="desc-title">
         About the recipe:
       </span> 
-      <span x-text="meta.description"></span>
+      <span x-text="description"></span>
       <span class="desc-title">
         Authors:
       </span> 
-      <span x-text="meta.author"></span>
+      <span x-text="author"></span>
       <div class="collection-recipe-tags">
-      <template x-for="(tag, idx) in meta.tags" :key="idx">
+      <template x-for="(tag, idx) in tags" :key="idx">
         <div class="tag default" x-text="tag"></div>
       </template>
       </div>

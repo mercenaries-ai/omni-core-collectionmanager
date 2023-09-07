@@ -1,21 +1,21 @@
 
 <div @mouseenter='hoverItem = item.value' @mouseleave='hoverItem = null' @contextmenu.prevent="selectItem(item.value)" class="border-2" :class="{ ' border-yellow-300': multiSelectedItems.includes(item.value), ' border-white': focusedItem === item.value.value }" alt="item.value.meta.fileName">
-  <div class="collection-extension" class="flex">
+  <div class="collection-extension" class="flex" x-data="collection" x-init="setData(item.value)">
     <div class="collection-extension-header">
-      <div class="collection-extension-header-title" x-text="item.value.title"></div>
+      <div class="collection-extension-header-title" x-text="title"></div>
       <div class="flex-grow"></div>
-      <img x-src="'/extensions/'+item.value.id+'/logo.png'" class="collection-extension-header-logo" onerror="this.onerror=null;this.src='/omni.png'" />
+      <img x-src="'/extensions/'+id+'/logo.png'" class="collection-extension-header-logo" onerror="this.onerror=null;this.src='/omni.png'" />
     </div>
     <div class="collection-extension-body">
-      <span>Author:</span> <span x-text="item.value.author"></span>
-      <span x-text="item.value.description"></span>
+      <span>Author:</span> <span x-text="author"></span>
+      <span x-text="description"></span>
     </div>
     <div class="btn-group">
-      <button class="btn btn-primary" x-show="item.value.canOpen" @click='await clickToAction(item, "extension")'><svg xmlns="http://www.w3.org/2000/svg" width="13" height="14" viewBox="0 0 13 14" fill="none">
+      <button class="btn btn-primary" x-show="canOpen" @click='await clickToAction(item, "extension")'><svg xmlns="http://www.w3.org/2000/svg" width="13" height="14" viewBox="0 0 13 14" fill="none">
           <path d="M12.5 7.75V11.5C12.5 12.3284 11.8284 13 11 13H2C1.17157 13 0.5 12.3284 0.5 11.5V7.75M9.5 4L6.5 1M6.5 1L3.5 4M6.5 1V10" stroke="white" stroke-width="0.96" stroke-linecap="round" stroke-linejoin="round" />
         </svg>
-        <span x-show="item.value.installed">Open</span>
-        <span x-show="!item.value.installed">Install</span>
+        <span x-show="installed">Open</span>
+        <span x-show="!installed">Install</span>
       </button>
       <span class="flex-grow"></span>
       <button class="btn btn-secondary" @click="await focusItem(item)"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 14 14" fill="none">
