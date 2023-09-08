@@ -275,44 +275,17 @@ const createGallery = function (itemsPerPage: number, itemApi: string) {
         }
       }
 */
-      let response = await sdk.runExtensionScript('delete', { type: type, id: payload.id, version: payload.version });
-      console.log(response)
-      if (!response.result) {
+      const deletedItemList = await sdk.runExtensionScript('delete', { type: type, id: payload.id, version: payload.version });
+      if( deletedItemList.length > 0 ) { 
+        this.needRefresh = true;
+      } else {
         sdk.sendChatMessage(
           'Failed to delete item(s) ' + payload.id + ' of type ' + type,
           'text/plain',
           {},
           ['error']
         );
-        return;
       }
-/*
-      this.multiSelectedItems = [];
-      if (data.deleted) {
-        this.items = this.items.filter((item) => {
-          console.log(item);
-          if (item.onclick != null) return true;
-
-          let deleted = data.deleted.includes(item.fid);
-          return !deleted;
-        });
-
-        if (this.focusedItem) {
-          if (data.deleted.includes(this.focusedItem.fid)) {
-            this.focusedItem = null;
-            // In viewer mode, we close the extension if the focused item is deleted
-            if (this.viewerMode === true) {
-              sdk.hide()
-            }
-          }
-        }
-
-        await this.fetchItems({
-          cursor: this.cursor,
-          limit: data.deleted.length,
-        });
-        
-      }*/
     },
     async clickToAction(item, type: string) {
       if (type === 'recipe') {
@@ -367,6 +340,7 @@ document.addEventListener('alpine:init', async () => {
     installed: false,
     created: null,
     updated: null,
+    deleted: false,
     setData(data) {
       this.id = data.id;
       this.name = data.meta?.name ?? data.name;
@@ -430,8 +404,13 @@ document.addEventListener('alpine:init', async () => {
       }
     },
     search: filter || '',
+    prevSearch: '',
+    needRefresh: false,
     async filteredItems () {
-      console.log('filteredItems', this.search);
+      if (!this.needRefresh && this.search === this.prevSearch) {
+        return this.items;
+      }
+      console.log('filteredItems', this.search, this.needRefresh);
       const body: { limit: number; cursor: number; type: string; filter: string } = {
         limit: this.itemsPerPage,
         type: this.type,
@@ -441,6 +420,8 @@ document.addEventListener('alpine:init', async () => {
       const data = await sdk.runExtensionScript('collection', body);
       this.addItems(data.items, true);
       this.cursor = this.items.length;
+      this.needRefresh = false;
+      this.prevSearch = this.search;
       return this.items;
     },
   }));

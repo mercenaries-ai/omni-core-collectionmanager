@@ -10,7 +10,10 @@ const script = {
         const workflow =  await integration.getWorkflow(payload.id, payload.version, ctx.userId, false /*allowPublic: false*/)
         if (workflow) {
             result = await integration.deleteWorkflow(workflow)
-            return { result: result };
+            if(result) {
+                const deletedItem = [workflow.id]
+                return deletedItem;
+            }
         }
         else {
           console.error('No permission to delete the recipe')
