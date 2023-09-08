@@ -114,11 +114,11 @@ const createGallery = function (itemsPerPage: number, itemApi: string) {
     async addItems(items, replace = false) {
       let lastCursor = this.cursor;
       if (items && items.length) {
-        this.items = this.items.filter((item) => item.type !== 'load-more');
-        this.cursor = this.items.length;
         if (replace) {
           this.items = items;
         } else {
+          this.items = this.items.filter((item) => item.type !== 'load-more');
+          this.cursor = this.items.length;
           this.items = this.items.concat(items);
         }
         if (this.items.length) {
@@ -407,10 +407,11 @@ document.addEventListener('alpine:init', async () => {
     prevSearch: '',
     needRefresh: false,
     async filteredItems () {
-      if (!this.needRefresh && this.search === this.prevSearch) {
-        return this.items;
-      }
       console.log('filteredItems', this.search, this.needRefresh);
+      if (this.needRefresh) {
+        this.cursor = 0
+        this.needRefresh = false
+      }
       const body: { limit: number; cursor: number; type: string; filter: string } = {
         limit: this.itemsPerPage,
         type: this.type,
@@ -420,8 +421,6 @@ document.addEventListener('alpine:init', async () => {
       const data = await sdk.runExtensionScript('collection', body);
       this.addItems(data.items, true);
       this.cursor = this.items.length;
-      this.needRefresh = false;
-      this.prevSearch = this.search;
       return this.items;
     },
   }));

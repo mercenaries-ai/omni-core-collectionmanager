@@ -2,13 +2,13 @@
 <div class="flex flex-wrap justify-left items-start gap-2 w-full">
    <template x-for="(item, idx) in filteredItems()" :key="idx">
       <div class="drop-shadow-md rounded-md">
-         <template x-if="item.type === 'recipe'">
+         <template x-if="item.type === 'recipe' && item.value">
             {{>recipe_grid}}
          </template>
-         <template x-if="item.type === 'extension'">
+         <template x-if="item.type === 'extension' && item.value">
             {{>extension_grid}}
          </template>
-         <template x-if="item.type === 'block'">
+         <template x-if="item.type === 'block' && item.value">
             {{>block_grid}}
          </template>
       </div>

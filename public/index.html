@@ -13,7 +13,7 @@
     }
   </style>
   
-  <script type="module" crossorigin src="/extensions/omni-core-collectionmanager/assets/main-0513d056.js"></script>
+  <script type="module" crossorigin src="/extensions/omni-core-collectionmanager/assets/main-7d5de7cf.js"></script>
   <link rel="stylesheet" href="/extensions/omni-core-collectionmanager/assets/index-a215ed44.css">
 </head>
 
@@ -145,7 +145,7 @@
               <div class="flex flex-wrap justify-left items-start gap-2 w-full">
                  <template x-for="(item, idx) in filteredItems()" :key="idx">
                     <div class="drop-shadow-md rounded-md">
-                       <template x-if="item.type === 'recipe'">
+                       <template x-if="item.type === 'recipe' && item.value">
                           
                           <div @mouseenter='hoverItem = item.value' @mouseleave='hoverItem = null' @contextmenu.prevent="selectItem(item.value)"
                             :class="{ ' border-yellow-300': multiSelectedItems.includes(item.value), ' border-white': focusedItem === item.value.value }"
@@ -210,7 +210,7 @@
                             </div>
                           </div>
                        </template>
-                       <template x-if="item.type === 'extension'">
+                       <template x-if="item.type === 'extension' && item.value">
                           
                           <div @mouseenter='hoverItem = item.value' @mouseleave='hoverItem = null' @contextmenu.prevent="selectItem(item.value)" class="border-2" :class="{ ' border-yellow-300': multiSelectedItems.includes(item.value), ' border-white': focusedItem === item.value.value }" alt="item.value.meta.fileName">
                             <div class="collection-extension" class="flex" x-data="collection" x-init="setData(item.value)">
@@ -237,7 +237,7 @@
                               </div>
                             </div>
                           </div>         </template>
-                       <template x-if="item.type === 'block'">
+                       <template x-if="item.type === 'block' && item.value">
                           <div @mouseenter="hoverItem = item.value" @mouseleave="hoverItem = null" @contextmenu.prevent="selectItem(item.value)"
                             :class="{ ' border-yellow-300': multiSelectedItems.includes(item.value), ' border-white': focusedItem === item.value.value }">
                           <div class="collection-block" x-data="collection" x-init="setData(item.value)">
