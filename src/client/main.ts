@@ -65,9 +65,7 @@ const createGallery = function (itemsPerPage: number, itemApi: string) {
     currentPage: 1,
     itemsPerPage: itemsPerPage,
     itemApi: itemApi,
-    items: viewerMode
-      ? []
-      : Array(itemsPerPage + 1).fill({ url: '/ph_250.png', meta: {} }),
+    items: [],
     totalPages: () => Math.ceil(this.items.length / this.itemsPerPage),
     multiSelectedItems: [],
 
@@ -99,8 +97,9 @@ const createGallery = function (itemsPerPage: number, itemApi: string) {
       });
     },
     renderItem(item, opts) {
+      console.log('renderItem', item, opts);
       if (!item) {
-        return '<img src="/ph_250.png" />';
+        //return '<img src="/ph_250.png" />';
       } else {
         const renderer = renderers.get(item.type);
         if (renderer) {
