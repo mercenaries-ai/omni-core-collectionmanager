@@ -122,7 +122,7 @@
                  </thead>
                  <tbody class="divide-y divide-gray-200">
                  <template x-for="(item, idx) in filteredItems()" :key="idx">
-                    <tr x-data="collection" x-init="setData(item.value)"> 
+                    <tr x-data="collection" x-effect="setData(item.value)"> 
                       <td class="px-4 py-2"><label class="sr-only" for="id"></label>
                               <input
                                 class="h-5 w-5 rounded border-gray-300"
@@ -150,7 +150,7 @@
                           <div @mouseenter='hoverItem = item.value' @mouseleave='hoverItem = null' @contextmenu.prevent="selectItem(item.value)"
                             :class="{ ' border-yellow-300': multiSelectedItems.includes(item.value), ' border-white': focusedItem === item.value.value }"
                             alt="item.value.meta.fileName">
-                            <div class="collection-recipe" x-data="collection" x-init="setData(item.value)">
+                            <div class="collection-recipe" x-data="collection" x-effect="setData(item.value)">
                               <div class="collection-recipe-header">
                                 <div class="collection-recipe-cover">
                                   <img :src="'/'+ pictureUrl" :alt="name"
@@ -213,7 +213,7 @@
                        <template x-if="item.type === 'extension' && item.value">
                           
                           <div @mouseenter='hoverItem = item.value' @mouseleave='hoverItem = null' @contextmenu.prevent="selectItem(item.value)" class="border-2" :class="{ ' border-yellow-300': multiSelectedItems.includes(item.value), ' border-white': focusedItem === item.value.value }" alt="item.value.meta.fileName">
-                            <div class="collection-extension" class="flex" x-data="collection" x-init="setData(item.value)">
+                            <div class="collection-extension" class="flex" x-data="collection" x-effect="setData(item.value)">
                               <div class="collection-extension-header">
                                 <div class="collection-extension-header-title" x-text="title"></div>
                                 <div class="flex-grow"></div>
@@ -240,7 +240,7 @@
                        <template x-if="item.type === 'block' && item.value">
                           <div @mouseenter="hoverItem = item.value" @mouseleave="hoverItem = null" @contextmenu.prevent="selectItem(item.value)"
                             :class="{ ' border-yellow-300': multiSelectedItems.includes(item.value), ' border-white': focusedItem === item.value.value }">
-                          <div class="collection-block" x-data="collection" x-init="setData(item.value)">
+                          <div class="collection-block" x-data="collection" x-effect="setData(item.value)">
                             <div class="collection-block-header">
                               <div class="collection-fav">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="17" height="15" viewBox="0 0 17 15" fill="none">

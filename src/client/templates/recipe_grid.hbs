@@ -2,7 +2,7 @@
 <div @mouseenter='hoverItem = item.value' @mouseleave='hoverItem = null' @contextmenu.prevent="selectItem(item.value)"
   :class="{ ' border-yellow-300': multiSelectedItems.includes(item.value), ' border-white': focusedItem === item.value.value }"
   alt="item.value.meta.fileName">
-  <div class="collection-recipe" x-data="collection" x-init="setData(item.value)">
+  <div class="collection-recipe" x-data="collection" x-effect="setData(item.value)">
     <div class="collection-recipe-header">
       <div class="collection-recipe-cover">
         <img :src="'/'+ pictureUrl" :alt="name"
