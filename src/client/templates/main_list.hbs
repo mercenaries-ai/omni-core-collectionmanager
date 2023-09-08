@@ -17,8 +17,8 @@
          <th class="px-4 py-2 font-medium text-gray-900"></th>
       </tr>
    </thead>
-   <tbody class="divide-y divide-gray-200">
-   <template x-for="(item, idx) in filteredItems()" :key="idx">
+   <tbody class="divide-y divide-gray-200" x-effect="$watch('search', value => filteredItems())">
+   <template x-for="(item, idx) in items" :key="idx">
       {{>general_list}}
    </template>
    </tbody>

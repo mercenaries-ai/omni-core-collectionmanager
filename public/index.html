@@ -13,14 +13,14 @@
     }
   </style>
   
-  <script type="module" crossorigin src="/extensions/omni-core-collectionmanager/assets/main-c53afdee.js"></script>
-  <link rel="stylesheet" href="/extensions/omni-core-collectionmanager/assets/index-a215ed44.css">
+  <script type="module" crossorigin src="/extensions/omni-core-collectionmanager/assets/main-d90a4e03.js"></script>
+  <link rel="stylesheet" href="/extensions/omni-core-collectionmanager/assets/index-9983fd2a.css">
 </head>
 
 <body class="p-6 select-none overflow-hidden bg-white">
   <div class="m-h-screen bg-white" x-data="appState"
     @keydown.window.prevent.stop.ctrl.shift.f="window.parent.client.workbench.activeExtension ? window.parent.client.workbench.hideExtension() :  window.parent.client.workbench.showExtension('omni-core-filemanager', {})">
-    <div id="container" class="bg-white" x-data="createGallery(50 , '')"
+    <div id="container" class="bg-white" x-data="createGallery(10 , '')"
       @keydown.escape.window="viewerMode ? window.parent.client.workbench.hideExtension() : multiSelectedItems.length>0 ? multiSelectedItems = [] :  focusedItem ? focusedItem = null :  window.parent.client.workbench.hideExtension()">
       <!-- Gallery Nav  -->
       <div x-show="!viewerMode && !focusedItem"
@@ -120,8 +120,8 @@
                        <th class="px-4 py-2 font-medium text-gray-900"></th>
                     </tr>
                  </thead>
-                 <tbody class="divide-y divide-gray-200">
-                 <template x-for="(item, idx) in filteredItems()" :key="idx">
+                 <tbody class="divide-y divide-gray-200" x-effect="$watch('search', value => filteredItems())">
+                 <template x-for="(item, idx) in items" :key="idx">
                     <tr x-data="collection" x-effect="setData(item.value)"> 
                       <td class="px-4 py-2"><label class="sr-only" for="id"></label>
                               <input
@@ -142,8 +142,8 @@
               </table>            </template>
             <template x-if="viewType ==='grid'">
               
-              <div class="flex flex-wrap justify-left items-start gap-2 w-full">
-                 <template x-for="(item, idx) in filteredItems()" :key="idx">
+              <div class="flex flex-wrap justify-left items-start gap-2 w-full" x-effect="$watch('search', value => filteredItems())">
+                 <template x-for="(item, idx) in items" :key="idx">
                     <div class="drop-shadow-md rounded-md">
                        <template x-if="item.type === 'recipe' && item.value">
                           
@@ -281,9 +281,15 @@
                           </div>         </template>
                     </div>
                  </template>
-              </div>            </template>
-
-          </div>
+              </div>
+            </template>
+            <div class="flex justify-center p-4 cursor-pointer" @click="loadMore()">
+                <svg class="w-14 h-14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" stroke="#DEDEDF">
+                <path
+                    d="M12 7V17M7 12H17M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z"
+                    stroke="#DEDEDF" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                </svg>
+            </div>          </div>
           <div
             class="absolute bottom-0 left-0 right-0 p-2 gap-5 z-10 font-semibold drop-shadow shadow-white bg-white bg-opacity-50 text-sm flex justify-between items-center h-8">
             <span class="font-semibold"></span>

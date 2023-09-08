@@ -1,6 +1,6 @@
 
-<div class="flex flex-wrap justify-left items-start gap-2 w-full">
-   <template x-for="(item, idx) in filteredItems()" :key="idx">
+<div class="flex flex-wrap justify-left items-start gap-2 w-full" x-effect="$watch('search', value => filteredItems())">
+   <template x-for="(item, idx) in items" :key="idx">
       <div class="drop-shadow-md rounded-md">
          <template x-if="item.type === 'recipe' && item.value">
             {{>recipe_grid}}

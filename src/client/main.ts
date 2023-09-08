@@ -7,7 +7,6 @@ import type CollectionRenderer from './renderers/CollectionRenderer';
 import RecipeRenderer from './renderers/RecipeRenderer'
 import BlockRenderer from './renderers/BlockRenderer'
 import APIManagementRenderer from './renderers/APIManagementRenderer'
-import LoadMoreRenderer from './renderers/LoadMoreRenderer'
 import ExtensionRenderer from './renderers/ExtensionRenderer'
 import {OmniSDKClient} from 'omni-sdk';
 
@@ -32,10 +31,7 @@ const renderers = new Map<string, CollectionRenderer>()
 renderers.set('recipe', new RecipeRenderer())
 renderers.set('block', new BlockRenderer())
 renderers.set('api', new APIManagementRenderer())
-renderers.set('load-more', new LoadMoreRenderer())
 renderers.set('extension', new ExtensionRenderer())
-
-
 
 const copyToClipboardComponent = () => {
   return {
@@ -68,12 +64,6 @@ const createGallery = function (itemsPerPage: number, itemApi: string) {
     items: [],
     totalPages: () => Math.ceil(this.items.length / this.itemsPerPage),
     multiSelectedItems: [],
-
-    style: () => {
-
-      return type == 'block' ? 'list' : 'grid';
-    },
-
     cursor: 0,
     showInfo: false,
     loading: false, // for anims
@@ -116,24 +106,25 @@ const createGallery = function (itemsPerPage: number, itemApi: string) {
         if (replace) {
           this.items = items;
         } else {
-          this.items = this.items.filter((item) => item.type !== 'load-more');
           this.cursor = this.items.length;
           this.items = this.items.concat(items);
         }
-        if (this.items.length) {
-          let self = this;
-          if (lastCursor != this.cursor || replace) {
-            this.items.push({
-              type: 'load-more',
-              value: {cursor: self.cursor, type: self.type}
-            });
-          }
-        }
-
         this.totalPages = Math.ceil(this.items.length / this.itemsPerPage);
       }
     },
-
+    async loadMore() {
+      console.log('loadMore - before', this.cursor, this.items.length)
+      const body: { limit: number; cursor: number; type: string; filter: string } = {
+        limit: this.itemsPerPage,
+        type: this.type,
+        cursor: this.cursor,
+        filter: this.search
+      };
+      const data = await sdk.runExtensionScript('collection', body);
+      this.addItems(data.items, false);
+      this.cursor = this.items.length;
+      console.log('loadMore - after', this.cursor, this.items.length)
+    },
     async fetchItems(opts?: {
       cursor?: number;
       limit?: number;

@@ -13,18 +13,6 @@ class RecipeRenderer extends CollectionRenderer {
       return;
     }
 
-    // Hacks! Fix me!
-    (window.parent as any).clickDeleteRecipe = function(item: any) {
-      const recipe = item.value;
-      console.log(`attempt to delete recipe`, recipe.id);
-      axios.delete("/api/v1/workflow/" + recipe.id, {
-        withCredentials: true,
-      });
-
-      // redraw etc..
-    };
-
-
     const imageUrl = content.meta.pictureUrl;
     const title = content.meta.name;
     const description = content.meta.description;
