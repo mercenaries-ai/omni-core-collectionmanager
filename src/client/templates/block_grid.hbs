@@ -12,8 +12,8 @@
   </div>
   <div class="collection-block-title" x-text="title">
   </div>
-  <div class="collection-block-tags" x-data="{names: name?.split('.')}">
-    <template x-for="(name, index) in names" :key="index">
+  <div class="collection-block-tags">
+    <template x-for="(name, index) in name?.split('.')" :key="index">
       <div class="tag namespace" x-text="name" @click.stop.prevent="search = name; $refs.search.focus();">
       </div>
     </template>
