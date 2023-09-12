@@ -1,6 +1,6 @@
 
-<div @mouseenter='hoverItem = item.value' @mouseleave='hoverItem = null' @contextmenu.prevent="selectItem(item.value)"
-  :class="{ ' border-yellow-300': multiSelectedItems.includes(item.value), ' border-white': focusedItem === item.value.value }"
+<div @mouseenter='hoverItem = item.value' @mouseleave='hoverItem = null' @contextmenu.prevent="selectItem(item)"
+  :class="{ ' border-2 rounded-md border-yellow-300': multiSelectedItems.includes(item), ' border-white': focusedItem === item.value.value }"
   alt="item.value.meta.fileName">
   <div class="collection-recipe" x-data="collection" x-effect="setData(item.value)">
     <div class="collection-recipe-header">
@@ -64,7 +64,7 @@
       <span x-text="updatedDate"></span>
       <div class="collection-recipe-tags">
       <template x-for="(tag, idx) in tags" :key="idx">
-        <div class="tag default" x-text="tag"></div>
+        <div class="tag default" x-text="tag" @click="search = tag"></div>
       </template>
       </div>
     </div>

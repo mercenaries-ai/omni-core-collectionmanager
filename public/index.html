@@ -13,7 +13,7 @@
     }
   </style>
   
-  <script type="module" crossorigin src="/extensions/omni-core-collectionmanager/assets/main-7bcfc835.js"></script>
+  <script type="module" crossorigin src="/extensions/omni-core-collectionmanager/assets/main-b6b0c2a4.js"></script>
   <link rel="stylesheet" href="/extensions/omni-core-collectionmanager/assets/index-f6c3b792.css">
 </head>
 
@@ -60,7 +60,7 @@
             </div>
             <!--h3 x-text="getTitle()">Title</h3-->
             <span
-              @click="await fetchItems({limit: itemsPerPage,replace:true}); multiSelectedItems=[]; window.scrollTo({ top: 0, behavior: 'smooth' }); "
+              @click="await refresh()"
               class="flex text-black items-center justify-center w-auto h-8 px-3 py-1 text-xs bg-red-500/60  border-0 rounded-md cursor-pointer  hover:bg-gray-500 active:bg-gray-600 focus:bg-gray-600 focus:outline-none  hover:text-neutral-600 group">
               <span></span>
               <svg class="w-5 h-5 " xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
@@ -70,7 +70,7 @@
                 <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15" />
               </svg>
             </span>
-            <span x-cloak @click="await deleteItem(multiSelectedItems)" x-show="multiSelectedItems.length > 0"
+            <span x-cloak @click="await deleteItemList(multiSelectedItems);" x-show="multiSelectedItems.length > 0" x-effect="$watch('needRefresh', (value) => { if(value) {refresh(); needRefresh = false;}})"
               class="flex text-black items-center justify-center w-auto h-8 px-3 py-1 text-xs bg-red-500/60   rounded-md cursor-pointer  hover:bg-gray-500 active:bg-gray-600 focus:bg-gray-600 focus:outline-none  hover:text-neutral-600 group">
               <span>Delete</span>
               <svg class="w-5 h-5 ml-0.5" xmlns="http://www.w3.org/2000/svg" fill="red" viewBox="0 0 24 24"
@@ -147,8 +147,8 @@
                     <div class="drop-shadow-md rounded-md">
                        <template x-if="item.type === 'recipe' && item.value">
                           
-                          <div @mouseenter='hoverItem = item.value' @mouseleave='hoverItem = null' @contextmenu.prevent="selectItem(item.value)"
-                            :class="{ ' border-yellow-300': multiSelectedItems.includes(item.value), ' border-white': focusedItem === item.value.value }"
+                          <div @mouseenter='hoverItem = item.value' @mouseleave='hoverItem = null' @contextmenu.prevent="selectItem(item)"
+                            :class="{ ' border-2 rounded-md border-yellow-300': multiSelectedItems.includes(item), ' border-white': focusedItem === item.value.value }"
                             alt="item.value.meta.fileName">
                             <div class="collection-recipe" x-data="collection" x-effect="setData(item.value)">
                               <div class="collection-recipe-header">
@@ -212,7 +212,7 @@
                                 <span x-text="updatedDate"></span>
                                 <div class="collection-recipe-tags">
                                 <template x-for="(tag, idx) in tags" :key="idx">
-                                  <div class="tag default" x-text="tag"></div>
+                                  <div class="tag default" x-text="tag" @click="search = tag"></div>
                                 </template>
                                 </div>
                               </div>

@@ -251,30 +251,49 @@ const createGallery = function (itemsPerPage: number, itemApi: string) {
       // Set the new scale
       this.$refs.zoomImg.style.transform = `scale(${newScale})`;
     },
-    async deleteItem(item) {
-      const type = item.type;
-      const payload = Alpine.raw(item.value);
-      /*
-      if (!Array.isArray(payload)) {
-        item = [item];
-      }
-
-      if (item.length > 1) {
-        if (!confirm(`Are you sure you want to delete ${item.length} items?`)) {
+    async deleteItemList(itemList) {
+      if(!itemList || itemList.length === 0) return;
+      let deletedItemList = [];
+      if( Array.isArray(itemList) && itemList.length > 0) {
+        if (!confirm(`Are you sure you want to delete ${itemList.length} items?`)) {
           return;
         }
+        itemList.forEach(async (i) => {
+          const result = await this.deleteItem(i);
+          if(result) {
+            deletedItemList.push(...result);
+          }
+        });
+        if( deletedItemList?.length > 0 ) { 
+          this.needRefresh = true;
+          return deletedItemList
+        } else {
+          console.log(itemList)
+          sdk.sendChatMessage(
+            'Failed to delete item(s) ' + itemList.join(', '),
+            'text/plain',
+            {},
+            ['error']
+          );
+          return null
+        }
       }
-*/
-      const deletedItemList = await sdk.runExtensionScript('delete', { type: type, id: payload.id, version: payload.version });
-      if( deletedItemList.length > 0 ) { 
+    },
+    async deleteItem(item) {
+        const type = item.type;
+        const payload = Alpine.raw(item.value);
+        const result = await sdk.runExtensionScript('delete', { type: type, id: payload.id }); 
+      if( result?.length > 0 ) { 
         this.needRefresh = true;
+        return result
       } else {
         sdk.sendChatMessage(
-          'Failed to delete item(s) ' + payload.id + ' of type ' + type,
+          'Failed to delete item(s) ' + item.value.name,
           'text/plain',
           {},
           ['error']
         );
+        return null
       }
     },
     async clickToAction(item, type: string) {
@@ -323,8 +342,8 @@ document.addEventListener('alpine:init', async () => {
       this.id = data.id;
       this.name = data.meta?.name ?? data.name;
       this.title = data.meta?.title ?? data.title;
-      this.description = data.meta?.description ?? data.description;
-      this.pictureUrl = data.meta?.pictureUrl ?? data.pictureUrl;
+      this.description = data.meta?.description; // don't bother with fallback anymore
+      this.pictureUrl = data.meta?.pictureUrl; // don't bother with fallback anymore
       this.type = data.type;
       this.category = data.category;
       this.author = data.meta?.author;
@@ -391,6 +410,11 @@ document.addEventListener('alpine:init', async () => {
     search: filter || '',
     prevSearch: '',
     needRefresh: false,
+    async refresh() {
+      await this.fetchItems({limit: this.itemsPerPage,replace:true});
+      this.multiSelectedItems=[]; 
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    },
     async filteredItems () {
       console.log('filteredItems', this.search, this.needRefresh);
       if (this.needRefresh) {

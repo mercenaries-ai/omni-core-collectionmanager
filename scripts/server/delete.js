@@ -1,24 +1,39 @@
 const script = {
   name: 'delete',
-
+  /*
+  permission: async function (ctx, ability, payload) {
+    const type = payload.type
+    if(type === 'recipe') {
+      const id = payload.id
+      const integration = ctx.app.integrations.get('workflow');
+      const workflow = await integration.getRecipe(payload.id, ctx.userId, false)
+      if (!workflow || !ability.can(EObjectAction.DELETE, workflow)) {
+        throw new Error ('Insufficient permissions to delete the recipe')
+      }
+    }
+  },
+  */
   exec: async function (ctx, payload) {
     let type = payload.type || undefined;
     console.log(payload)
     if (type === 'recipe') {
         let result = false;
         const integration = ctx.app.integrations.get('workflow');
-        const workflow =  await integration.getWorkflow(payload.id, payload.version, ctx.userId, false /*allowPublic: false*/)
+        const workflow =  await integration.getRecipe(payload.id, ctx.userId, false /*allowPublic: false*/)
         if (workflow) {
             result = await integration.deleteWorkflow(workflow)
             if(result) {
                 const deletedItem = [workflow.id]
                 return deletedItem;
+            } else {
+                console.error('Failed to delete the recipe')
+                return null
             }
         }
         else {
-          console.error('No permission to delete the recipe')
+            console.error('Failed to delete the recipe')
+            return null
         }
-        return { result: result };
     } else if (type === 'block') {
         console.log('delete block')
         /*
