@@ -13,8 +13,8 @@
     }
   </style>
   
-  <script type="module" crossorigin src="/extensions/omni-core-collectionmanager/assets/main-4e817dd6.js"></script>
-  <link rel="stylesheet" href="/extensions/omni-core-collectionmanager/assets/index-28650623.css">
+  <script type="module" crossorigin src="/extensions/omni-core-collectionmanager/assets/main-7bcfc835.js"></script>
+  <link rel="stylesheet" href="/extensions/omni-core-collectionmanager/assets/index-f6c3b792.css">
 </head>
 
 <body class="p-6 select-none overflow-hidden bg-white">
@@ -201,7 +201,15 @@
                                   Authors:
                                 </span> 
                                 <span x-text="author"></span>
-                                <span x-text="id"></span>      
+                                <span x-text="id"></span>
+                                <span class="desc-title">
+                                  Created Date: 
+                                </span>
+                                <span x-text="createdDate"></span>
+                                <span class="desc-title">
+                                  Updated Date: 
+                                </span>
+                                <span x-text="updatedDate"></span>
                                 <div class="collection-recipe-tags">
                                 <template x-for="(tag, idx) in tags" :key="idx">
                                   <div class="tag default" x-text="tag"></div>
