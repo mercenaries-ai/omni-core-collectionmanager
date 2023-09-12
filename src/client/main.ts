@@ -280,7 +280,7 @@ const createGallery = function (itemsPerPage: number, itemApi: string) {
     async clickToAction(item, type: string) {
       if (type === 'recipe') {
         //@ts-expect-error
-        await window.parent.client.workbench.loadWorkflow(item.value.id, item.value.version);
+        await window.parent.client.workbench.loadRecipe(item.value.id, item.value.version);
 
         sdk.close();
       }
@@ -299,18 +299,6 @@ const createGallery = function (itemsPerPage: number, itemApi: string) {
     }
   };
 };
-
-function orderByName(a, b) {
-  const name_a = a.value?.meta?.name?.toLowerCase() || a.value?.name?.toLowerCase();
-  const name_b = b.value?.meta?.name?.toLowerCase() || b.value?.name?.toLowerCase();
-  if (name_a > name_b) {
-    return 1;
-  } else if (name_a < name_b) {
-    return -1;
-  } else {
-    return 0;
-  }
-}
 
 window.Alpine = Alpine;
 document.addEventListener('alpine:init', async () => {
@@ -348,6 +336,13 @@ document.addEventListener('alpine:init', async () => {
       this.installed = data.installed;
       this.canOpen = data.canOpen;   
     },
+    get createdDate() {
+      return this.created ? new Date(this.created).toLocaleString() : null;
+    },
+    get updatedDate() {
+      return this.updated ? new Date(this.updated).toLocaleString() : null;
+    }
+
   }));
 
   Alpine.data('appState', () => ({
