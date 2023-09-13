@@ -1,6 +1,5 @@
 const script = {
   name: 'delete',
-  /*
   permission: async function (ctx, ability, payload) {
     const type = payload.type
     if(type === 'recipe') {
@@ -12,7 +11,6 @@ const script = {
       }
     }
   },
-  */
   exec: async function (ctx, payload) {
     let type = payload.type || undefined;
     console.log(payload)

@@ -280,20 +280,24 @@ const createGallery = function (itemsPerPage: number, itemApi: string) {
       }
     },
     async deleteItem(item) {
-        const type = item.type;
-        const payload = Alpine.raw(item.value);
+      const type = item.type;
+      const payload = Alpine.raw(item.value);
+      try {
         const result = await sdk.runExtensionScript('delete', { type: type, id: payload.id }); 
-      if( result?.length > 0 ) { 
-        this.needRefresh = true;
-        return result
-      } else {
-        sdk.sendChatMessage(
-          'Failed to delete item(s) ' + item.value.name,
-          'text/plain',
-          {},
-          ['error']
-        );
-        return null
+        if( result?.length > 0 ) { 
+          this.needRefresh = true;
+          return result
+        } else {
+          sdk.sendChatMessage(
+            'Failed to delete item(s) ' + item.value.name,
+            'text/plain',
+            {},
+            ['error']
+          );
+          return null
+        }
+      } catch (e) {
+        console.error(e);
       }
     },
     async clickToAction(item, type: string) {
@@ -342,7 +346,7 @@ document.addEventListener('alpine:init', async () => {
       this.id = data.id;
       this.name = data.meta?.name ?? data.name;
       this.title = data.meta?.title ?? data.title;
-      this.description = data.meta?.description; // don't bother with fallback anymore
+      this.description = data.meta?.description ?? data.description;
       this.pictureUrl = data.meta?.pictureUrl; // don't bother with fallback anymore
       this.type = data.type;
       this.category = data.category;
