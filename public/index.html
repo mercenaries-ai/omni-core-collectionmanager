@@ -13,14 +13,14 @@
     }
   </style>
   
-  <script type="module" crossorigin src="/extensions/omni-core-collectionmanager/assets/main-42499c45.js"></script>
+  <script type="module" crossorigin src="/extensions/omni-core-collectionmanager/assets/main-b35aa3da.js"></script>
   <link rel="stylesheet" href="/extensions/omni-core-collectionmanager/assets/index-f6c3b792.css">
 </head>
 
 <body class="p-6 select-none overflow-hidden bg-white">
   <div class="m-h-screen bg-white" x-data="appState"
     @keydown.window.prevent.stop.ctrl.shift.f="window.parent.client.workbench.activeExtension ? window.parent.client.workbench.hideExtension() :  window.parent.client.workbench.showExtension('omni-core-filemanager', {})">
-    <div id="container" class="bg-white" x-data="createGallery(10 , '')"
+    <div id="container" class="bg-white" x-data="createGallery(20 , '')"
       @keydown.escape.window="viewerMode ? window.parent.client.workbench.hideExtension() : multiSelectedItems.length>0 ? multiSelectedItems = [] :  focusedItem ? focusedItem = null :  window.parent.client.workbench.hideExtension()">
       <!-- Gallery Nav  -->
       <div x-show="!viewerMode && !focusedItem"
@@ -292,7 +292,7 @@
                  </template>
               </div>
             </template>
-            <div class="flex justify-center p-4 cursor-pointer" @click="loadMore()">
+            <div class="flex justify-center p-4 cursor-pointer" @click="loadMore()" x-show="totalPages !== currentPage">
                 <svg class="w-14 h-14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" stroke="#DEDEDF">
                 <path
                     d="M12 7V17M7 12H17M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z"

@@ -58,7 +58,7 @@ const createGallery = function (itemsPerPage: number, itemApi: string) {
   return {
     type: type,
     viewerMode: viewerMode,
-    currentPage: 1,
+    currentPage: 0,
     itemsPerPage: itemsPerPage,
     itemApi: itemApi,
     items: [],
@@ -101,19 +101,20 @@ const createGallery = function (itemsPerPage: number, itemApi: string) {
     },
 
     async addItems(items, replace = false) {
-      let lastCursor = this.cursor;
-      if (items && items.length) {
-        if (replace) {
-          this.items = items;
-        } else {
-          this.cursor = this.items.length;
-          this.items = this.items.concat(items);
-        }
-        this.totalPages = Math.ceil(this.items.length / this.itemsPerPage);
+      if (replace) {
+        console.log('replace items', this.items, items)
+        this.items = items;
+      } else {
+        this.items = this.items.concat(items);
       }
+      this.cursor = this.items.length;
+      this.totalPages = Math.ceil(this.items.length / this.itemsPerPage);
     },
     async loadMore() {
-      console.log('loadMore - before', this.cursor, this.items.length)
+      if(this.currentPage === this.totalPages) {
+        console.log('This is the last page')
+        return;
+      }
       const body: { limit: number; cursor: number; type: string; filter: string } = {
         limit: this.itemsPerPage,
         type: this.type,
@@ -122,8 +123,9 @@ const createGallery = function (itemsPerPage: number, itemApi: string) {
       };
       const data = await sdk.runExtensionScript('collection', body);
       this.addItems(data.items, false);
+      this.totalPages = data.totalPages;
+      this.currentPage = data.currentPage;
       this.cursor = this.items.length;
-      console.log('loadMore - after', this.cursor, this.items.length)
     },
     async fetchItems(opts?: {
       cursor?: number;

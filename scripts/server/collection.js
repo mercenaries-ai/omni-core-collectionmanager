@@ -13,18 +13,24 @@ const script = {
 
     if (type === 'recipe') {
       const workflowIntegration = ctx.app.integrations.get('workflow');
-      const result = await workflowIntegration.getWorkflowsForUserPaginated(
+      const page = parseInt(cursor / limit);
+      const result = await workflowIntegration.getWorkflowsForUserPaginatedV2(
         ctx.user.id,
-        limit,
-        0,
-        cursor,
         true,
+        limit,
+        page,
         filter
       );
+      if(result.data.length === 0) {
+        console.log('no result')
+        return {items: []}
+      }
       const items = result.data.map((item) => {
         return {
           value: { ...item },
           type: 'recipe',
+          currentPage: page,
+          totalPages: result.totalPage,
         };
       });
       return {
