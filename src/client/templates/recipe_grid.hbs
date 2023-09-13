@@ -11,7 +11,7 @@
       <div class="collection-recipe-action">
         <div class="collection-recipe-title">
           <div class="text-sm font-semibold" x-text="name"></div>
-          <div class="collection-fav" @click="clickToAction(item, 'toggleRecipeStar')">
+          <div class="collection-fav ml-2 cusor-pointer" @click="clickToAction(item, 'toggleRecipeStar')">
             <svg x-show="!starred" xmlns="http://www.w3.org/2000/svg" width="17" height="15"
               viewBox="0 0 17 15" fill="none">
               <path
@@ -47,19 +47,19 @@
     <div class="collection-recipe-description">
       <span class="desc-title">
         About the recipe:
-      </span> 
+      </span>
       <span x-text="description"></span>
       <span class="desc-title">
         Authors:
-      </span> 
+      </span>
       <span x-text="author"></span>
       <span x-text="id"></span>
       <span class="desc-title">
-        Created Date: 
+        Created Date:
       </span>
       <span x-text="createdDate"></span>
       <span class="desc-title">
-        Updated Date: 
+        Updated Date:
       </span>
       <span x-text="updatedDate"></span>
       <div class="collection-recipe-tags">

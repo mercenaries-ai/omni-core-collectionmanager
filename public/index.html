@@ -13,8 +13,8 @@
     }
   </style>
   
-  <script type="module" crossorigin src="/extensions/omni-core-collectionmanager/assets/main-b35aa3da.js"></script>
-  <link rel="stylesheet" href="/extensions/omni-core-collectionmanager/assets/index-f6c3b792.css">
+  <script type="module" crossorigin src="/extensions/omni-core-collectionmanager/assets/main-726cd149.js"></script>
+  <link rel="stylesheet" href="/extensions/omni-core-collectionmanager/assets/index-4528f991.css">
 </head>
 
 <body class="p-6 select-none overflow-hidden bg-white">
@@ -159,7 +159,7 @@
                                 <div class="collection-recipe-action">
                                   <div class="collection-recipe-title">
                                     <div class="text-sm font-semibold" x-text="name"></div>
-                                    <div class="collection-fav" @click="clickToAction(item, 'toggleRecipeStar')">
+                                    <div class="collection-fav ml-2 cusor-pointer" @click="clickToAction(item, 'toggleRecipeStar')">
                                       <svg x-show="!starred" xmlns="http://www.w3.org/2000/svg" width="17" height="15"
                                         viewBox="0 0 17 15" fill="none">
                                         <path
@@ -195,19 +195,19 @@
                               <div class="collection-recipe-description">
                                 <span class="desc-title">
                                   About the recipe:
-                                </span> 
+                                </span>
                                 <span x-text="description"></span>
                                 <span class="desc-title">
                                   Authors:
-                                </span> 
+                                </span>
                                 <span x-text="author"></span>
                                 <span x-text="id"></span>
                                 <span class="desc-title">
-                                  Created Date: 
+                                  Created Date:
                                 </span>
                                 <span x-text="createdDate"></span>
                                 <span class="desc-title">
-                                  Updated Date: 
+                                  Updated Date:
                                 </span>
                                 <span x-text="updatedDate"></span>
                                 <div class="collection-recipe-tags">
@@ -220,17 +220,28 @@
                           </div>
                        </template>
                        <template x-if="item.type === 'extension' && item.value">
-                          
                           <div @mouseenter='hoverItem = item.value' @mouseleave='hoverItem = null' @contextmenu.prevent="selectItem(item.value)" class="border-2" :class="{ ' border-yellow-300': multiSelectedItems.includes(item.value), ' border-white': focusedItem === item.value.value }" alt="item.value.meta.fileName">
                             <div class="collection-extension" class="flex" x-data="collection" x-effect="setData(item.value)">
                               <div class="collection-extension-header">
-                                <div class="collection-extension-header-title" x-text="title"></div>
+                                <div class="collection-extension-header-title" x-data="{'pinned': window.localStorage.getItem('favourite-' + id) }">
+                                  <svg
+                                  class="absolute float-right right-4 pr-2 w-5 h-5 cursor-pointer "
+                                  xmlns="http://www.w3.org/2000/svg"  @click="window.localStorage.getItem('favourite-' + id) ? window.localStorage.removeItem('favourite-' + id) : window.localStorage.setItem('favourite-' + id, true); pinned = !!window.localStorage.getItem('favourite-' + id)" viewBox="0 0 17 15" fill="red">
+                                    <path :class="{
+                                            'fill-red-600 stroke-black': pinned,
+                                            'fill-white stroke-black': !pinned
+                                          }" d="M2.1095 7.70617L8.5 14.3333L14.8905 7.70617C15.6009 6.96942 16 5.97024 16 4.92838C16 2.75879 14.304 1 12.2119 1C11.2073 1 10.2437 1.41388 9.53333 2.15059L8.5 3.22222L7.46667 2.15059C6.75624 1.41388 5.79273 1 4.78807 1C2.69597 1 1 2.75879 1 4.92838C1 5.97024 1.3991 6.96942 2.1095 7.70617Z" stroke="#ffffff" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" />
+                                  </svg>
+                                  <span x-text='title'></span>
+                                </div>
                                 <div class="flex-grow"></div>
                                 <img x-src="'/extensions/'+id+'/logo.png'" class="collection-extension-header-logo" onerror="this.onerror=null;this.src='/omni.png'" />
                               </div>
-                              <div class="collection-extension-body">
-                                <span>Author:</span> <span x-text="author"></span>
-                                <span x-text="description"></span>
+                          
+                              <div class="font-normal text-md shadow-none drop-shadow-none border-0">
+                                <div x-show="author">Author: <span x-text="item.author"></span></div>
+                                <div x-show="description != null || description.length === 0"><span x-text="description"></span></div>
+                                <div x-show="description == null"><span text="No description provided"></span></div>
                               </div>
                               <div class="btn-group">
                                 <button class="btn btn-primary" x-show="canOpen || !installed" @click='await clickToAction(item, "extension")'><svg xmlns="http://www.w3.org/2000/svg" width="13" height="14" viewBox="0 0 13 14" fill="none">
