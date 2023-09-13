@@ -7,7 +7,7 @@ client:
   addToWorkbench: false
   singleton: true
   winbox:
-    minwidth: 60%
+    minwidth: 50%
     minheight: 100%
     x: right
     y: top
