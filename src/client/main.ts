@@ -307,7 +307,7 @@ const createGallery = function (itemsPerPage: number, itemApi: string) {
         console.log(await sdk.runClientScript('add', [item.value.name]))
       }
       else if (type == 'extension') {
-        if (item.value.installed === 'true') {
+        if (item.value.installed) {
           //@ts-expect-error
           sdk.signalIntent("show", item.value.id);
         } else {
