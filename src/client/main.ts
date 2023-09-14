@@ -302,6 +302,11 @@ const createGallery = function (itemsPerPage: number, itemApi: string) {
         console.error(e);
       }
     },
+    async update(item, type: string) {
+      if (type == 'extension') {
+        sdk.runClientScript('extensions',['update', item.value.id]);
+      }
+    },
     async clickToAction(item, type: string) {
       if (type === 'recipe') {
         //@ts-expect-error
@@ -349,10 +354,10 @@ document.addEventListener('alpine:init', async () => {
       this.name = data.meta?.name ?? data.name;
       this.title = data.meta?.title ?? data.title;
       this.description = data.meta?.description ?? data.description;
-      this.pictureUrl = data.meta?.pictureUrl; // don't bother with fallback anymore
+      this.pictureUrl = data.meta?.pictureUrl ?? data.pictureUrl;
       this.type = data.type;
       this.category = data.category;
-      this.author = data.meta?.author;
+      this.author = data.meta?.author ?? data.author;
       this.tags = data.meta?.tags ?? data.tags;
       this.starred = data.starred;
       this.canDelete = data.canDelete;
