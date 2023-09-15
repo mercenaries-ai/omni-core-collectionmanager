@@ -1,6 +1,30 @@
 import path from 'path';
 import fs from 'fs/promises';
 import yaml from 'js-yaml';
+
+const getKnownFile = async () => {
+  try {
+    const knownFilePath = path.join(process.cwd(), 'etc', 'extensions', 'known_extensions.yaml');
+    const knownFileContents = await fs.readFile(knownFilePath, 'utf8');
+    return yaml.load(knownFileContents);
+  } catch (error) {
+    console.error('Error reading the known file:', error);
+    throw error;
+  }
+};
+
+const getPrivateExtensions = (allExtensions, knownKeysSet) => {
+  return allExtensions
+    .map(({ config }) => ({ ...config }))
+    .filter(({ id }) => !knownKeysSet.has(id));
+};
+
+const getAllExtensions = (knownFile, privateExtensions) => {
+  return knownFile.known_extensions
+    .concat(privateExtensions)
+    .sort((a, b) => a.title.localeCompare(b.title));
+};
+
 const script = {
   name: 'collection',
 
@@ -52,27 +76,23 @@ const script = {
       return { items: [{type: 'block'}] }
     } else if (type === 'extension') {
       // TODO
-      const knownFilePath = path.join(process.cwd(), 'etc', 'extensions', 'known_extensions.yaml')
-      const knownFileContents = await fs.readFile(knownFilePath, 'utf8')
-      const knownFile = yaml.load(knownFileContents)
-      const knownKeys =knownFile.known_extensions.map(k=>k.id)
-
-
-      const privateExtensions =ctx.app.extensions.all().map(e=>JSON.parse(JSON.stringify({...e.config} ))).filter(e=>!knownKeys.includes(e.id))
-      console.log(privateExtensions)
-
-      const allExtensions = knownFile.known_extensions.concat(privateExtensions).sort((a,b)=>a.title.localeCompare(b.title))
-
-
-      const items = allExtensions.filter(e=>!e.deprecated && e.title.toLowerCase().includes(filter)).map(e => {
+      const knownFile = await getKnownFile();
+      const knownKeysSet = new Set(knownFile.known_extensions.map(k => k.id));
+      const allExtensions = ctx.app.extensions.all().filter(e => e.config.client?.addToWorkbench);
+      const privateExtensions = getPrivateExtensions(allExtensions, knownKeysSet);
+      const allExtensionsSorted = getAllExtensions(knownFile, privateExtensions);
+      const items = allExtensionsSorted.filter(e=>!e.deprecated && e.title.toLowerCase().includes(filter)).map(e => {
         if(ctx.app.extensions.has(e.id)) {
           const extension = ctx.app.extensions.get(e.id)
+
           return {type: 'extension', value: {installed: ctx.app.extensions.has(e.id), canOpen: extension.config.client?.addToWorkbench, id: `${e.id}`, title: `${e.title}`, description: `${extension.config.description}`, url: `${e.url}`, author: `${extension.config.author}`}};
         } else {
 
           return {type: 'extension', value: {installed: ctx.app.extensions.has(e.id), id: `${e.id}`, title: `${e.title}`, description: `${e.description}`, url: `${e.url}`, author: `${e.author || 'Anonymous'}`}};
         }
       })
+      // sort items to put installed extensions first
+      items.sort((a,b)=>a.value.installed === b.value.installed ? 0 : a.value.installed ? -1 : 1)
       return { items };
     } else if (type === 'api') {
       let items = blockManager.getAllNamespaces();
