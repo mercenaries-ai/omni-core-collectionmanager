@@ -307,6 +307,17 @@ const createGallery = function (itemsPerPage: number, itemApi: string) {
         sdk.runClientScript('extensions',['update', item.value.id]);
       }
     },
+    async toggleFavorite(item, type: string) {
+      let key = 'fav-' + type;
+      if (type === 'block') {
+        key += item.value.name;
+      } else {
+        key += item.value.id;
+      }
+      window.localStorage.getItem(key) ? window.localStorage.removeItem(key) : window.localStorage.setItem(key, 'true');
+      this.starred = !this.starred
+      item.value.starred = this.starred
+    },
     async clickToAction(item, type: string) {
       if (type === 'recipe') {
         //@ts-expect-error
@@ -349,17 +360,23 @@ document.addEventListener('alpine:init', async () => {
     created: null,
     updated: null,
     deleted: false,
-    setData(data) {
+    setData(type, data) {
+      let key = 'fav-' + type;
+      if (type === 'block') {
+        key += data.name;
+      } else {
+        key += data.id;
+      }
       this.id = data.id;
       this.name = data.meta?.name ?? data.name;
       this.title = data.meta?.title ?? data.title;
       this.description = data.meta?.description ?? data.description;
       this.pictureUrl = data.meta?.pictureUrl ?? data.pictureUrl;
-      this.type = data.type;
+      this.type = type;
       this.category = data.category;
       this.author = data.meta?.author ?? data.author;
       this.tags = data.meta?.tags ?? data.tags;
-      this.starred = data.starred;
+      this.starred = window.localStorage.getItem(key) ? true : false;
       this.canDelete = data.canDelete;
       this.created = data.meta?.created;
       this.updated = data.meta?.updated;   

@@ -1,13 +1,17 @@
 <div @mouseenter="hoverItem = item.value" @mouseleave="hoverItem = null" @contextmenu.prevent="selectItem(item.value)"
   :class="{ ' border-2 border-yellow-300': multiSelectedItems.includes(item.value), ' border-white': focusedItem === item.value.value }">
-<div class="collection-block" x-data="collection" x-effect="setData(item.value)">
+<div class="collection-block" x-data="collection" x-effect="setData(item.type, item.value)">
   <div class="collection-block-header">
-    <div class="collection-fav">
-      <svg xmlns="http://www.w3.org/2000/svg" width="17" height="15" viewBox="0 0 17 15" fill="none">
-        <path
-          d="M2.1095 7.70617L8.5 14.3333L14.8905 7.70617C15.6009 6.96942 16 5.97024 16 4.92838C16 2.75879 14.304 1 12.2119 1C11.2073 1 10.2437 1.41388 9.53333 2.15059L8.5 3.22222L7.46667 2.15059C6.75624 1.41388 5.79273 1 4.78807 1C2.69597 1 1 2.75879 1 4.92838C1 5.97024 1.3991 6.96942 2.1095 7.70617Z"
-          stroke="#505050" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" />
-      </svg>
+    <div class="favorite" @click="toggleFavorite(item, 'block')">
+      <svg xmlns="http://www.w3.org/2000/svg" width="17" height="15" viewBox="0 0 17 15"
+              fill="none">
+              <path :class="{
+                  'fill-red-600 stroke-white': starred,
+                  'fill-white stroke-black': !starred
+                }"
+                d="M2.1095 7.70617L8.5 14.3333L14.8905 7.70617C15.6009 6.96942 16 5.97024 16 4.92838C16 2.75879 14.304 1 12.2119 1C11.2073 1 10.2437 1.41388 9.53333 2.15059L8.5 3.22222L7.46667 2.15059C6.75624 1.41388 5.79273 1 4.78807 1C2.69597 1 1 2.75879 1 4.92838C1 5.97024 1.3991 6.96942 2.1095 7.70617Z"
+                stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
     </div>
   </div>
   <div class="collection-block-title" x-text="title">

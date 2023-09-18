@@ -231,6 +231,14 @@ h2 {
   }
 }
 
+.favorite {
+  width: 0.9375rem;
+  height: 0.83331rem;
+  align-items: flex-end;
+  cursor: pointer;
+  margin-left: 0.5rem;
+}
+
 // Extensions
 .collection-extension {
   display: flex;
@@ -270,18 +278,10 @@ h2 {
         display: flex;
         -webkit-box-orient: vertical;
         -webkit-line-clamp: 2;
-        align-self: stretch;
         overflow: hidden;
-        align-content: right;
         color: var(--medium-grey, #505050);
         text-overflow: ellipsis;
         @extend .omni-font-l-medium;
-
-        .collection-fav {
-          width: 0.9375rem;
-          height: 0.83331rem;
-          align-items: flex-end;
-        }
       }
     }
   }
@@ -319,12 +319,7 @@ h2 {
     align-items: flex-end;
     align-self: stretch;
 
-    .collection-fav {
-      width: 0.9375rem;
-      height: 0.83331rem;
-      flex-shrink: 0;
-      align-items: flex-end;
-    }
+    
   }
 
   &-title {
@@ -452,12 +447,6 @@ h2 {
       flex-direction: column;
       gap: 0.5rem;
       padding-top: 0rem;
-
-      .collection-fav {
-        width: 0.9375rem;
-        height: 0.83331rem;
-        align-items: flex-end;
-      }
     }
   }
 
