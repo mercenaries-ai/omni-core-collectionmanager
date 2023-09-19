@@ -2,12 +2,6 @@ import Alpine from 'alpinejs'
 import tippy from 'tippy.js'
 import 'tippy.js/dist/tippy.css'
 import DOMPurify from 'dompurify'
-
-import type CollectionRenderer from './renderers/CollectionRenderer';
-import RecipeRenderer from './renderers/RecipeRenderer'
-import BlockRenderer from './renderers/BlockRenderer'
-import APIManagementRenderer from './renderers/APIManagementRenderer'
-import ExtensionRenderer from './renderers/ExtensionRenderer'
 import {OmniSDKClient} from 'omni-sdk';
 
 const sdk = new OmniSDKClient("omni-core-collectionmanager").init();
@@ -26,12 +20,6 @@ focusedItem = params?.focusedItem;
 let viewerMode = focusedItem ? true : false;
 let type = params?.type;
 let filter = params?.filter;
-
-const renderers = new Map<string, CollectionRenderer>()
-renderers.set('recipe', new RecipeRenderer())
-renderers.set('block', new BlockRenderer())
-renderers.set('api', new APIManagementRenderer())
-renderers.set('extension', new ExtensionRenderer())
 
 const getFavoriteKey = function (type: string, data: any) {
   let key = 'fav-' + type;
@@ -98,18 +86,8 @@ const createGallery = function (itemsPerPage: number, itemApi: string) {
     },
     renderItem(item, opts) {
       console.log('renderItem', item, opts);
-      if (!item) {
-        //return '<img src="/ph_250.png" />';
-      } else {
-        const renderer = renderers.get(item.type);
-        if (renderer) {
-          return renderer.render(item.value);
-        } else {
-          return '<img src="/ph_250.png" />';
-        }
-     }
+      // TODO
     },
-
     async addItems(items, replace = false) {
       if(this.favOnly) {
         items = items.filter((item) => {
@@ -238,19 +216,6 @@ const createGallery = function (itemsPerPage: number, itemApi: string) {
       }
     },
 
-    async importItem(item) {
-      let args = {
-        action: 'import',
-        itemFid: item.fid,
-      };
-      const file = <any>(await sdk.runExtensionScript('export', args)).file;
-      console.log('import', file);
-      window.parent.location.href =
-        window.parent.location.protocol +
-        '//' +
-        window.parent.location.host +
-        `/?rx=${encodeURIComponent(file.url)}`;
-    },
     zoomItem(event) {
       // Determine whether the wheel was scrolled up or down
       const direction = event.deltaY < 0 ? 0.1 : -0.1;
