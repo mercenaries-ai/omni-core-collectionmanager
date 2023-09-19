@@ -8,7 +8,7 @@ const sdk = new OmniSDKClient("omni-core-collectionmanager").init();
 
 declare global {
   interface Window {
-    Alpine: typeof Alpine;
+    Alpine: typeof Alpine
   }
 }
 
@@ -75,19 +75,6 @@ const createGallery = function (itemsPerPage: number, itemApi: string) {
       await this.fetchItems({ replace: true, limit: itemsPerPage, cursor: 0 });
     },
 
-    async fileToDataUrl(file) {
-      /* Encode content of file as https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/Data_URLs */
-      return new Promise(function (resolve, reject) {
-        /* Load file into javascript. */
-        const reader = new FileReader();
-        reader.onload = (e) => resolve(e.target.result);
-        reader.readAsDataURL(file);
-      });
-    },
-    renderItem(item, opts) {
-      console.log('renderItem', item, opts);
-      // TODO
-    },
     async addItems(items, replace = false) {
       if(this.favOnly) {
         items = items.filter((item) => {
@@ -102,14 +89,13 @@ const createGallery = function (itemsPerPage: number, itemApi: string) {
         this.items = this.items.concat(items);
       }
       this.cursor = this.items.length;
-      this.totalPages = Math.ceil(this.items.length / this.itemsPerPage);
     },
     async loadMore() {
       if(this.currentPage === this.totalPages) {
         console.log('This is the last page')
         return;
       }
-      const body: { limit: number; cursor: number; type: string; filter: string } = {
+      const body: { limit: number, cursor: number, type: string, filter: string } = {
         limit: this.itemsPerPage,
         type: this.type,
         cursor: this.cursor,
@@ -160,36 +146,6 @@ const createGallery = function (itemsPerPage: number, itemApi: string) {
       return this.items;
     },
 
-    async nextItem() {
-      const currentIndex = this.items.indexOf(this.focusedItem);
-      if (currentIndex < this.items.length - 1) {
-        await this.focusItem(this.items[currentIndex + 1]);
-      }
-    },
-
-    animateTransition() {
-      if (this.loading) {
-        return;
-      }
-      this.loading = true;
-      setTimeout(() => {
-        this.loading = false;
-      }, 200); // Adjust this delay as needed
-    },
-
-    async previousItem() {
-      const currentIndex = this.items.indexOf(this.focusedItem);
-      if (currentIndex > 0) {
-        await this.focusItem(this.items[currentIndex - 1]);
-      }
-    },
-
-    nextPage() {
-      if (this.currentPage < this.totalPages) {
-        this.currentPage += 1;
-      }
-    },
-
     mouseEnter() {
       this.hover = true;
     },
@@ -197,43 +153,6 @@ const createGallery = function (itemsPerPage: number, itemApi: string) {
       this.hover = false;
     },
 
-    async focusItem(item) {
-      this.animateTransition();
-      this.x = 0;
-      this.y = 0;
-      this.scale = 1;
-      if (item.onclick != null) {
-        await item.onclick.call(item);
-        return;
-      }
-      this.focusedItem = item;
-      console.log('focusItem', item);
-    },
-
-    previousPage() {
-      if (this.currentPage > 1) {
-        this.currentPage -= 1;
-      }
-    },
-
-    zoomItem(event) {
-      // Determine whether the wheel was scrolled up or down
-      const direction = event.deltaY < 0 ? 0.1 : -0.1;
-
-      // Get the current scale of the item
-      const currentScale = this.$refs.zoomImg.style.transform || 'scale(1)';
-      const currentScaleValue = parseFloat(currentScale.slice(6, -1));
-
-      // Calculate the new scale
-      const newScale = Math.min(
-        Math.max(0.75, currentScaleValue + direction),
-        5.0
-      );
-      this.scale = newScale;
-
-      // Set the new scale
-      this.$refs.zoomImg.style.transform = `scale(${newScale})`;
-    },
     async deleteItemList(itemList) {
       if(!itemList || itemList.length === 0) return;
       let deletedItemList = [];
@@ -379,23 +298,6 @@ document.addEventListener('alpine:init', async () => {
       }
     },
 
-    moving: false,
-    startMoving(e) {
-      this.moving = true;
-      this.lastX = e.clientX;
-      this.lastY = e.clientY;
-      e.preventDefault();
-    },
-    move(e) {
-      if (!this.moving) return;
-      this.x += e.clientX - this.lastX;
-      this.y += e.clientY - this.lastY;
-      this.lastX = e.clientX;
-      this.lastY = e.clientY;
-    },
-    stopMoving() {
-      this.moving = false;
-    },
     getTitle() {
       if(type === 'recipe') {
         return 'Recipes';
