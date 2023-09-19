@@ -14,9 +14,10 @@
     "experimentalDecorators": true,
     "skipLibCheck": true,
     "lib": ["es2020", "dom"],
+    "strict": true
   },
   "include": [
-    "./main.ts",
-    "./main.js",
+    "./**/*.ts",
+    "./main.ts"
   ]
 }
