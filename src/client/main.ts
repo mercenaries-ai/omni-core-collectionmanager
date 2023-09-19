@@ -72,7 +72,7 @@ const createGallery = function (itemsPerPage: number, itemApi: string) {
     y: 0,
     focusedItem: focusedItem || null,
     hover: false,
-
+    favOnly: false,
     async init() {
       await this.fetchItems({ replace: true, limit: itemsPerPage, cursor: 0 });
     },
@@ -101,6 +101,17 @@ const createGallery = function (itemsPerPage: number, itemApi: string) {
     },
 
     async addItems(items, replace = false) {
+      if(this.favOnly) {
+        items = items.filter((item) => {
+          let key = 'fav-' + item.type;
+          if (item.type === 'block') {
+            key += item.value.name;
+          } else {
+            key += item.value.id;
+          }
+          return window.localStorage.getItem(key) ? true : false;
+        });
+      }
       if (replace) {
         console.log('replace items', this.items, items)
         this.items = items;
