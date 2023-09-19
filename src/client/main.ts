@@ -33,6 +33,16 @@ renderers.set('block', new BlockRenderer())
 renderers.set('api', new APIManagementRenderer())
 renderers.set('extension', new ExtensionRenderer())
 
+const getFavoriteKey = function (type: string, data: any) {
+  let key = 'fav-' + type;
+  if (type === 'block') {
+    key += data.name;
+  } else {
+    key += data.id;
+  }
+  return key;
+}
+
 const copyToClipboardComponent = () => {
   return {
     copyText: '',
@@ -103,12 +113,7 @@ const createGallery = function (itemsPerPage: number, itemApi: string) {
     async addItems(items, replace = false) {
       if(this.favOnly) {
         items = items.filter((item) => {
-          let key = 'fav-' + item.type;
-          if (item.type === 'block') {
-            key += item.value.name;
-          } else {
-            key += item.value.id;
-          }
+          const key = getFavoriteKey(item.type, item.value)
           return window.localStorage.getItem(key) ? true : false;
         });
       }
@@ -319,12 +324,7 @@ const createGallery = function (itemsPerPage: number, itemApi: string) {
       }
     },
     async toggleFavorite(item, type: string) {
-      let key = 'fav-' + type;
-      if (type === 'block') {
-        key += item.value.name;
-      } else {
-        key += item.value.id;
-      }
+      const key = getFavoriteKey(type, item.value)
       window.localStorage.getItem(key) ? window.localStorage.removeItem(key) : window.localStorage.setItem(key, 'true');
       this.starred = !this.starred
       item.value.starred = this.starred
@@ -372,12 +372,6 @@ document.addEventListener('alpine:init', async () => {
     updated: null,
     deleted: false,
     setData(type, data) {
-      let key = 'fav-' + type;
-      if (type === 'block') {
-        key += data.name;
-      } else {
-        key += data.id;
-      }
       this.id = data.id;
       this.name = data.meta?.name ?? data.name;
       this.title = data.meta?.title ?? data.title;
@@ -387,6 +381,8 @@ document.addEventListener('alpine:init', async () => {
       this.category = data.category;
       this.author = data.meta?.author ?? data.author;
       this.tags = data.meta?.tags ?? data.tags;
+
+      const key = getFavoriteKey(type, data)
       this.starred = window.localStorage.getItem(key) ? true : false;
       this.canDelete = data.canDelete;
       this.created = data.meta?.created;
