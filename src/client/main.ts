@@ -11,6 +11,7 @@ declare global {
     Alpine: typeof Alpine
   }
 }
+type CollectionType = 'block' | 'recipe' | 'extension';
 
 // -------------------- Viewer Mode: If q.focusedItem is set, we hide the gallery and show the item full screen -----------------------
 const args = new URLSearchParams(location.search);
@@ -21,7 +22,7 @@ let viewerMode = focusedItem ? true : false;
 let type = params?.type;
 let filter = params?.filter;
 
-const getFavoriteKey = function (type: string, data: any) {
+const getFavoriteKey = function (type: CollectionType, data: any) {
   let key = 'fav-' + type;
   if (type === 'block') {
     key += data.name;
@@ -102,7 +103,7 @@ const createGallery = function (itemsPerPage: number, itemApi: string) {
         console.log('This is the last page')
         return;
       }
-      const body: { limit: number, cursor: number, type: string, filter: string } = {
+      const body: { limit: number, cursor: number, type: CollectionType, filter: string } = {
         limit: this.itemsPerPage,
         type: this.type,
         cursor: this.cursor,
@@ -123,7 +124,7 @@ const createGallery = function (itemsPerPage: number, itemApi: string) {
       if (this.viewerMode) {
         return Promise.resolve();
       }
-      const body: { limit: number; cursor: number; type: string; filter: string } = {
+      const body: { limit: number; cursor: number; type: CollectionType; filter: string } = {
         limit: this.itemsPerPage,
         type: this.type,
         cursor: 0,
@@ -210,18 +211,18 @@ const createGallery = function (itemsPerPage: number, itemApi: string) {
         console.error(e);
       }
     },
-    async update(item, type: string) {
+    async update(item, type: CollectionType) {
       if (type == 'extension') {
         sdk.runClientScript('extensions',['update', item.value.id]);
       }
     },
-    async toggleFavorite(item, type: string) {
+    async toggleFavorite(item, type: CollectionType) {
       const key = getFavoriteKey(type, item.value)
       window.localStorage.getItem(key) ? window.localStorage.removeItem(key) : window.localStorage.setItem(key, 'true');
       this.starred = !this.starred
       item.value.starred = this.starred
     },
-    async clickToAction(item, type: string) {
+    async clickToAction(item, type: CollectionType) {
       if (type === 'recipe') {
         //@ts-expect-error
         await window.parent.client.workbench.loadRecipe(item.value.id, item.value.version);
@@ -331,7 +332,7 @@ document.addEventListener('alpine:init', async () => {
         this.cursor = 0
         this.needRefresh = false
       }
-      const body: { limit: number; cursor: number; type: string; filter: string } = {
+      const body: { limit: number; cursor: number; type: CollectionType; filter: string } = {
         limit: this.itemsPerPage,
         type: this.type,
         cursor: 0,
