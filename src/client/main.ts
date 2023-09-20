@@ -67,27 +67,6 @@ const getFavoriteKey = function (type: CollectionType, data: any) {
   return key;
 }
 
-const copyToClipboardComponent = () => {
-  return {
-    copyText: '',
-    copyNotification: false,
-
-    async copyToClipboard(item) {
-      const res = await fetch(item.url);
-      const blob = await res.blob();
-      const data = [new ClipboardItem({ [blob.type]: blob })];
-      await navigator.clipboard.write(data);
-      //alert('Item copied to clipboard');
-      //navigator.clipboard.writeText(this.copyText);
-      this.copyNotification = true;
-      let that = this;
-      setTimeout(function () {
-        that.copyNotification = false;
-      }, 3000);
-    },
-  };
-};
-
 const createGallery = function (itemsPerPage: number, itemApi: string) {
   return {
     type: type,
@@ -328,33 +307,8 @@ document.addEventListener('alpine:init', async () => {
   }));
 
   Alpine.data('appState', () => ({
-    copyToClipboardComponent,
     createGallery,
-    async copyToClipboard(itemUrl) {
-      try {
-        const res = await fetch(itemUrl);
-        const blob = await res.blob();
-        const data = [new ClipboardItem({ [blob.type]: blob })];
-        await navigator.clipboard.write(data);
-        alert('Item copied to clipboard');
-      } catch (err) {
-        console.error(err.name, err.message);
-      }
-    },
-
-    getTitle() {
-      if(type === 'recipe') {
-        return 'Recipes';
-      } else if (type === 'block') {
-        return 'Add Blocks';
-      } else if (type === 'extension') {
-        return 'Extensions';
-      } else if (type === 'api') {
-        return 'API Management';
-      }
-    },
     search: filter || '',
-    prevSearch: '',
     needRefresh: false,
     async refresh() {
       await this.fetchItems({limit: this.itemsPerPage,replace:true});
