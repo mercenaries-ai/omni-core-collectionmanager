@@ -71,6 +71,13 @@ const createGallery = function (itemsPerPage: number, itemApi: string) {
     focusedItem: focusedItem || null,
     hover: false,
     favOnly: false,
+    calculateCursor() {
+      if(this.type === 'block') {
+        this.cursor = this.items[this.items.length-1].value.id;
+      } else {
+        this.cursor = this.items.length;
+      }
+    },
     async init() {
       await this.fetchItems({ replace: true, limit: itemsPerPage, cursor: 0 });
     },
@@ -88,7 +95,7 @@ const createGallery = function (itemsPerPage: number, itemApi: string) {
       } else {
         this.items = this.items.concat(items);
       }
-      this.cursor = this.items.length;
+      this.calculateCursor();
     },
     async loadMore() {
       if(this.currentPage === this.totalPages) {
@@ -105,7 +112,8 @@ const createGallery = function (itemsPerPage: number, itemApi: string) {
       this.addItems(data.items, false);
       this.totalPages = data.totalPages;
       this.currentPage = data.currentPage;
-      this.cursor = this.items.length;
+      this.calculateCursor();
+      
     },
     async fetchItems(opts?: {
       cursor?: number;
@@ -331,7 +339,7 @@ document.addEventListener('alpine:init', async () => {
       };
       const data = await sdk.runExtensionScript('collection', body);
       this.addItems(data.items, true);
-      this.cursor = this.items.length;
+      this.calculateCursor();
       return this.items;
     },
   }));

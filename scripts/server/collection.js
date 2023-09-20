@@ -63,10 +63,11 @@ const script = {
     } else if (type === 'block') {
       const opts = { contentMatch: filter, tags: '' };
       let items = blockManager.getFilteredBlocksAndPatches(limit, cursor, filter, opts);
+      console.log(items)
       if (items != null && Array.isArray(items) && items.length > 0) {
         items = items.map((n) => {
           return {
-            value: { ...n },
+            value: { ...n[1], id: n[0] },
             type: 'block',
           }
         });
