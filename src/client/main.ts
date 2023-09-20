@@ -13,6 +13,41 @@ declare global {
 }
 type CollectionType = 'block' | 'recipe' | 'extension';
 
+interface BaseCollectionValue {
+  id: string;
+  name: string;
+  title: string;
+  description: string;
+  category: string;
+  tags: string[];
+  starred: boolean;
+  setData: (type: CollectionType, data: Partial<Recipe & Extension & Block>) => void;
+}
+
+interface Recipe extends BaseCollectionValue {
+  author: string;
+  pictureUrl: string;
+  canDelete: boolean;
+  created: Date | null;
+  updated: Date | null;
+  deleted: boolean;
+  createdDate: string | null;
+  updatedDate: string | null;
+}
+
+interface Extension extends BaseCollectionValue {
+  author: string;
+  installed: boolean;
+  canOpen: boolean;
+}
+
+interface Block extends BaseCollectionValue {
+  // ... (any attributes unique to Block)
+}
+
+type CollectionValue = Recipe | Extension | Block;
+type CollectionItem = { type: CollectionType; value: CollectionValue; };
+
 // -------------------- Viewer Mode: If q.focusedItem is set, we hide the gallery and show the item full screen -----------------------
 const args = new URLSearchParams(location.search);
 const params = sdk.args
@@ -83,7 +118,7 @@ const createGallery = function (itemsPerPage: number, itemApi: string) {
       await this.fetchItems({ replace: true, limit: itemsPerPage, cursor: 0 });
     },
 
-    async addItems(items, replace = false) {
+    async addItems(items: Array<CollectionItem>, replace = false) {
       if(this.favOnly) {
         items = items.filter((item) => {
           const key = getFavoriteKey(item.type, item.value)
