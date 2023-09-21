@@ -98,6 +98,11 @@ const createGallery = function (itemsPerPage: number, itemApi: string) {
     },
 
     async addItems(items: Array<CollectionItem>, replace = false) {
+      if(items.length === 1 && items[0].type === 'block' && Object.keys(items[0]).length === 1) {
+        // Special case, items is actually empty
+        items = []
+      }
+
       if(this.favOnly) {
         items = items.filter((item) => {
           const key = getFavoriteKey(item.type, item.value)
