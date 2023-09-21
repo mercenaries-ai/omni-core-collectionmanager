@@ -232,9 +232,17 @@ const createGallery = function (itemsPerPage: number, itemApi: string) {
     },
     async toggleFavorite(item, type: CollectionType) {
       const key = getFavoriteKey(type, item.value)
-      window.localStorage.getItem(key) ? window.localStorage.removeItem(key) : window.localStorage.setItem(key, 'true');
+      item.value.starred = !window.localStorage.getItem(key) // Toggle.
+      if (item.value.starred) {
+        window.localStorage.setItem(key, (new Date().getTime()).toString())
+      } else {
+        window.localStorage.removeItem(key)
+      }
+
+
+      // TODO: The next line isn't part of the toggle logic, but appears to trigger the redraw as a side-effect.
+      // Don't remove it without adding the redraw back in.
       this.starred = !this.starred
-      item.value.starred = this.starred
     },
     async clickToAction(item, type: CollectionType) {
       if (type === 'recipe') {
