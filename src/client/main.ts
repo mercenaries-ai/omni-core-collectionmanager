@@ -74,7 +74,7 @@ const createGallery = function (itemsPerPage: number, itemApi: string) {
     currentPage: 0,
     itemsPerPage: itemsPerPage,
     itemApi: itemApi,
-    items: [],
+    items: new Array<CollectionItem>(),
     totalPages: () => Math.ceil(this.items.length / this.itemsPerPage),
     multiSelectedItems: [],
     cursor: 0,
@@ -94,10 +94,15 @@ const createGallery = function (itemsPerPage: number, itemApi: string) {
       }
     },
     async init() {
-      await this.fetchItems({ replace: true, limit: itemsPerPage, cursor: 0 });
+      await this.loadMore()
     },
 
     async addItems(items: Array<CollectionItem>, replace = false) {
+      if (replace) {
+        this.items = new Array<CollectionItem>()
+        this.cursor = 0
+      }
+
       if(items.length === 1 && items[0].type === 'block' && Object.keys(items[0]).length === 1) {
         // Special case, items is actually empty
         items = []
@@ -109,12 +114,8 @@ const createGallery = function (itemsPerPage: number, itemApi: string) {
           return window.localStorage.getItem(key) ? true : false;
         });
       }
-      if (replace) {
-        console.log('replace items', this.items, items)
-        this.items = items;
-      } else {
-        this.items = this.items.concat(items);
-      }
+
+      this.items = this.items.concat(items);
       this.calculateCursor();
     },
     async loadMore() {
