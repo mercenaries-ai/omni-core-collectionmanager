@@ -75,7 +75,7 @@ const createGallery = function (itemsPerPage: number, itemApi: string) {
     itemsPerPage: itemsPerPage,
     itemApi: itemApi,
     items: new Array<CollectionItem>(),
-    totalPages: () => Math.ceil(this.items.length / this.itemsPerPage),
+    totalPages: 1,
     multiSelectedItems: [],
     cursor: 0,
     showInfo: false,
@@ -86,13 +86,6 @@ const createGallery = function (itemsPerPage: number, itemApi: string) {
     focusedItem: focusedItem || null,
     hover: false,
     favOnly: false,
-    calculateCursor() {
-      if(this.type === 'block') {
-        this.cursor = this.items[this.items.length-1].value.id;
-      } else {
-        this.cursor = this.items.length;
-      }
-    },
     async init() {
       await this.loadMore()
     },
@@ -108,6 +101,8 @@ const createGallery = function (itemsPerPage: number, itemApi: string) {
         items = []
       }
 
+      this.cursor += items.length
+
       if(this.favOnly) {
         items = items.filter((item) => {
           const key = getFavoriteKey(item.type, item.value)
@@ -116,49 +111,27 @@ const createGallery = function (itemsPerPage: number, itemApi: string) {
       }
 
       this.items = this.items.concat(items);
-      this.calculateCursor();
     },
-    async loadMore() {
-      if(this.currentPage === this.totalPages) {
-        console.log('This is the last page')
-        return;
-      }
-      const body: { limit: number, cursor: number, type: CollectionType, filter: string } = {
-        limit: this.itemsPerPage,
-        type: this.type,
-        cursor: this.cursor,
-        filter: this.search
-      };
-      const data = await sdk.runExtensionScript('collection', body);
-      this.addItems(data.items, false);
-      this.totalPages = data.totalPages;
-      this.currentPage = data.currentPage;
-      this.calculateCursor();
-      
+    async loadMore(replace = false) {
+      await this.fetchItems(replace)
     },
-    async fetchItems(opts?: {
-      cursor?: number;
-      limit?: number;
-      replace?: boolean;
-    }) {
+    async fetchItems(replace = false) {
       if (this.viewerMode) {
         return Promise.resolve();
       }
+
+      const limit = this.itemsPerPage + 1 // One extra to see if we are at the end of the collection.
       const body: { limit: number; cursor: number; type: CollectionType; filter: string } = {
-        limit: this.itemsPerPage,
+        limit,
         type: this.type,
-        cursor: 0,
+        cursor: this.cursor,
         filter: this.search,
       };
-      if (opts?.cursor) {
-        body.cursor = opts?.cursor;
-      }
-      if (opts?.limit && typeof opts.limit === 'number' && opts.limit > 0) {
-        body.limit = Math.max(opts.limit, 2);
-      }
       const data = await sdk.runExtensionScript('collection', body);
+      this.addItems(data.items.slice(0, limit - 1), replace);
 
-      this.addItems(data.items, opts?.replace);
+      this.currentPage += 1
+      this.totalPages = (data.items.length === limit) ? this.currentPage + 1 : this.currentPage
     },
     selectItem(item) {
       if (item.onclick) {
@@ -325,8 +298,8 @@ document.addEventListener('alpine:init', async () => {
     search: filter || '',
     needRefresh: false,
     async refresh() {
-      await this.fetchItems({limit: this.itemsPerPage,replace:true});
-      this.multiSelectedItems=[]; 
+      await this.loadMore(true)
+      this.multiSelectedItems=[]
       window.scrollTo({ top: 0, behavior: 'smooth' });
     },
     async filteredItems () {
@@ -343,7 +316,6 @@ document.addEventListener('alpine:init', async () => {
       };
       const data = await sdk.runExtensionScript('collection', body);
       this.addItems(data.items, true);
-      this.calculateCursor();
       return this.items;
     },
   }));
