@@ -33,7 +33,6 @@ const script = {
     let cursor = payload.cursor || 0;
     let type = payload.type || undefined;
     let filter = payload.filter || '';
-    const blockManager = ctx.app.blocks;
 
     if (type === 'recipe') {
       const workflowIntegration = ctx.app.integrations.get('workflow');
@@ -61,6 +60,7 @@ const script = {
         items,
       };
     } else if (type === 'block') {
+      const blockManager = ctx.app.blocks
       const opts = { contentMatch: filter, tags: '' };
       let items = blockManager.getFilteredBlocksAndPatches(limit, cursor, filter, opts);
       console.log(items)
