@@ -316,7 +316,8 @@ document.addEventListener('alpine:init', async () => {
       window.scrollTo({ top: 0, behavior: 'smooth' });
     },
     async filteredItems () {
-      this.prepareFromShadow()
+      this.needRefresh = false
+      await this.loadMore(true)
       return this.items
     },
   }));
