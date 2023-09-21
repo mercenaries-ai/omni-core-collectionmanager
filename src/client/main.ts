@@ -75,6 +75,7 @@ const createGallery = function (itemsPerPage: number, itemApi: string) {
     itemsPerPage: itemsPerPage,
     itemApi: itemApi,
     items: new Array<CollectionItem>(),
+    shadow: new Array<CollectionItem>(),
     totalPages: 1,
     multiSelectedItems: [],
     cursor: 0,
@@ -90,9 +91,20 @@ const createGallery = function (itemsPerPage: number, itemApi: string) {
       await this.loadMore()
     },
 
+    prepareFromShadow() {
+      this.items = [...this.shadow]
+      if(this.favOnly) {
+        this.items = this.items.filter((item) => {
+          const key = getFavoriteKey(item.type, item.value)
+          return window.localStorage.getItem(key) ? true : false;
+        });
+      }
+    },
+
     async addItems(items: Array<CollectionItem>, replace = false) {
       if (replace) {
         this.items = new Array<CollectionItem>()
+        this.shadow = new Array<CollectionItem>()
         this.cursor = 0
       }
 
@@ -103,14 +115,8 @@ const createGallery = function (itemsPerPage: number, itemApi: string) {
 
       this.cursor += items.length
 
-      if(this.favOnly) {
-        items = items.filter((item) => {
-          const key = getFavoriteKey(item.type, item.value)
-          return window.localStorage.getItem(key) ? true : false;
-        });
-      }
-
-      this.items = this.items.concat(items);
+      this.shadow = this.shadow.concat(items);
+      this.prepareFromShadow()
     },
     async loadMore(replace = false) {
       await this.fetchItems(replace)
@@ -310,20 +316,8 @@ document.addEventListener('alpine:init', async () => {
       window.scrollTo({ top: 0, behavior: 'smooth' });
     },
     async filteredItems () {
-      console.log('filteredItems', this.search, this.needRefresh);
-      if (this.needRefresh) {
-        this.cursor = 0
-        this.needRefresh = false
-      }
-      const body: { limit: number; cursor: number; type: CollectionType; filter: string } = {
-        limit: this.itemsPerPage,
-        type: this.type,
-        cursor: 0,
-        filter: this.search
-      };
-      const data = await sdk.runExtensionScript('collection', body);
-      this.addItems(data.items, true);
-      return this.items;
+      this.prepareFromShadow()
+      return this.items
     },
   }));
 

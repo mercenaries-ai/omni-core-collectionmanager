@@ -61,7 +61,7 @@
               <button 
                   x-ref="switchButton"
                   type="button" 
-                  @click="favOnly = !favOnly; await refresh()"
+                  @click="favOnly = !favOnly; prepareFromShadow()"
                   :class="favOnly ? 'bg-red-400' : 'bg-neutral-200'" 
                   class="relative inline-flex h-6 py-0.5 ml-4 focus:outline-none rounded-full w-10"
                   x-cloak>
