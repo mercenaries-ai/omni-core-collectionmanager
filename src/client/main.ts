@@ -120,7 +120,10 @@ const createGallery = function (itemsPerPage: number, itemApi: string) {
         return Promise.resolve();
       }
 
-      const limit = this.itemsPerPage + 1 // One extra to see if we are at the end of the collection.
+      let limit = this.itemsPerPage;
+      if (type === 'block') {
+        limit += 1 // One extra to see if we are at the end of the collection.
+      }
       const body: { limit: number; cursor: number; type: CollectionType; filter: string } = {
         limit,
         type: this.type,
@@ -128,9 +131,13 @@ const createGallery = function (itemsPerPage: number, itemApi: string) {
         filter: this.search,
       };
       const data = await sdk.runExtensionScript('collection', body);
-      this.addItems(data.items.slice(0, limit - 1), replace);
+      this.addItems(data.items.slice(0, this.itemsPerPage), replace);
 
-      this.currentPage += 1
+      if (type === 'block') {
+        this.currentPage += 1
+      } else {
+        this.currentPage = data.currentPage
+      }
       this.totalPages = (data.items.length === limit) ? this.currentPage + 1 : this.currentPage
     },
     selectItem(item) {
