@@ -139,12 +139,12 @@ const createGallery = function (itemsPerPage: number, itemApi: string) {
       const data = await sdk.runExtensionScript('collection', body);
       this.addItems(data.items.slice(0, this.itemsPerPage), replace);
 
-      if (data.hasownProperty('currentPage')) {
+      if (data.hasOwnProperty('currentPage')) {
         this.currentPage = data.currentPage
       } else {
         this.currentPage += 1
       }
-      if (data.hasownProperty('totalPages')) {
+      if (data.hasOwnProperty('totalPages')) {
         this.totalPages = data.totalPages
       } else {
         this.totalPages = (data.items.length === limit) ? this.currentPage + 1 : this.currentPage
