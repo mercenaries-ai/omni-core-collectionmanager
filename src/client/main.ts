@@ -127,7 +127,7 @@ const createGallery = function (itemsPerPage: number, itemApi: string) {
       }
 
       let limit = this.itemsPerPage;
-      if (type === 'block') {
+      if (type !== 'recipe') {
         limit += 1 // One extra to see if we are at the end of the collection.
       }
       const body: { limit: number; cursor: number; type: CollectionType; filter: string } = {
@@ -139,12 +139,16 @@ const createGallery = function (itemsPerPage: number, itemApi: string) {
       const data = await sdk.runExtensionScript('collection', body);
       this.addItems(data.items.slice(0, this.itemsPerPage), replace);
 
-      if (type === 'block') {
-        this.currentPage += 1
-      } else {
+      if (data.hasownProperty('currentPage')) {
         this.currentPage = data.currentPage
+      } else {
+        this.currentPage += 1
       }
-      this.totalPages = (data.items.length === limit) ? this.currentPage + 1 : this.currentPage
+      if (data.hasownProperty('totalPages')) {
+        this.totalPages = data.totalPages
+      } else {
+        this.totalPages = (data.items.length === limit) ? this.currentPage + 1 : this.currentPage
+      }
     },
     selectItem(item) {
       if (item.onclick) {

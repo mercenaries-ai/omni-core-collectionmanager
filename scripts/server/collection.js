@@ -82,7 +82,7 @@ const script = {
       const allExtensions = ctx.app.extensions.all().filter(e => e.config.client?.addToWorkbench);
       const privateExtensions = getPrivateExtensions(allExtensions, knownKeysSet);
       const allExtensionsSorted = getAllExtensions(knownFile, privateExtensions);
-      const items = allExtensionsSorted.filter(e=>!e.deprecated && e.title.toLowerCase().includes(filter)).map(e => {
+      let items = allExtensionsSorted.filter(e=>!e.deprecated && e.title.toLowerCase().includes(filter)).map(e => {
         if(ctx.app.extensions.has(e.id)) {
           const extension = ctx.app.extensions.get(e.id)
 
@@ -94,6 +94,7 @@ const script = {
       })
       // sort items to put installed extensions first
       items.sort((a,b)=>a.value.installed === b.value.installed ? 0 : a.value.installed ? -1 : 1)
+      items = items.slice(cursor, cursor + limit)
       return { items };
     } else if (type === 'api') {
       let items = blockManager.getAllNamespaces();
