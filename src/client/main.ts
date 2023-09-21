@@ -133,7 +133,7 @@ const createGallery = function (itemsPerPage: number, itemApi: string) {
       const body: { limit: number; cursor: number; type: CollectionType; filter: string } = {
         limit,
         type: this.type,
-        cursor: this.cursor,
+        cursor: replace ? 0 : this.cursor,
         filter: this.search,
       };
       const data = await sdk.runExtensionScript('collection', body);
