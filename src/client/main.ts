@@ -235,6 +235,9 @@ const createGallery = function (itemsPerPage: number, itemApi: string) {
         window.localStorage.removeItem(key)
       }
 
+      if (this.favOnly) {
+        this.prepareFromShadow() // `item` is no longer visible!
+      }
 
       // TODO: The next line isn't part of the toggle logic, but appears to trigger the redraw as a side-effect.
       // Don't remove it without adding the redraw back in.
