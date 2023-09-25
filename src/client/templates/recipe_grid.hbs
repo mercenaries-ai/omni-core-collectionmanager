@@ -31,7 +31,7 @@
                 stroke="white" stroke-width="0.96" stroke-linecap="round" stroke-linejoin="round" />
             </svg><span>Open</span></button>
           <button x-show="canDelete" class="btn btn-delete"
-            @click="deleteItem(item)"><span>Delete</span></button>
+            @click="await deleteItem(item)"><span>Delete</span></button>
         </div>
       </div>
     </div>
