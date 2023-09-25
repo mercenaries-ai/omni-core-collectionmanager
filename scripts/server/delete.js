@@ -1,3 +1,5 @@
+import { EObjectAction } from 'omni-shared'
+
 const script = {
   name: 'delete',
   permission: async function (ctx, ability, payload) {
