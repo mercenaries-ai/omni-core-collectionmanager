@@ -11,6 +11,9 @@
          <template x-if="item.type === 'block' && item.value">
             {{>block_grid}}
          </template>
+         <template x-if="item.type === 'api' && item.value">
+            {{>api_grid}}
+         </template>
       </div>
    </template>
 </div>

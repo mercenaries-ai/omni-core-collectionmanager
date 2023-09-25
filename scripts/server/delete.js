@@ -51,6 +51,7 @@ const script = {
       */
     } else if (type === 'extension') {
         console.log('delete extension')
+        
       // TODO
       /*
       const knownFilePath = path.join(process.cwd(), 'etc', 'extensions', 'known_extensions.yaml')
@@ -77,7 +78,9 @@ const script = {
       return { items };
       */
     } else if (type === 'api') {
-        console.log('delete api')
+        console.log(payload.id)
+        
+    
         /*
       let items = blockManager.getAllNamespaces();
       if (items != null && Array.isArray(items) && items.length > 0) {

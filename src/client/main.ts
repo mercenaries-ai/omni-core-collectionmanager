@@ -11,7 +11,7 @@ declare global {
     Alpine: typeof Alpine
   }
 }
-type CollectionType = 'block' | 'recipe' | 'extension';
+type CollectionType = 'block' | 'recipe' | 'extension' | 'api';
 
 interface BaseCollectionValue {
   id: string;
@@ -21,7 +21,7 @@ interface BaseCollectionValue {
   category: string;
   tags: string[];
   starred: boolean;
-  setData: (type: CollectionType, data: Partial<Recipe & Extension & Block>) => void;
+  setData: (type: CollectionType, data: Partial<Recipe & Extension & Block & Api>) => void;
 }
 
 interface Recipe extends BaseCollectionValue {
@@ -45,7 +45,14 @@ interface Block extends BaseCollectionValue {
   // ... (any attributes unique to Block)
 }
 
-type CollectionValue = Recipe | Extension | Block;
+interface Api extends BaseCollectionValue {
+  namespace: string;
+  basePath: string;
+  url: string;
+  key: Map<string, string>;
+}
+
+type CollectionValue = Recipe | Extension | Block | Api;
 type CollectionItem = { type: CollectionType; value: CollectionValue; };
 
 // -------------------- Viewer Mode: If q.focusedItem is set, we hide the gallery and show the item full screen -----------------------
@@ -258,6 +265,16 @@ const createGallery = function (itemsPerPage: number, itemApi: string) {
           sdk.runClientScript('extensions',['add', item.value.url]);
         }
       }
+      else if (type == 'api') {
+        if(this.hasKey) {
+          const response = await sdk.runClientScript('revokeKey', [this.namespace])
+          this.hasKey = false
+        } else {
+          // add credential
+          const response = await sdk.runClientScript('setKey', [this.namespace, this.key.type,this.key.secret ])
+          this.hasKey = true
+        }
+      }
 
     }
   };
@@ -282,6 +299,11 @@ document.addEventListener('alpine:init', async () => {
     created: null,
     updated: null,
     deleted: false,
+    namespace: '',
+    basePath: '',
+    url: '',
+    key: null,
+    hasKey: false,
     setData(type, data) {
       this.id = data.id;
       this.name = data.meta?.name ?? data.name;
@@ -300,6 +322,12 @@ document.addEventListener('alpine:init', async () => {
       this.updated = data.meta?.updated;   
       this.installed = data.installed;
       this.canOpen = data.canOpen;   
+
+      this.namespace = data.namespace;
+      this.basePath = data.api?.basePath;
+      this.url = data.api?.url;
+      this.key = data.key
+      this.hasKey = data.hasKey
     },
     get createdDate() {
       return this.created ? new Date(this.created).toLocaleString() : null;

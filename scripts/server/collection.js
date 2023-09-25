@@ -1,6 +1,7 @@
 import path from 'path';
 import fs from 'fs/promises';
 import yaml from 'js-yaml';
+import { User } from 'omni-shared'
 
 const getKnownFile = async () => {
   try {
@@ -33,7 +34,8 @@ const script = {
     let cursor = payload.cursor || 0;
     let type = payload.type || undefined;
     let filter = payload.filter || '';
-
+    const blockManager = ctx.app.blocks
+    const credentialService = ctx.app.services.get('credentials');
     if (type === 'recipe') {
       const workflowIntegration = ctx.app.integrations.get('workflow');
       const page = parseInt(cursor / limit);
@@ -60,10 +62,8 @@ const script = {
         items,
       };
     } else if (type === 'block') {
-      const blockManager = ctx.app.blocks
       const opts = { contentMatch: filter, tags: '' };
       let items = blockManager.getFilteredBlocksAndPatches(limit, cursor, filter, opts);
-      console.log(items)
       if (items != null && Array.isArray(items) && items.length > 0) {
         items = items.map((n) => {
           return {
@@ -98,13 +98,25 @@ const script = {
       return { items };
     } else if (type === 'api') {
       let items = blockManager.getAllNamespaces();
+      if(filter?.length > 0) {
+        items = items.filter(n=>n.namespace.includes(filter))
+      }
+      const keys = await credentialService.listKeyMetadata(ctx.userId, User.modelName)
       if (items != null && Array.isArray(items) && items.length > 0) {
-        items = items.map((n) => {
-          return {
-            value: { ...n },
-            type: 'api',
+        const keysSet = new Set(keys.map(key => key.apiNamespace));
+        items = items.reduce((acc, n) => {
+          const requiredKeys = blockManager.getRequiredCredentials(n.namespace);
+          if (requiredKeys?.length > 0) {
+            // TODO: handle multiple keys
+            const key = requiredKeys[0];
+            const hasKey = keysSet.has(n.namespace);
+            acc.push({
+              value: { ...n, key, hasKey },
+              type: 'api',
+            });
           }
-        });
+          return acc;
+        }, []);
         return { items }
       }
     }
