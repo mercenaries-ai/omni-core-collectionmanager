@@ -103,7 +103,7 @@ const script = {
       }
       const keys = await credentialService.listKeyMetadata(ctx.userId, User.modelName)
       if (items != null && Array.isArray(items) && items.length > 0) {
-        const keysSet = new Set(keys.map(key => key.apiNamespace));
+        const keysSet = new Set(keys.filter(k => k.meta?.revoked === false).map(key => key.apiNamespace));
         items = items.reduce((acc, n) => {
           const requiredKeys = blockManager.getRequiredCredentials(n.namespace);
           if (requiredKeys?.length > 0) {
