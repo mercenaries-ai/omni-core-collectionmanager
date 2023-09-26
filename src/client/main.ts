@@ -270,11 +270,11 @@ const createGallery = function (itemsPerPage: number, itemApi: string) {
       }
       else if (type == 'api') {
         if(this.hasKey) {
-          const response = await sdk.runClientScript('revokeKey', [this.namespace, this.key.type])
+          const response = await sdk.runClientScript('revokeKey', [this.namespace, this.key.id])
           this.hasKey = false
         } else {
           // add credential
-          const response = await sdk.runClientScript('setKey', [this.namespace, this.key.type,this.key.secret ])
+          const response = await sdk.runClientScript('setKey', [this.namespace, this.key.id, this.key.secret ])
           this.hasKey = true
         }
       }
