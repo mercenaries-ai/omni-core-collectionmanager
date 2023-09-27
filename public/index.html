@@ -354,8 +354,8 @@
                  </template>
               </div>
             </template>
-            <div class="flex justify-center p-4 cursor-pointer" @click="loadMore()" x-show="totalPages !== currentPage">
-                <button class="loadmore">Load More</button>
+            <div class="flex justify-center p-4 cursor-pointer" x-show="totalPages !== currentPage">
+                <button class="loadmore" @click="loadMore()">Load More</button>
             </div>          </div>
           <div
             class="absolute bottom-0 left-0 right-0 p-2 gap-5 z-10 font-semibold drop-shadow shadow-white bg-white bg-opacity-50 text-sm flex justify-between items-center h-8">
