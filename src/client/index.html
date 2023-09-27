@@ -18,7 +18,7 @@
 <body class="p-6 select-none overflow-hidden bg-white">
   <div class="m-h-screen bg-white" x-data="appState"
     @keydown.window.prevent.stop.ctrl.shift.f="window.parent.client.workbench.activeExtension ? window.parent.client.workbench.hideExtension() :  window.parent.client.workbench.showExtension('omni-core-filemanager', {})">
-    <div id="container" class="bg-white" x-data="createGallery(24, '')"
+    <div id="container" class="bg-white" x-data="createGallery(60, '')"
       @keydown.escape.window="viewerMode ? window.parent.client.workbench.hideExtension() : multiSelectedItems.length>0 ? multiSelectedItems = [] :  focusedItem ? focusedItem = null :  window.parent.client.workbench.hideExtension()">
       <!-- Gallery Nav  -->
       <div x-show="!viewerMode && !focusedItem"
