@@ -13,11 +13,11 @@
     }
   </style>
   
-  <script type="module" crossorigin src="/extensions/omni-core-collectionmanager/assets/main-a18ec45c.js"></script>
+  <script type="module" crossorigin src="/extensions/omni-core-collectionmanager/assets/main-4baf35cb.js"></script>
   <link rel="stylesheet" href="/extensions/omni-core-collectionmanager/assets/index-52cd1eb2.css">
 </head>
 
-<body class="p-6 select-none overflow-hidden bg-white">
+<body class="p-6 overflow-hidden bg-white">
   <div class="m-h-screen bg-white" x-data="appState"
     @keydown.window.prevent.stop.ctrl.shift.f="window.parent.client.workbench.activeExtension ? window.parent.client.workbench.hideExtension() :  window.parent.client.workbench.showExtension('omni-core-filemanager', {})">
     <div id="container" class="bg-white" x-data="createGallery(60, '')"

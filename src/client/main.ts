@@ -235,13 +235,8 @@ const createGallery = function (itemsPerPage: number, itemApi: string) {
     },
     async toggleFavorite(item, type: CollectionType) {
       const key = getFavoriteKey(type, item.value)
-      item.value.starred = !window.localStorage.getItem(key) // Toggle.
-      if (item.value.starred) {
-        window.localStorage.setItem(key, (new Date().getTime()).toString())
-      } else {
-        window.localStorage.removeItem(key)
-      }
-
+      sdk.runClientScript('toggleFavorite', [key])
+      item.value.starred = window.localStorage.getItem(key) !== null // Toggle.
       if (this.favOnly) {
         this.prepareFromShadow() // `item` is no longer visible!
       }
@@ -336,6 +331,7 @@ document.addEventListener('alpine:init', async () => {
       return this.created ? new Date(this.created).toLocaleString() : null;
     },
     get updatedDate() {
+      console.log(this.updated)
       return this.updated ? new Date(this.updated).toLocaleString() : null;
     }
 
