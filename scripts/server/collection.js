@@ -39,9 +39,8 @@ const script = {
     if (type === 'recipe') {
       const workflowIntegration = ctx.app.integrations.get('workflow');
       const page = parseInt(cursor / limit);
-      const result = await workflowIntegration.getWorkflowsForUserPaginatedV2(
-        ctx.user.id,
-        true,
+      const result = await workflowIntegration.getWorkflowsForSessionUser(
+        ctx,
         limit,
         page,
         filter
