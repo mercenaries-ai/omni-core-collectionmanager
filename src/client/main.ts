@@ -268,11 +268,13 @@ const createGallery = function (itemsPerPage: number, itemApi: string) {
     
         case 'api':
           if (this.hasKey) {
+            this.hasKey = !this.hasKey // Toggle on click
             const response = await sdk.runClientScript('revokeKey', [this.namespace, this.key.id]);
-            this.hasKey = false;
+            this.hasKey = !response.answer // Set to server value
           } else {
+            this.hasKey = !this.hasKey // Toggle on click
             const response = await sdk.runClientScript('setKey', [this.namespace, this.key.id, this.key.secret]);
-            this.hasKey = true;
+            this.hasKey = response.answer // Set to server value
           }
           break;
     
