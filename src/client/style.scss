@@ -367,8 +367,6 @@ h2 {
 .collection-api {
   display: flex;
   width: 33rem;
-  min-width: 9.375rem;
-  max-width: 33rem;
   padding: var(--spacing-2, 0.5rem);
   flex-direction: column;
   align-items: flex-start;
@@ -380,12 +378,10 @@ h2 {
   &-header {
     display: flex;
     width: 100%;
-    text-align: center;
     align-items: center;
     gap: 0.5rem;
     align-self: stretch;
     @extend .omni-font-s-medium;
-
 
     .collection-api-cover {
       width: 10%;
@@ -403,11 +399,6 @@ h2 {
       width: 100%;
       align-content: center;
       align-items: center;
-    }
-
-    img {
-      width: 2rem;
-      height: 2rem;
     }
   }
   &-title,

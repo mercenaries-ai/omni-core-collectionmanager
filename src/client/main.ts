@@ -48,6 +48,7 @@ interface Block extends BaseCollectionValue {
 interface Api extends BaseCollectionValue {
   namespace: string;
   basePath: string;
+  signUpUrl: string;
   url: string;
   key: Map<string, string>;
 }
@@ -157,7 +158,7 @@ const createGallery = function (itemsPerPage: number, itemApi: string) {
         this.totalPages = (data.items.length === limit) ? this.currentPage + 1 : this.currentPage
       }
     },
-    selectItem(item) {
+    selectItem(item: CollectionItem) {
       if (item.onclick) {
         return;
       }
@@ -179,7 +180,7 @@ const createGallery = function (itemsPerPage: number, itemApi: string) {
       this.hover = false;
     },
 
-    async deleteItemList(itemList) {
+    async deleteItemList(itemList: Array<CollectionItem>) {
       if(!itemList || itemList.length === 0) return;
       let deletedItemList = [];
       if( Array.isArray(itemList) && itemList.length > 0) {
@@ -228,12 +229,12 @@ const createGallery = function (itemsPerPage: number, itemApi: string) {
         console.error(e);
       }
     },
-    async update(item, type: CollectionType) {
+    async update(item: CollectionItem, type: CollectionType) {
       if (type == 'extension') {
         sdk.runClientScript('extensions',['update', item.value.id]);
       }
     },
-    async toggleFavorite(item, type: CollectionType) {
+    async toggleFavorite(item: CollectionItem, type: CollectionType) {
       const key = getFavoriteKey(type, item.value)
       sdk.runClientScript('toggleFavorite', [key])
       item.value.starred = window.localStorage.getItem(key) !== null // Toggle.
@@ -245,33 +246,39 @@ const createGallery = function (itemsPerPage: number, itemApi: string) {
       // Don't remove it without adding the redraw back in.
       this.starred = !this.starred
     },
-    async clickToAction(item, type: CollectionType) {
-      if (type === 'recipe') {
-        //@ts-expect-error
-        await window.parent.client.workbench.loadRecipe(item.value.id, item.value.version);
-
-        sdk.close();
-      }
-      else if (type == 'block') {
-        console.log(await sdk.runClientScript('add', [item.value.name]))
-      }
-      else if (type == 'extension') {
-        if (item.value.installed) {
-          //@ts-expect-error
-          sdk.signalIntent("show", item.value.id);
-        } else {
-          sdk.runClientScript('extensions',['add', item.value.url]);
-        }
-      }
-      else if (type == 'api') {
-        if(this.hasKey) {
-          const response = await sdk.runClientScript('revokeKey', [this.namespace, this.key.id])
-          this.hasKey = false
-        } else {
-          // add credential
-          const response = await sdk.runClientScript('setKey', [this.namespace, this.key.id, this.key.secret ])
-          this.hasKey = true
-        }
+    async clickToAction(item: CollectionItem, type: CollectionType) {
+      switch (type) {
+        case 'recipe':
+          // Assuming the error here is known and is because of external typings
+          await (window.parent.client.workbench as any).loadRecipe(item.value.id, item.value.version);
+          sdk.close();
+          break;
+    
+        case 'block':
+          console.log(await sdk.runClientScript('add', [item.value.name]));
+          break;
+    
+        case 'extension':
+          if (item.value.installed) {
+            sdk.signalIntent("show", item.value.id);
+          } else {
+            sdk.runClientScript('extensions', ['add', item.value.url]);
+          }
+          break;
+    
+        case 'api':
+          if (this.hasKey) {
+            const response = await sdk.runClientScript('revokeKey', [this.namespace, this.key.id]);
+            this.hasKey = false;
+          } else {
+            const response = await sdk.runClientScript('setKey', [this.namespace, this.key.id, this.key.secret]);
+            this.hasKey = true;
+          }
+          break;
+    
+        // Optional: Add a default case if there's a possibility of unknown types.
+        default:
+          console.error(`Unknown type: ${type}`);
       }
 
     }
@@ -299,6 +306,7 @@ document.addEventListener('alpine:init', async () => {
     deleted: false,
     namespace: '',
     basePath: '',
+    signUpUrl: '',
     url: '',
     key: null,
     hasKey: false,
@@ -323,7 +331,7 @@ document.addEventListener('alpine:init', async () => {
 
       this.namespace = data.namespace;
       this.basePath = data.api?.basePath;
-      this.url = data.api?.url;
+      this.signUpUrl = data.signUpUrl;
       this.key = data.key
       this.hasKey = data.hasKey
     },

@@ -13,8 +13,8 @@
     }
   </style>
   
-  <script type="module" crossorigin src="/extensions/omni-core-collectionmanager/assets/main-4baf35cb.js"></script>
-  <link rel="stylesheet" href="/extensions/omni-core-collectionmanager/assets/index-52cd1eb2.css">
+  <script type="module" crossorigin src="/extensions/omni-core-collectionmanager/assets/main-07cb82a6.js"></script>
+  <link rel="stylesheet" href="/extensions/omni-core-collectionmanager/assets/index-e44e37bc.css">
 </head>
 
 <body class="p-6 overflow-hidden bg-white">
@@ -316,12 +316,10 @@
                             alt="item.value.meta.fileName">
                             <div class="collection-api" x-data="collection" x-effect="setData(item.type, item.value)">
                               <div class="collection-api-header">
-                                <!--
                                 <div class="collection-api-cover">
-                                  <img :src="'/'+ pictureUrl" :alt="name"
+                                  <img :src="'/logos/'+ namespace + '.png'" :alt="name"
                                     onerror="this.onerror=null;this.src='/omni.png';">
                                 </div>
-                                -->
                                 <div class="collection-api-action">
                                   <form @submit.prevent x-id="['api-key']" x-cloak class="flex flex-row w-full content-center">
                                     <label :for="$id('api-key')" x-text="title" class="w-24"></label>
@@ -344,7 +342,7 @@
                                   </form>
                                   <div class="btn-group">
                                     <button x-show="key.type !== 'oauth2' || hasKey" class="btn " :class="{' btn-open' : !hasKey, ' btn-delete': hasKey}" @click="await clickToAction(item, 'api');"><span x-text="hasKey ? 'Revoke' : 'Add Credential'"></span></button>
-                                    <a :href="basePath" target="_blank"><button class="btn btn-secondary"><span>Sign Up</span></button></a>
+                                    <a :href="signUpUrl" target="_blank"><button class="btn btn-secondary"><span>Sign Up</span></button></a>
                                   </div>
                                 </div>
                               </div>
