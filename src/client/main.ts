@@ -39,6 +39,9 @@ interface Extension extends BaseCollectionValue {
   author: string;
   installed: boolean;
   canOpen: boolean;
+  isCore: boolean;
+  isLocal: boolean;
+  url: string;
 }
 
 interface Block extends BaseCollectionValue {
@@ -334,8 +337,9 @@ document.addEventListener('alpine:init', async () => {
       this.namespace = data.namespace;
       this.basePath = data.api?.basePath;
       this.signUpUrl = data.signUpUrl;
-      this.key = data.key
-      this.hasKey = data.hasKey
+      this.key = data.key;
+      this.hasKey = data.hasKey;
+      this.url = data.url;
     },
     get createdDate() {
       return this.created ? new Date(this.created).toLocaleString() : null;

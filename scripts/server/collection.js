@@ -75,21 +75,9 @@ const script = {
       // TODO handle when items is empty
       return { items: [{type: 'block'}] }
     } else if (type === 'extension') {
-      // TODO
-      const knownFile = await getKnownFile();
-      const knownKeysSet = new Set(knownFile.known_extensions.map(k => k.id));
-      const allExtensions = ctx.app.extensions.all().filter(e => e.config.client?.addToWorkbench);
-      const privateExtensions = getPrivateExtensions(allExtensions, knownKeysSet);
-      const allExtensionsSorted = getAllExtensions(knownFile, privateExtensions);
-      let items = allExtensionsSorted.filter(e=>!e.deprecated && e.title.toLowerCase().includes(filter)).map(e => {
-        if(ctx.app.extensions.has(e.id)) {
-          const extension = ctx.app.extensions.get(e.id)
-
-          return {type: 'extension', value: {installed: ctx.app.extensions.has(e.id), canOpen: extension.config.client?.addToWorkbench, id: `${e.id}`, title: `${e.title}`, description: `${extension.config.description}`, url: `${e.url}`, author: `${extension.config.author}`}};
-        } else {
-
-          return {type: 'extension', value: {installed: ctx.app.extensions.has(e.id), id: `${e.id}`, title: `${e.title}`, description: `${e.description}`, url: `${e.url}`, author: `${e.author || 'Anonymous'}`}};
-        }
+      const extensions = await ctx.app.extensions.getExtensionsList();
+      let items = extensions.filter(e=>!e.deprecated && e.title.toLowerCase().includes(filter)).map(e => {
+          return {type: 'extension', value: {installed: ctx.app.extensions.has(e.id), id: `${e.id}`, title: `${e.title}`, description: `${e.manifest.description}`, url: `${e.url}`, author: `${e.manifest.author || 'Anonymous'}`}};
       })
       // sort items to put installed extensions first
       items.sort((a,b)=>a.value.installed === b.value.installed ? 0 : a.value.installed ? -1 : 1)
