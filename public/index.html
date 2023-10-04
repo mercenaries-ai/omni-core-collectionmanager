@@ -100,8 +100,8 @@
             <div class="flex-grow"></div>
 
             <div class="searchWrapper text-sm pr-10">
-              <input autocomplete="off" x-ref="search" class="search__field" x-model.debounce.500ms="search" id="search"
-                type="search" placeholder="Search for..." />
+              <input autocomplete="off" x-ref="search" class="search__field" x-model.debounce.500ms="search" id="search" autofocus
+                type="search" placeholder="Search for..." x-init="$refs.search.focus()" />
               <div class="search__icon">
                 <label class="sr-only" for="search"> Search </label>
                 <svg width="25px" height="25px" viewBox="0 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg">
