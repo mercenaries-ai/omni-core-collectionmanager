@@ -102,6 +102,10 @@ const createGallery = function (itemsPerPage: number, itemApi: string) {
       await this.loadMore()
     },
 
+    close() {
+      sdk.close();
+    },
+
     prepareFromShadow() {
       this.items = [...this.shadow]
       if(this.favOnly) {
@@ -111,7 +115,12 @@ const createGallery = function (itemsPerPage: number, itemApi: string) {
         });
       }
     },
-
+    async addToCanvas(id: string) {
+      //return await sdk.runClientScript('add', ["omnitool.input_omnitool.run_workflow", {workflowId: id}]);
+      //TODO
+      console.log('add to canvas');
+    },
+    
     async addItems(items: Array<CollectionItem>, replace = false) {
       if (replace) {
         this.items = new Array<CollectionItem>()
@@ -200,7 +209,6 @@ const createGallery = function (itemsPerPage: number, itemApi: string) {
           this.needRefresh = true;
           return deletedItemList
         } else {
-          console.log(itemList)
           sdk.sendChatMessage(
             'Failed to delete item(s) ' + itemList.join(', '),
             'text/plain',
@@ -265,7 +273,7 @@ const createGallery = function (itemsPerPage: number, itemApi: string) {
           if (item.value.installed) {
             sdk.signalIntent("show", item.value.id);
           } else {
-            sdk.runClientScript('extensions', ['add', item.value.url]);
+            await sdk.runClientScript('extensions', ['add', item.value.url]);
           }
           break;
     
@@ -345,7 +353,6 @@ document.addEventListener('alpine:init', async () => {
       return this.created ? new Date(this.created).toLocaleString() : null;
     },
     get updatedDate() {
-      console.log(this.updated)
       return this.updated ? new Date(this.updated).toLocaleString() : null;
     }
 

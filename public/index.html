@@ -13,15 +13,15 @@
     }
   </style>
   
-  <script type="module" crossorigin src="/extensions/omni-core-collectionmanager/assets/main-13912b6c.js"></script>
+  <script type="module" crossorigin src="/extensions/omni-core-collectionmanager/assets/main-3a97829d.js"></script>
   <link rel="stylesheet" href="/extensions/omni-core-collectionmanager/assets/index-e44e37bc.css">
 </head>
 
 <body class="p-6 overflow-hidden bg-white">
   <div class="m-h-screen bg-white" x-data="appState"
-    @keydown.window.prevent.stop.ctrl.shift.f="window.parent.client.workbench.activeExtension ? window.parent.client.workbench.hideExtension() :  window.parent.client.workbench.showExtension('omni-core-filemanager', {})">
+    @keydown.window.prevent.stop.ctrl.shift.f="window.parent.client.workbench.activeExtension ? close() :  window.parent.client.workbench.showExtension('omni-core-filemanager', {})">
     <div id="container" class="bg-white" x-data="createGallery(60, '')"
-      @keydown.escape.window="viewerMode ? window.parent.client.workbench.hideExtension() : multiSelectedItems.length>0 ? multiSelectedItems = [] :  focusedItem ? focusedItem = null :  window.parent.client.workbench.hideExtension()">
+      @keydown.escape.window="multiSelectedItems.length>0 ? multiSelectedItems = [] :  focusedItem ? focusedItem = null :  close()">
       <!-- Gallery Nav  -->
       <div x-show="!viewerMode && !focusedItem"
         class="fixed top-0 left-0 w-full h-full flex flex-col items-center justify-center ">
@@ -204,6 +204,7 @@
                                 </div>
                               </div>
                               <div class="collection-recipe-description">
+                                <span x-text="id" ></span>
                                 <span class="desc-title">
                                   About the recipe:
                                 </span>
@@ -212,7 +213,6 @@
                                   Authors:
                                 </span>
                                 <span x-text="author"></span>
-                                <span x-text="id"></span>
                                 <span class="desc-title">
                                   Created Date:
                                 </span>
