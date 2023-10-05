@@ -76,7 +76,7 @@ const script = {
       return { items: [{type: 'block'}] }
     } else if (type === 'extension') {
       const extensions = await ctx.app.extensions.getExtensionsList();
-      let items = extensions.filter(e=>!e.deprecated && e.title.toLowerCase().includes(filter)).map(e => {
+      let items = extensions.filter(e=>!e.deprecated && e.manifest?.title.toLowerCase().includes(filter)).map(e => {
           return {type: 'extension', value: {installed: ctx.app.extensions.has(e.id), canOpen: e.manifest?.client?.addToWorkbench, id: `${e.id}`, title: `${e.title}`, description: `${e.manifest.description}`, url: `${e.url}`, author: `${e.manifest.author || 'Anonymous'}`}};
       })
       // sort items to put installed extensions first
