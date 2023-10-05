@@ -126,7 +126,9 @@
                        <th class="px-4 py-2 font-medium text-gray-900">
                           Name
                        </th>
+                       <template x-if="type === 'block'">
                        <th class="px-4 py-2 font-medium text-gray-900">Category</th>
+                       </template>
                        <th class="px-4 py-2 font-medium text-gray-900">Description</th>
                        <th class="px-4 py-2 font-medium text-gray-900"></th>
                     </tr>
@@ -147,7 +149,9 @@
                         </div>
                       </td>
                       <td class="px-4 py-2 font-medium text-gray-900"><span x-text="title ?? name"></span></td>
-                      <td class="px-4 py-2 font-medium text-gray-900"><span x-text="category"> </span></td>
+                      <template x-if="item.type === 'block'">
+                      <td class="px-4 py-2 font-medium text-gray-900"><span x-text="category"> </span></td>  
+                      </template>
                       <td class="px-4 py-2 font-medium text-gray-900"><span x-text="description"> </span></td>
                       <td class="px-4 py-2 font-medium text-gray-900">
                         <button class="btn color-primary cursor-pointer h-6 w-10 pt-2" @click="await clickToAction(item, item.type)">
