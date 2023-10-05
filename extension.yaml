@@ -8,6 +8,4 @@ client:
   singleton: true
   winbox:
     minwidth: 50%
-    minheight: 100%
-    x: right
-    y: top
+    minheight: 80%
