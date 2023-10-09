@@ -91,19 +91,17 @@
     <div class='justify-end items-center flex w-full max-w-full flex-row gap-1 mt-1.5 mb-0.5'>
       <button
         x-show='canDelete'
-        class='justify-between items-start border-[color:var(--default-red-500,#EF4444)] self-stretch flex w-[81px] flex-row gap-1.5 px-2 py-1 rounded-lg border-[1.6px] border-solid cursor-pointer hover:bg-red-500'
+        class='group justify-between items-start border-[color:var(--default-red-500,#EF4444)] self-stretch flex w-[81px] flex-row gap-1.5 px-2 py-1 rounded-lg border-[1.6px] border-solid cursor-pointer hover:bg-red-500'
         @click='await deleteItem(item)'
       >
-        <svg
+        <svg class="group-hover:stroke-white"
           width='18'
           height='18'
           viewBox='0 0 18 18'
           fill='none'
           xmlns='http://www.w3.org/2000/svg'
-          class='hover:stroke-white'
         >
-          <path
-            class='hover:stroke-white'
+          <path class="group-hover:stroke-white"
             d='M7 7.58824V13.2353M11 7.58824V13.2353M15 3.82353V15.1176C15 16.1573 14.1046 17 13 17H5C3.89543 17 3 16.1573 3 15.1176V3.82353M1 3.82353H17M12 3.82353V2.88235C12 1.84276 11.1046 1 10 1H8C6.89543 1 6 1.84276 6 2.88235V3.82353'
             stroke='#EF4444'
             stroke-width='1.6'
@@ -111,7 +109,7 @@
             stroke-linejoin='round'
           />
         </svg>
-        <div class='text-red-500 text-sm leading-5 self-center my-auto hover:text-white'>
+        <div class='text-red-500 text-sm leading-5 self-center my-auto group-hover:text-white' >
           Delete
         </div>
       </button>
