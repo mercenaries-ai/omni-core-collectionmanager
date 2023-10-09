@@ -13,8 +13,8 @@
     }
   </style>
   
-  <script type="module" crossorigin src="/extensions/omni-core-collectionmanager/assets/main-3a97829d.js"></script>
-  <link rel="stylesheet" href="/extensions/omni-core-collectionmanager/assets/index-e44e37bc.css">
+  <script type="module" crossorigin src="/extensions/omni-core-collectionmanager/assets/main-42108556.js"></script>
+  <link rel="stylesheet" href="/extensions/omni-core-collectionmanager/assets/index-1c3e737c.css">
 </head>
 
 <body class="p-6 overflow-hidden bg-white">
@@ -170,70 +170,159 @@
                  <template x-for="(item, idx) in items" :key="idx">
                     <div class="drop-shadow-md rounded-md">
                        <template x-if="item.type === 'recipe' && item.value">
-                          
-                          <div @mouseenter='hoverItem = item.value' @mouseleave='hoverItem = null' @contextmenu.prevent="selectItem(item)"
+                          <div
+                            @mouseenter='hoverItem = item.value'
+                            @mouseleave='hoverItem = null'
+                            @contextmenu.prevent='selectItem(item)'
                             :class="{ ' border-2 rounded-md border-yellow-300': multiSelectedItems.includes(item), ' border-white': focusedItem === item.value.value }"
-                            alt="item.value.meta.fileName">
-                            <div class="collection-recipe" x-data="collection" x-effect="setData(item.type, item.value)">
-                              <div class="collection-recipe-header">
-                                <div class="collection-recipe-cover">
-                                  <img :src="'/'+ pictureUrl" :alt="name"
-                                    onerror="this.onerror=null;this.src='/omni.png';">
-                                </div>
-                                <div class="collection-recipe-action">
-                                  <div class="collection-recipe-title">
-                                    <div class="text-sm font-semibold" x-text="name"></div>
-                                    <div class="favorite" @click="toggleFavorite(item, 'recipe')">
-                                      <svg xmlns="http://www.w3.org/2000/svg" width="17" height="15" viewBox="0 0 17 15"
-                                        fill="none">
-                                        <path :class="{
+                            alt='item.value.meta.fileName'
+                          >
+                            <div
+                              x-data='collection'
+                              x-effect='setData(item.type, item.value)'
+                              class='items-center flex w-[416px] max-w-full flex-col bg-neutral-200 px-1.5 py-2 rounded-lg mt-1 lg:h-60'
+                            >
+                              <div class='items-center flex w-[404px] max-w-full flex-col bg-neutral-50 -mt-0.5 p-1.5 rounded-md lg:h-56'>
+                                <div class='justify-center items-start self-stretch flex flex-row gap-1.5 max-md:max-w-full max-md:flex-wrap'>
+                                  <img
+                                    :src="'/'+ pictureUrl"
+                                    :alt='name'
+                                    class='aspect-square object-cover object-center w-16 shrink-0 rounded-md'
+                                    onerror="this.onerror=null;this.src='/omni.png';"
+                                  />
+                                  <div class='items-start flex-[1_0_0] flex flex-col max-md:max-w-full'>
+                                    <div
+                                      x-text='name'
+                                      class='max-w-full flex-[1_0_0] text-neutral-800 text-ellipsis text-base leading-6 w-[300px]'
+                                    >
+                                    </div>
+                                    <div class='text-neutral-500 text-xs leading-3 w-[174px]' x-text='`Made by: ${author}`'>
+                                    </div>
+                                  </div>
+                                  <svg
+                                    xmlns='http://www.w3.org/2000/svg'
+                                    width='17'
+                                    height='15'
+                                    viewBox='0 0 17 15'
+                                    class='aspect-[1.15] object-cover object-center w-[15px] shrink-0 cursor-pointer'
+                                    fill='none'
+                                    @click="toggleFavorite(item, 'recipe')"
+                                  >
+                                    <path
+                                      :class="{
                                             'fill-red-600 stroke-white': starred,
                                             'fill-white stroke-black': !starred
                                           }"
-                                          d="M2.1095 7.70617L8.5 14.3333L14.8905 7.70617C15.6009 6.96942 16 5.97024 16 4.92838C16 2.75879 14.304 1 12.2119 1C11.2073 1 10.2437 1.41388 9.53333 2.15059L8.5 3.22222L7.46667 2.15059C6.75624 1.41388 5.79273 1 4.78807 1C2.69597 1 1 2.75879 1 4.92838C1 5.97024 1.3991 6.96942 2.1095 7.70617Z"
-                                          stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" />
-                                      </svg>
+                                      d='M2.1095 7.70617L8.5 14.3333L14.8905 7.70617C15.6009 6.96942 16 5.97024 16 4.92838C16 2.75879 14.304 1 12.2119 1C11.2073 1 10.2437 1.41388 9.53333 2.15059L8.5 3.22222L7.46667 2.15059C6.75624 1.41388 5.79273 1 4.78807 1C2.69597 1 1 2.75879 1 4.92838C1 5.97024 1.3991 6.96942 2.1095 7.70617Z'
+                                      stroke-width='1.2'
+                                      stroke-linecap='round'
+                                      stroke-linejoin='round'
+                                    />
+                                  </svg>
+                                </div>
+                                <div
+                                  x-text='description'
+                                  class='self-stretch text-neutral-800 overflow-hidden text-ellipsis text-xs leading-4 w-[392px] max-w-full mt-1 lg:min-h-[68px] lg:max-h-[72px]'
+                                >
+                                </div>
+                                <div class='items-end self-stretch flex flex-col py-0.5 max-md:max-w-full'>
+                                  <div class='justify-end items-start flex max-w-full flex-row gap-1 mt-0.5 h-5'>
+                                    <template x-for='(tag, idx) in tags' :key='idx'>
+                                      <div
+                                        class='flex overflow-hidden text-neutral-500 text-ellipsis text-xs leading-3 self-stretch justify-center items-center bg-amber-100 px-1.5 py-1 rounded-2xl cursor-pointer'
+                                        x-text='tag'
+                                        @click='search = tag'
+                                      ></div>
+                                    </template>
+                                  </div>
+                                  <div class='items-end flex w-[245px] max-w-full flex-row justify-end gap-1 mr-1 mt-1 -mb-0.5'>
+                                    <svg
+                                      width='14'
+                                      height='14'
+                                      viewBox='0 0 14 14'
+                                      fill='none'
+                                      xmlns='http://www.w3.org/2000/svg'
+                                      class='cursor-pointer'
+                                      x-tooltip:reactive='id'
+                                    >
+                                      <path
+                                        d='M7 3.67333V3.66667M7 10.3333V5.66667M13 7C13 10.3137 10.3137 13 7 13C3.68629 13 1 10.3137 1 7C1 3.68629 3.68629 1 7 1C10.3137 1 13 3.68629 13 7Z'
+                                        stroke='#737373'
+                                        stroke-linecap='round'
+                                        stroke-linejoin='round'
+                                      />
+                                    </svg>
+                                    <div
+                                      x-text='`Last update: ${updatedDate}`'
+                                      class='overflow-hidden text-neutral-500 text-ellipsis text-xs leading-3 self-stretch'
+                                    >
                                     </div>
                                   </div>
-                                  <div class="btn-group">
-                                    <button class="btn btn-primary" @click="await clickToAction(item, 'recipe');"><svg
-                                        xmlns="http://www.w3.org/2000/svg" width="13" height="14" viewBox="0 0 13 14" fill="none">
-                                        <path
-                                          d="M12.5 7.75V11.5C12.5 12.3284 11.8284 13 11 13H2C1.17157 13 0.5 12.3284 0.5 11.5V7.75M9.5 4L6.5 1M6.5 1L3.5 4M6.5 1V10"
-                                          stroke="white" stroke-width="0.96" stroke-linecap="round" stroke-linejoin="round" />
-                                      </svg><span>Open</span></button>
-                                    <button x-show="canDelete" class="btn btn-delete"
-                                      @click="await deleteItem(item)"><span>Delete</span></button>
-                                  </div>
                                 </div>
                               </div>
-                              <div class="collection-recipe-description">
-                                <span x-text="id" ></span>
-                                <span class="desc-title">
-                                  About the recipe:
-                                </span>
-                                <span x-text="description"></span>
-                                <span class="desc-title">
-                                  Authors:
-                                </span>
-                                <span x-text="author"></span>
-                                <span class="desc-title">
-                                  Created Date:
-                                </span>
-                                <span x-text="createdDate"></span>
-                                <span class="desc-title">
-                                  Updated Date:
-                                </span>
-                                <span x-text="updatedDate"></span>
-                                <div class="collection-recipe-tags">
-                                <template x-for="(tag, idx) in tags" :key="idx">
-                                  <div class="tag default" x-text="tag" @click="search = tag"></div>
-                                </template>
-                                </div>
+                              <div class='justify-end items-center flex w-full max-w-full flex-row gap-1 mt-1.5 mb-0.5'>
+                                <button
+                                  x-show='canDelete'
+                                  class='justify-between items-start border-[color:var(--default-red-500,#EF4444)] self-stretch flex w-[81px] flex-row gap-1.5 px-2 py-1 rounded-lg border-[1.6px] border-solid cursor-pointer hover:bg-red-500'
+                                  @click='await deleteItem(item)'
+                                >
+                                  <svg
+                                    width='18'
+                                    height='18'
+                                    viewBox='0 0 18 18'
+                                    fill='none'
+                                    xmlns='http://www.w3.org/2000/svg'
+                                    class='hover:stroke-white'
+                                  >
+                                    <path
+                                      class='hover:stroke-white'
+                                      d='M7 7.58824V13.2353M11 7.58824V13.2353M15 3.82353V15.1176C15 16.1573 14.1046 17 13 17H5C3.89543 17 3 16.1573 3 15.1176V3.82353M1 3.82353H17M12 3.82353V2.88235C12 1.84276 11.1046 1 10 1H8C6.89543 1 6 1.84276 6 2.88235V3.82353'
+                                      stroke='#EF4444'
+                                      stroke-width='1.6'
+                                      stroke-linecap='round'
+                                      stroke-linejoin='round'
+                                    />
+                                  </svg>
+                                  <div class='text-red-500 text-sm leading-5 self-center my-auto hover:text-white'>
+                                    Delete
+                                  </div>
+                                </button>
+                                <button
+                                  @click='await addToCanvas(id)'
+                                  class='justify-between items-center self-stretch flex flex-row gap-1.5 bg-red-300 px-2 py-1 rounded-lg cursor-pointer hover:bg-red-400'
+                                >
+                                  <svg width='18' height='18' viewBox='0 0 18 18' fill='none' xmlns='http://www.w3.org/2000/svg'>
+                                    <path
+                                      d='M14.1147 7.55356L14.1148 3.52977C14.1148 2.13263 12.9404 1.00002 11.4918 1.00001L3.62302 1C2.1744 0.999997 1.00006 2.13261 1.00006 3.52975L1 10.9107C0.999996 12.3078 2.17433 13.4405 3.62295 13.4405H8.00214M11.2295 13.4405H14.1148M14.1148 13.4405H17M14.1148 13.4405V10.6577M14.1148 13.4405V16.7291'
+                                      stroke='#F5F5F5'
+                                      stroke-width='1.6'
+                                      stroke-linecap='round'
+                                    />
+                                  </svg>
+                                  <div class='text-neutral-50 text-sm leading-5 self-center my-auto'>
+                                    Add to Canvas
+                                  </div>
+                                </button>
+                                <button
+                                  class='justify-between items-center self-stretch flex flex-row gap-1.5 bg-amber-500 px-2 py-1 rounded-lg cursor-pointer hover:bg-amber-600'
+                                  @click="await clickToAction(item, 'recipe');"
+                                >
+                                  <svg xmlns='http://www.w3.org/2000/svg' width='13' height='14' viewBox='0 0 13 14' fill='none'>
+                                    <path
+                                      d='M12.5 7.75V11.5C12.5 12.3284 11.8284 13 11 13H2C1.17157 13 0.5 12.3284 0.5 11.5V7.75M9.5 4L6.5 1M6.5 1L3.5 4M6.5 1V10'
+                                      stroke='white'
+                                      stroke-width='0.96'
+                                      stroke-linecap='round'
+                                      stroke-linejoin='round'
+                                    />
+                                  </svg>
+                                  <div class='text-neutral-50 text-sm leading-5 self-center my-auto'>
+                                    Load
+                                  </div>
+                                </button>
                               </div>
                             </div>
-                          </div>
-                       </template>
+                          </div>         </template>
                        <template x-if="item.type === 'extension' && item.value">
                           <div @mouseenter='hoverItem = item.value' @mouseleave='hoverItem = null' @contextmenu.prevent="selectItem(item.value)"
                             :class="{ 'border-2 border-yellow-300': multiSelectedItems.includes(item.value), ' border-white': focusedItem === item.value.value }"
