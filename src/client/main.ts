@@ -115,10 +115,8 @@ const createGallery = function (itemsPerPage: number, itemApi: string) {
         });
       }
     },
-    async addToCanvas(id: string) {
-      //return await sdk.runClientScript('add', ["omnitool.input_omnitool.run_workflow", {workflowId: id}]);
-      //TODO
-      console.log('add to canvas');
+    async addAsBlock(id: string) {
+      return await sdk.runClientScript('add', ["omnitool.loop_recipe", {recipe_id: id}]);
     },
     
     async addItems(items: Array<CollectionItem>, replace = false) {
