@@ -1,465 +1,530 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Collection Manager</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet" />
+    
+    <style>
+      [x-cloak] {
+        display: none !important;
+      }
+    </style>
+    
+    <script type="module" crossorigin src="/extensions/omni-core-collectionmanager/assets/main-94c3fcd6.js"></script>
+    <link rel="stylesheet" href="/extensions/omni-core-collectionmanager/assets/index-a3381118.css">
+  </head>
 
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Collection Manager</title>
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
-  
-  <style>
-    [x-cloak] {
-      display: none !important;
-    }
-  </style>
-  
-  <script type="module" crossorigin src="/extensions/omni-core-collectionmanager/assets/main-2cb6c1ba.js"></script>
-  <link rel="stylesheet" href="/extensions/omni-core-collectionmanager/assets/index-6bb4b464.css">
-</head>
-
-<body class="p-6 overflow-hidden bg-white">
-  <div class="m-h-screen bg-white" x-data="appState"
-    @keydown.window.prevent.stop.ctrl.shift.f="window.parent.client.workbench.activeExtension ? close() :  window.parent.client.workbench.showExtension('omni-core-filemanager', {})">
-    <div id="container" class="bg-white" x-data="createGallery(60, '')"
-      @keydown.escape.window="multiSelectedItems.length>0 ? multiSelectedItems = [] :  focusedItem ? focusedItem = null :  close()">
-      <!-- Gallery Nav  -->
-      <div x-show="!viewerMode && !focusedItem"
-        class="fixed top-0 left-0 w-full h-full flex flex-col items-center justify-center ">
-        <div x-data="{hoverItem: null, viewType: 'grid'}"
-          class=" relative p-2 flex flex-row items-top justify-center overflow-hidden"
-          style="width: 98vw; height: 98.9vh;">
+  <body class="p-6 overflow-hidden bg-white">
+    <div
+      class="m-h-screen bg-white"
+      x-data="appState"
+      @keydown.window.prevent.stop.ctrl.shift.f="window.parent.client.workbench.activeExtension ? close() :  window.parent.client.workbench.showExtension('omni-core-filemanager', {})">
+      <div
+        id="container"
+        class="bg-white"
+        x-data="createGallery(60, '')"
+        @keydown.escape.window="multiSelectedItems.length>0 ? multiSelectedItems = [] :  focusedItem ? focusedItem = null :  close()">
+        <!-- Gallery Nav  -->
+        <div
+          x-show="!viewerMode && !focusedItem"
+          class="fixed top-0 left-0 w-full h-full flex flex-col items-center justify-center">
           <div
-            class="absolute p-2 flex justify-between items-center gap-2 h-12 text-black drop-shadow-md shadow-black w-full">
-            <div class="inline-flex rounded-lg border border-gray-100 bg-gray-100 p-1">
-              <button class="inline-flex items-center gap-2 rounded-md px-4 py-2 text-sm text-gray-500 hover:text-gray-700 focus:relative"
-                :class="viewType !== 'grid' ? 'bg-white' : ''"
-                @click="viewType = 'list'">
-                <svg stroke-width="1.5" stroke="currentColor" class="h-4 w-4" viewBox="0 0 24 24" fill="none"
-                  xmlns="http://www.w3.org/2000/svg">
-                  <path d="M8 8H19M8 12H19M8 16H19M5 8V8.00999M5 12V12.01M5 16V16.01" stroke-linecap="round"
-                    stroke-linejoin="round"></path>
-                </svg>
-                List View
-              </button>
+            x-data="{hoverItem: null, viewType: 'grid'}"
+            class="relative p-2 flex flex-row items-top justify-center overflow-hidden"
+            style="width: 98vw; height: 98.9vh">
+            <div
+              class="absolute p-2 flex justify-between items-center gap-2 h-12 text-black drop-shadow-md shadow-black w-full">
+              <div class="inline-flex rounded-lg border border-gray-100 bg-gray-100 p-1">
+                <button
+                  class="inline-flex items-center gap-2 rounded-md px-4 py-2 text-sm text-gray-500 hover:text-gray-700 focus:relative"
+                  :class="viewType !== 'grid' ? 'bg-white' : ''"
+                  @click="viewType = 'list'">
+                  <svg
+                    stroke-width="1.5"
+                    stroke="currentColor"
+                    class="h-4 w-4"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg">
+                    <path
+                      d="M8 8H19M8 12H19M8 16H19M5 8V8.00999M5 12V12.01M5 16V16.01"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"></path>
+                  </svg>
+                  List View
+                </button>
 
-              <button class="inline-flex items-center gap-2 rounded-md px-4 py-2 text-sm text-gray-500 hover:text-gray-700 focus:relative"
-                :class="viewType === 'grid' ? 'bg-white' : ''" @click="viewType = 'grid'">
-                <svg stroke-width="1.5" stroke="currentColor"
-                  class="h-4 w-4" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M3.5 3.5H10.5V10.5H3.5V3.5Z" stroke="#000000" stroke-width="1.5" stroke-linecap="round"
-                    stroke-linejoin="round"></path>
-                  <path d="M3.5 13.5H10.5V20.5H3.5V13.5Z" stroke="#000000" stroke-width="1.5" stroke-linecap="round"
-                    stroke-linejoin="round"></path>
-                  <path d="M13.5 3.5H20.5V10.5H13.5V3.5Z" stroke="#000000" stroke-width="1.5" stroke-linecap="round"
-                    stroke-linejoin="round"></path>
-                  <path d="M13.5 13.5H20.5V20.5H13.5V13.5Z" stroke="#000000" stroke-width="1.5" stroke-linecap="round"
-                    stroke-linejoin="round"></path>
-                </svg>
-                Grid View
-              </button>
-            </div>
-            <div class="flex items-center justify-center space-x-2">
-              <input id="favOnly" type="checkbox" name="switch" class="hidden" :checked="favOnly">
-              <button 
+                <button
+                  class="inline-flex items-center gap-2 rounded-md px-4 py-2 text-sm text-gray-500 hover:text-gray-700 focus:relative"
+                  :class="viewType === 'grid' ? 'bg-white' : ''"
+                  @click="viewType = 'grid'">
+                  <svg
+                    stroke-width="1.5"
+                    stroke="currentColor"
+                    class="h-4 w-4"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg">
+                    <path
+                      d="M3.5 3.5H10.5V10.5H3.5V3.5Z"
+                      stroke="#000000"
+                      stroke-width="1.5"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"></path>
+                    <path
+                      d="M3.5 13.5H10.5V20.5H3.5V13.5Z"
+                      stroke="#000000"
+                      stroke-width="1.5"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"></path>
+                    <path
+                      d="M13.5 3.5H20.5V10.5H13.5V3.5Z"
+                      stroke="#000000"
+                      stroke-width="1.5"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"></path>
+                    <path
+                      d="M13.5 13.5H20.5V20.5H13.5V13.5Z"
+                      stroke="#000000"
+                      stroke-width="1.5"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"></path>
+                  </svg>
+                  Grid View
+                </button>
+              </div>
+              <div class="flex items-center justify-center space-x-2">
+                <input id="favOnly" type="checkbox" name="switch" class="hidden" :checked="favOnly" />
+                <button
                   x-ref="switchButton"
-                  type="button" 
+                  type="button"
                   @click="favOnly = !favOnly; prepareFromShadow()"
-                  :class="favOnly ? 'bg-red-400' : 'bg-neutral-200'" 
+                  :class="favOnly ? 'bg-red-400' : 'bg-neutral-200'"
                   class="relative inline-flex h-6 py-0.5 ml-4 focus:outline-none rounded-full w-10"
                   x-cloak>
-                  <span :class="favOnly ? 'translate-x-[18px]' : 'translate-x-0.5'" class="w-5 h-5 duration-200 ease-in-out bg-white rounded-full shadow-md"></span>
-              </button>
-              <label @click="$refs.switchButton.click(); $refs.switchButton.focus()" :id="$id('switch')" for="favOnly"
+                  <span
+                    :class="favOnly ? 'translate-x-[18px]' : 'translate-x-0.5'"
+                    class="w-5 h-5 duration-200 ease-in-out bg-white rounded-full shadow-md"></span>
+                </button>
+                <label
+                  @click="$refs.switchButton.click(); $refs.switchButton.focus()"
+                  :id="$id('switch')"
+                  for="favOnly"
                   :class="{ 'text-red-400': favOnly, 'text-gray-400': !favOnly }"
                   class="text-sm select-none"
                   x-cloak>
                   Favorites Only
-              </label>
-          </div>
-            <span
-              @click="await refresh()"
-              class="flex text-black items-center justify-center w-auto h-8 px-3 py-1 text-xs border-0 rounded-md cursor-pointer  hover:bg-gray-500 active:bg-gray-600 focus:bg-gray-600 focus:outline-none  hover:text-neutral-600 group">
-              <svg class="w-5 h-5 " xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
-                stroke="black" class="w-6 h-6"> >
-                <polyline points="23 4 23 10 17 10" />
-                <polyline points="1 20 1 14 7 14" />
-                <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15" />
-              </svg>
-            </span>
-            <span x-cloak @click="await deleteItemList(multiSelectedItems);" x-show="multiSelectedItems.length > 0" x-effect="$watch('needRefresh', (value) => { if(value) {refresh(); needRefresh = false;}})"
-              class="flex text-black items-center justify-center w-auto h-8 px-3 py-1 text-xs bg-red-500/60   rounded-md cursor-pointer  hover:bg-gray-500 active:bg-gray-600 focus:bg-gray-600 focus:outline-none  hover:text-neutral-600 group">
-              <span>Delete</span>
-              <svg class="w-5 h-5 ml-0.5" xmlns="http://www.w3.org/2000/svg" fill="red" viewBox="0 0 24 24"
-                stroke-width="2" stroke="black" class="w-6 h-6"> >
-                <polyline points="3 6 5 6 21 6" />
-                <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0  1 2-2h4a2 2 0 0 1 2 2v2" />
-                <line x1="10" y1="11" x2="10" y2="17" />
-                <line x1="14" y1="11" x2="14" y2="17" />
-              </svg>
-            </span>
-            <div class="flex-grow"></div>
-
-            <div class="searchWrapper text-sm pr-10">
-              <input autocomplete="off" x-ref="search" class="search__field" x-model.debounce.500ms="search" id="search" autofocus
-                type="search" placeholder="Search for..." x-init="$refs.search.focus()" />
-              <div class="search__icon">
-                <label class="sr-only" for="search"> Search </label>
-                <svg width="25px" height="25px" viewBox="0 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path
-                    d="M24 24L18.3221 18.3221M21.2941 11.1471C21.2941 5.54299 16.7511 1 11.1471 1C5.54299 1 1 5.54299 1 11.1471C1 16.7511 5.54299 21.2941 11.1471 21.2941C16.7511 21.2941 21.2941 16.7511 21.2941 11.1471Z"
-                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                </label>
+              </div>
+              <span
+                @click="await refresh()"
+                class="flex text-black items-center justify-center w-auto h-8 px-3 py-1 text-xs border-0 rounded-md cursor-pointer hover:bg-gray-500 active:bg-gray-600 focus:bg-gray-600 focus:outline-none hover:text-neutral-600 group">
+                <svg
+                  class="w-5 h-5"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke-width="2"
+                  stroke="black"
+                  class="w-6 h-6">
+                  >
+                  <polyline points="23 4 23 10 17 10" />
+                  <polyline points="1 20 1 14 7 14" />
+                  <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15" />
                 </svg>
-              </div>
+              </span>
+              <button
+                x-show="multiSelectedItems.length > 0"
+                class="group justify-between items-start border-[color:var(--default-red-500,#EF4444)] self-stretch flex w-[81px] flex-row gap-1.5 px-2 py-1 rounded-lg border-[1.6px] border-solid cursor-pointer hover:bg-red-500"
+                @click="await deleteItemList(multiSelectedItems)"
+                x-effect="$watch('needRefresh', (value) => { if(value) {refresh(); needRefresh = false;}})">
+                <svg
+                  class="group-hover:stroke-white"
+                  width="18"
+                  height="18"
+                  viewBox="0 0 18 18"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg">
+                  <path
+                    class="group-hover:stroke-white"
+                    d="M7 7.58824V13.2353M11 7.58824V13.2353M15 3.82353V15.1176C15 16.1573 14.1046 17 13 17H5C3.89543 17 3 16.1573 3 15.1176V3.82353M1 3.82353H17M12 3.82353V2.88235C12 1.84276 11.1046 1 10 1H8C6.89543 1 6 1.84276 6 2.88235V3.82353"
+                    stroke="#EF4444"
+                    stroke-width="1.6"
+                    stroke-linecap="round"
+                    stroke-linejoin="round" />
+                </svg>
+                <div class="text-red-500 text-sm leading-5 self-center my-auto group-hover:text-white">Delete</div>
+              </button>
               <div class="flex-grow"></div>
-
-            </div>
-          </div>
-          <!-- Gallery -->
-          <div class="relative custom-scroll w-full h-full mt-14">
-            <template x-if="viewType ==='list'">
-              <table class="w-full border-collapse divide-y-2 divide-gray-200 bg-white text-sm table-auto">
-                 <thead>
-                    <tr>
-                       <th class="px-4 py-2">
-                          Favorite
-                       </th>
-                       <th class="px-4 py-2 font-medium text-gray-900">
-                          Name
-                       </th>
-                       <template x-if="type === 'block'">
-                       <th class="px-4 py-2 font-medium text-gray-900">Category</th>
-                       </template>
-                       <th class="px-4 py-2 font-medium text-gray-900">Description</th>
-                       <th class="px-4 py-2 font-medium text-gray-900"></th>
-                    </tr>
-                 </thead>
-                 <tbody class="divide-y divide-gray-200" x-effect="$watch('search', value => filteredItems())">
-                 <template x-for="(item, idx) in items" :key="idx">
-                    <tr x-data="collection" x-effect="setData(item.type, item.value)">
-                      <td class="px-4 py-2"><label class="sr-only" for="id"></label>
-                        <div class="favorite" @click="toggleFavorite(item, item.type)">
-                          <svg xmlns="http://www.w3.org/2000/svg" width="17" height="15" viewBox="0 0 17 15" fill="none">
-                            <path :class="{
-                                      'fill-red-600 stroke-white': starred,
-                                      'fill-white stroke-black': !starred
-                                    }"
-                              d="M2.1095 7.70617L8.5 14.3333L14.8905 7.70617C15.6009 6.96942 16 5.97024 16 4.92838C16 2.75879 14.304 1 12.2119 1C11.2073 1 10.2437 1.41388 9.53333 2.15059L8.5 3.22222L7.46667 2.15059C6.75624 1.41388 5.79273 1 4.78807 1C2.69597 1 1 2.75879 1 4.92838C1 5.97024 1.3991 6.96942 2.1095 7.70617Z"
-                              stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" />
-                          </svg>
-                        </div>
-                      </td>
-                      <td class="px-4 py-2 font-medium text-gray-900"><span x-text="title ?? name"></span></td>
-                      <template x-if="item.type === 'block'">
-                      <td class="px-4 py-2 font-medium text-gray-900"><span x-text="category"> </span></td>  
-                      </template>
-                      <td class="px-4 py-2 font-medium text-gray-900"><span x-text="description"> </span></td>
-                      <td class="px-4 py-2 font-medium text-gray-900">
-                        <button class="btn color-primary cursor-pointer h-6 w-10 pt-2" @click="await clickToAction(item, item.type)">
-                          <svg viewBox='0 0 13 14' fill='none' xmlns='http://www.w3.org/2000/svg'>
-                            <path
-                              d='M10.2689 5.95853L10.2689 3.0614C10.2689 2.05545 9.45863 1.23997 8.45908 1.23997L3.02961 1.23996C2.03006 1.23996 1.21977 2.05544 1.21977 3.06138L1.21973 8.37566C1.21972 9.38161 2.03002 10.1971 3.02956 10.1971H6.05121M8.27809 10.1971H10.2689M10.2689 10.1971H12.2597M10.2689 10.1971V8.19352M10.2689 10.1971V12.5649'
-                              stroke='white' stroke-width='0.96' stroke-linecap='round' />
-                          </svg></button>
-                      </td>
-                    </tr>   </template>
-                 </tbody>
-              </table>            </template>
-            <template x-if="viewType ==='grid'">
-              
-              <div class="flex flex-wrap justify-left items-start gap-2 w-full" x-effect="$watch('search', value => filteredItems())">
-                 <template x-for="(item, idx) in items" :key="idx">
-                    <div class="drop-shadow-md rounded-md">
-                       <template x-if="item.type === 'recipe' && item.value">
-                          <div
-                            @mouseenter='hoverItem = item.value'
-                            @mouseleave='hoverItem = null'
-                            @contextmenu.prevent='selectItem(item)'
-                            :class="{ ' border-2 rounded-md border-yellow-300': multiSelectedItems.includes(item), ' border-white': focusedItem === item.value.value }"
-                            alt='item.value.meta.fileName'
-                          >
-                            <div
-                              x-data='collection'
-                              x-effect='setData(item.type, item.value)'
-                              class='items-center flex w-[416px] max-w-full flex-col bg-neutral-200 px-1.5 py-2 rounded-lg mt-1 lg:h-60'
-                            >
-                              <div class='items-center flex w-[404px] max-w-full flex-col bg-neutral-50 -mt-0.5 p-1.5 rounded-md lg:h-56'>
-                                <div class='justify-center items-start self-stretch flex flex-row gap-1.5 max-md:max-w-full max-md:flex-wrap'>
-                                  <img
-                                    :src="'/'+ pictureUrl"
-                                    :alt='name'
-                                    class='aspect-square object-cover object-center w-16 shrink-0 rounded-md'
-                                    onerror="this.onerror=null;this.src='/omni.png';"
-                                  />
-                                  <div class='items-start flex-[1_0_0] flex flex-col max-md:max-w-full'>
-                                    <div
-                                      x-text='name'
-                                      class='max-w-full flex-[1_0_0] text-neutral-800 text-ellipsis text-base leading-6 w-[300px]'
-                                    >
-                                    </div>
-                                    <div class='text-neutral-500 text-xs leading-3 w-[174px]' x-text='`Made by: ${author}`'>
-                                    </div>
-                                  </div>
-                                  <svg
-                                    xmlns='http://www.w3.org/2000/svg'
-                                    width='17'
-                                    height='15'
-                                    viewBox='0 0 17 15'
-                                    class='aspect-[1.15] object-cover object-center w-[15px] shrink-0 cursor-pointer'
-                                    fill='none'
-                                    @click="toggleFavorite(item, 'recipe')"
-                                  >
-                                    <path
-                                      :class="{
-                                            'fill-red-600 stroke-white': starred,
-                                            'fill-white stroke-black': !starred
-                                          }"
-                                      d='M2.1095 7.70617L8.5 14.3333L14.8905 7.70617C15.6009 6.96942 16 5.97024 16 4.92838C16 2.75879 14.304 1 12.2119 1C11.2073 1 10.2437 1.41388 9.53333 2.15059L8.5 3.22222L7.46667 2.15059C6.75624 1.41388 5.79273 1 4.78807 1C2.69597 1 1 2.75879 1 4.92838C1 5.97024 1.3991 6.96942 2.1095 7.70617Z'
-                                      stroke-width='1.2'
-                                      stroke-linecap='round'
-                                      stroke-linejoin='round'
-                                    />
-                                  </svg>
-                                </div>
-                                <div
-                                  x-text='description'
-                                  class='self-stretch text-neutral-800 overflow-hidden text-ellipsis text-xs leading-4 w-[392px] max-w-full mt-1 lg:min-h-[68px] lg:max-h-[72px]'
-                                >
-                                </div>
-                                <div class='items-end self-stretch flex flex-col py-0.5 max-md:max-w-full'>
-                                  <div class='justify-end items-start flex max-w-full flex-row gap-1 mt-0.5 h-5'>
-                                    <template x-for='(tag, idx) in tags' :key='idx'>
-                                      <div
-                                        class='flex overflow-hidden text-neutral-500 text-ellipsis text-xs leading-3 self-stretch justify-center items-center bg-amber-100 px-1.5 py-1 rounded-2xl cursor-pointer'
-                                        x-text='tag'
-                                        @click='search = tag'
-                                      ></div>
-                                    </template>
-                                  </div>
-                                  <div class='items-end flex w-[245px] max-w-full flex-row justify-end gap-1 mr-1 mt-1 -mb-0.5'>
-                                    <svg
-                                      width='14'
-                                      height='14'
-                                      viewBox='0 0 14 14'
-                                      fill='none'
-                                      xmlns='http://www.w3.org/2000/svg'
-                                      class='cursor-pointer'
-                                      x-tooltip:reactive='id'
-                                    >
-                                      <path
-                                        d='M7 3.67333V3.66667M7 10.3333V5.66667M13 7C13 10.3137 10.3137 13 7 13C3.68629 13 1 10.3137 1 7C1 3.68629 3.68629 1 7 1C10.3137 1 13 3.68629 13 7Z'
-                                        stroke='#737373'
-                                        stroke-linecap='round'
-                                        stroke-linejoin='round'
-                                      />
-                                    </svg>
-                                    <div
-                                      x-text='`Last update: ${updatedDate}`'
-                                      class='overflow-hidden text-neutral-500 text-ellipsis text-xs leading-3 self-stretch'
-                                    >
-                                    </div>
-                                  </div>
-                                </div>
-                              </div>
-                              <div class='justify-end items-center flex w-full max-w-full flex-row gap-1 mt-1.5 mb-0.5'>
-                                <button
-                                  x-show='canDelete'
-                                  class='group justify-between items-start border-[color:var(--default-red-500,#EF4444)] self-stretch flex w-[81px] flex-row gap-1.5 px-2 py-1 rounded-lg border-[1.6px] border-solid cursor-pointer hover:bg-red-500'
-                                  @click='await deleteItem(item)'
-                                >
-                                  <svg class="group-hover:stroke-white"
-                                    width='18'
-                                    height='18'
-                                    viewBox='0 0 18 18'
-                                    fill='none'
-                                    xmlns='http://www.w3.org/2000/svg'
-                                  >
-                                    <path class="group-hover:stroke-white"
-                                      d='M7 7.58824V13.2353M11 7.58824V13.2353M15 3.82353V15.1176C15 16.1573 14.1046 17 13 17H5C3.89543 17 3 16.1573 3 15.1176V3.82353M1 3.82353H17M12 3.82353V2.88235C12 1.84276 11.1046 1 10 1H8C6.89543 1 6 1.84276 6 2.88235V3.82353'
-                                      stroke='#EF4444'
-                                      stroke-width='1.6'
-                                      stroke-linecap='round'
-                                      stroke-linejoin='round'
-                                    />
-                                  </svg>
-                                  <div class='text-red-500 text-sm leading-5 self-center my-auto group-hover:text-white' >
-                                    Delete
-                                  </div>
-                                </button>
-                                <button
-                                  @click='await addToCanvas(id)'
-                                  class='justify-between items-center self-stretch flex flex-row gap-1.5 bg-red-300 px-2 py-1 rounded-lg cursor-pointer hover:bg-red-400'
-                                >
-                                  <svg width='18' height='18' viewBox='0 0 18 18' fill='none' xmlns='http://www.w3.org/2000/svg'>
-                                    <path
-                                      d='M14.1147 7.55356L14.1148 3.52977C14.1148 2.13263 12.9404 1.00002 11.4918 1.00001L3.62302 1C2.1744 0.999997 1.00006 2.13261 1.00006 3.52975L1 10.9107C0.999996 12.3078 2.17433 13.4405 3.62295 13.4405H8.00214M11.2295 13.4405H14.1148M14.1148 13.4405H17M14.1148 13.4405V10.6577M14.1148 13.4405V16.7291'
-                                      stroke='#F5F5F5'
-                                      stroke-width='1.6'
-                                      stroke-linecap='round'
-                                    />
-                                  </svg>
-                                  <div class='text-neutral-50 text-sm leading-5 self-center my-auto'>
-                                    Add to Canvas
-                                  </div>
-                                </button>
-                                <button
-                                  class='justify-between items-center self-stretch flex flex-row gap-1.5 bg-amber-500 px-2 py-1 rounded-lg cursor-pointer hover:bg-amber-600'
-                                  @click="await clickToAction(item, 'recipe');"
-                                >
-                                  <svg xmlns='http://www.w3.org/2000/svg' width='13' height='14' viewBox='0 0 13 14' fill='none'>
-                                    <path
-                                      d='M12.5 7.75V11.5C12.5 12.3284 11.8284 13 11 13H2C1.17157 13 0.5 12.3284 0.5 11.5V7.75M9.5 4L6.5 1M6.5 1L3.5 4M6.5 1V10'
-                                      stroke='white'
-                                      stroke-width='0.96'
-                                      stroke-linecap='round'
-                                      stroke-linejoin='round'
-                                    />
-                                  </svg>
-                                  <div class='text-neutral-50 text-sm leading-5 self-center my-auto'>
-                                    Load
-                                  </div>
-                                </button>
-                              </div>
-                            </div>
-                          </div>         </template>
-                       <template x-if="item.type === 'extension' && item.value">
-                          <div @mouseenter='hoverItem = item.value' @mouseleave='hoverItem = null' @contextmenu.prevent="selectItem(item.value)"
-                            :class="{ 'border-2 border-yellow-300': multiSelectedItems.includes(item.value), ' border-white': focusedItem === item.value.value }"
-                            alt="item.value.meta.fileName">
-                            <div class="collection-extension" class="flex" x-data="collection" x-effect="setData(item.type, item.value)">
-                              <div class="collection-extension-header">
-                                <div class="collection-extension-cover">
-                                  <img :src="'/extensions/'+id+'/logo.png'" @error="$event.target.src='/omni.png'" />
-                                </div>
-                                <div class="collection-extension-action">
-                                  <div class="collection-extension-title">
-                                    <div class="text-sm font-semibold" x-text="title"></div>
-                                    <div class="favorite" @click="toggleFavorite(item, 'extension')">
-                                      <svg xmlns="http://www.w3.org/2000/svg" width="17" height="15" viewBox="0 0 17 15"
-                                        fill="none">
-                                        <path :class="{
-                                            'fill-red-600 stroke-white': starred,
-                                            'fill-white stroke-black': !starred
-                                          }"
-                                          d="M2.1095 7.70617L8.5 14.3333L14.8905 7.70617C15.6009 6.96942 16 5.97024 16 4.92838C16 2.75879 14.304 1 12.2119 1C11.2073 1 10.2437 1.41388 9.53333 2.15059L8.5 3.22222L7.46667 2.15059C6.75624 1.41388 5.79273 1 4.78807 1C2.69597 1 1 2.75879 1 4.92838C1 5.97024 1.3991 6.96942 2.1095 7.70617Z"
-                                          stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" />
-                                      </svg>
-                                    </div>
-                                  </div>
-                                  <div class="btn-group">
-                                    <button class="btn" :class=" { ' btn-open': installed && canOpen, ' btn-primary': !installed, '' : installed && !canOpen }"
-                                      @click="await clickToAction(item, 'extension');">
-                                      <span x-text="installed && canOpen ? 'Open' : !installed ? 'Install' : 'Installed'"></span></button>
-                                    <button x-show="installed" class="btn btn-secondary" @click="update(item, 'extension')"><span>Update</span></button>
-                                  </div>
-                                </div>
-                              </div>
-                              <div class="collection-extension-description">
-                                <span>Author:</span>
-                                <div x-text="author"></div>
-                                <span>Description: </span>
-                                <div x-text="description"></div>
-                              </div>
-                            </div>
-                          </div>         </template>
-                       <template x-if="item.type === 'block' && item.value">
-                          <div @mouseenter="hoverItem = item.value" @mouseleave="hoverItem = null" @contextmenu.prevent="selectItem(item.value)"
-                            :class="{ ' border-2 border-yellow-300': multiSelectedItems.includes(item.value), ' border-white': focusedItem === item.value.value }">
-                          <div class="collection-block" x-data="collection" x-effect="setData(item.type, item.value)">
-                            <div class="collection-block-header">
-                              <div class="favorite" @click="toggleFavorite(item, 'block')">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="17" height="15" viewBox="0 0 17 15"
-                                        fill="none">
-                                        <path :class="{
-                                            'fill-red-600 stroke-white': starred,
-                                            'fill-white stroke-black': !starred
-                                          }"
-                                          d="M2.1095 7.70617L8.5 14.3333L14.8905 7.70617C15.6009 6.96942 16 5.97024 16 4.92838C16 2.75879 14.304 1 12.2119 1C11.2073 1 10.2437 1.41388 9.53333 2.15059L8.5 3.22222L7.46667 2.15059C6.75624 1.41388 5.79273 1 4.78807 1C2.69597 1 1 2.75879 1 4.92838C1 5.97024 1.3991 6.96942 2.1095 7.70617Z"
-                                          stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" />
-                                      </svg>
-                              </div>
-                            </div>
-                            <div class="collection-block-title" x-text="title">
-                            </div>
-                            <div class="collection-block-tags">
-                              <template x-for="(name, index) in name?.split('.')" :key="index">
-                                <div class="tag namespace" x-text="name" @click.stop.prevent="search = name; $refs.search.focus();">
-                                </div>
-                              </template>
-                              <div class="tag default" @click.stop.prevent="search = category; $refs.search.focus();"
-                                x-text="category">
-                              </div>
-                            </div>
-                            <div class="collection-block-description" x-text="description">
-                            </div>
-                            <div class="btn-group">
-                              <button class="btn btn-primary" @click="await clickToAction(item, 'block');"><svg width="13" height="14"
-                                  viewBox="0 0 13 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                  <path
-                                    d="M10.2689 5.95853L10.2689 3.0614C10.2689 2.05545 9.45863 1.23997 8.45908 1.23997L3.02961 1.23996C2.03006 1.23996 1.21977 2.05544 1.21977 3.06138L1.21973 8.37566C1.21972 9.38161 2.03002 10.1971 3.02956 10.1971H6.05121M8.27809 10.1971H10.2689M10.2689 10.1971H12.2597M10.2689 10.1971V8.19352M10.2689 10.1971V12.5649"
-                                    stroke="white" stroke-width="0.96" stroke-linecap="round" />
-                                </svg> <span>Add Block</span></button>
-                            </div>
-                          </div>
-                          </div>         </template>
-                       <template x-if="item.type === 'api' && item.value">
-                          <div @mouseenter='hoverItem = item.value' @mouseleave='hoverItem = null' @contextmenu.prevent="selectItem(item)"
-                            :class="{ ' border-2 rounded-md border-yellow-300': multiSelectedItems.includes(item), ' border-white': focusedItem === item.value.value }"
-                            alt="item.value.meta.fileName">
-                            <div class="collection-api" x-data="collection" x-effect="setData(item.type, item.value)">
-                              <div class="collection-api-header">
-                                <div class="collection-api-cover">
-                                  <img :src="'/logos/'+ namespace + '.png'" :alt="name"
-                                    onerror="this.onerror=null;this.src='/omni.png';">
-                                </div>
-                                <div class="collection-api-action">
-                                  <form @submit.prevent x-id="['api-key']" x-cloak class="flex flex-row w-full content-center">
-                                    <label :for="$id('api-key')" x-text="title" class="w-24"></label>
-                                    <template x-if="key.type !== 'oauth2' && hasKey !== true">
-                                      <div class="w-full">
-                                        <input type="password" :id="$id('api-key')" x-bind:placeholder="key.displayName || key.id"
-                                          x-model="key.secret"
-                                          class=" text-gray-600 rounded-md border-gray-200 py-2.5 pe-10 shadow-sm sm:text-sm disabled:cursor-not-allowed disabled:bg-gray-50 disabled:text-gray-500"
-                                          autocomplete="off" :disabled="hasKey === true" />
-                                      </div>
-                                    </template>
-                                    <template x-if="key.type === 'oauth2' && hasKey !== true">
-                                      <div class="w-full">
-                                        <a :href="'/api/v1/auth/oauth2?ns=' + namespace" target="_blank"
-                                          class="flex items-center justify-center space-x-2 text-gray-600 my-2 py-2 bg-gray-100 hover:bg-gray-200 rounded">
-                                          <span text="Link your account">Link your account</span>
-                                        </a>
-                                      </div>
-                                    </template>
-                                  </form>
-                                  <div class="btn-group">
-                                    <button x-show="key.type !== 'oauth2' || hasKey" class="btn " :class="{' btn-open' : !hasKey, ' btn-delete': hasKey}" @click="await clickToAction(item, 'api');"><span x-text="hasKey ? 'Revoke' : 'Add Credential'"></span></button>
-                                    <a :href="signUpUrl" target="_blank"><button class="btn btn-secondary"><span>Sign Up</span></button></a>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                          </div>         </template>
-                    </div>
-                 </template>
+              <div class="searchWrapper text-sm pr-10">
+                <input
+                  autocomplete="off"
+                  x-ref="search"
+                  class="search__field"
+                  x-model.debounce.500ms="search"
+                  id="search"
+                  autofocus
+                  type="search"
+                  placeholder="Search for..."
+                  x-init="$refs.search.focus()" />
+                <div class="search__icon">
+                  <label class="sr-only" for="search"> Search </label>
+                  <svg width="25px" height="25px" viewBox="0 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path
+                      d="M24 24L18.3221 18.3221M21.2941 11.1471C21.2941 5.54299 16.7511 1 11.1471 1C5.54299 1 1 5.54299 1 11.1471C1 16.7511 5.54299 21.2941 11.1471 21.2941C16.7511 21.2941 21.2941 16.7511 21.2941 11.1471Z"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round" />
+                  </svg>
+                </div>
+                <div class="flex-grow"></div>
               </div>
-            </template>
-            <div class="flex justify-center p-4 cursor-pointer" x-show="totalPages !== currentPage">
-                <button class="loadmore" @click="loadMore()">Load More</button>
-            </div>          </div>
-          <div
-            class="absolute bottom-0 left-0 right-0 p-2 gap-5 z-10 font-semibold drop-shadow shadow-white bg-white bg-opacity-50 text-sm flex justify-between items-center h-8">
-            <span class="font-semibold"></span>
-            <span x-text="items.length+' items.'"></span>
-            <span x-text="multiSelectedItems.length+' selected'"></span>
-            <span class="flex-grow"></span>
+            </div>
+            <!-- Gallery -->
+            <div class="relative custom-scroll w-full h-full mt-14">
+              <template x-if="viewType ==='list'"> <table class="w-full border-collapse divide-y-2 divide-gray-200 bg-white text-sm table-auto">
+   <thead>
+      <tr>
+         <th class="px-4 py-2">
+            Favorite
+         </th>
+         <th class="px-4 py-2 font-medium text-gray-900">
+            Name
+         </th>
+         <template x-if="type === 'block'">
+         <th class="px-4 py-2 font-medium text-gray-900">Category</th>
+         </template>
+         <th class="px-4 py-2 font-medium text-gray-900">Description</th>
+         <th class="px-4 py-2 font-medium text-gray-900"></th>
+      </tr>
+   </thead>
+   <tbody class="divide-y divide-gray-200" x-effect="$watch('search', value => filteredItems())">
+   <template x-for="(item, idx) in items" :key="idx">
+      <tr x-data="collection" x-effect="setData(item.type, item.value)">
+        <td class="px-4 py-2"><label class="sr-only" for="id"></label>
+          <div class="favorite" @click="toggleFavorite(item, item.type)">
+            <svg xmlns="http://www.w3.org/2000/svg" width="17" height="15" viewBox="0 0 17 15" fill="none">
+              <path :class="{
+                        'fill-red-600 stroke-white': starred,
+                        'fill-white stroke-black': !starred
+                      }"
+                d="M2.1095 7.70617L8.5 14.3333L14.8905 7.70617C15.6009 6.96942 16 5.97024 16 4.92838C16 2.75879 14.304 1 12.2119 1C11.2073 1 10.2437 1.41388 9.53333 2.15059L8.5 3.22222L7.46667 2.15059C6.75624 1.41388 5.79273 1 4.78807 1C2.69597 1 1 2.75879 1 4.92838C1 5.97024 1.3991 6.96942 2.1095 7.70617Z"
+                stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+          </div>
+        </td>
+        <td class="px-4 py-2 font-medium text-gray-900"><span x-text="title ?? name"></span></td>
+        <template x-if="item.type === 'block'">
+        <td class="px-4 py-2 font-medium text-gray-900"><span x-text="category"> </span></td>  
+        </template>
+        <td class="px-4 py-2 font-medium text-gray-900"><span x-text="description"> </span></td>
+        <td class="px-4 py-2 font-medium text-gray-900">
+          <button class="btn color-primary cursor-pointer h-6 w-10 pt-2" @click="await clickToAction(item, item.type)">
+            <svg viewBox='0 0 13 14' fill='none' xmlns='http://www.w3.org/2000/svg'>
+              <path
+                d='M10.2689 5.95853L10.2689 3.0614C10.2689 2.05545 9.45863 1.23997 8.45908 1.23997L3.02961 1.23996C2.03006 1.23996 1.21977 2.05544 1.21977 3.06138L1.21973 8.37566C1.21972 9.38161 2.03002 10.1971 3.02956 10.1971H6.05121M8.27809 10.1971H10.2689M10.2689 10.1971H12.2597M10.2689 10.1971V8.19352M10.2689 10.1971V12.5649'
+                stroke='white' stroke-width='0.96' stroke-linecap='round' />
+            </svg></button>
+        </td>
+      </tr>   </template>
+   </tbody>
+</table> </template>
+              <template x-if="viewType ==='grid'"> 
+<div class="flex flex-wrap justify-left items-start gap-2 w-full" x-effect="$watch('search', value => filteredItems())">
+   <template x-for="(item, idx) in items" :key="idx">
+      <div class="drop-shadow-md rounded-md">
+         <template x-if="item.type === 'recipe' && item.value">
+            <div
+              @mouseenter='hoverItem = item.value'
+              @mouseleave='hoverItem = null'
+              @contextmenu.prevent='selectItem(item)'
+              :class="{ ' border-2 rounded-md border-yellow-300': multiSelectedItems.includes(item), ' border-white': focusedItem === item.value.value }"
+              alt='item.value.meta.fileName'
+            >
+              <div
+                x-data='collection'
+                x-effect='setData(item.type, item.value)'
+                class='items-center flex w-[416px] max-w-full flex-col bg-neutral-200 px-1.5 py-2 rounded-lg mt-1 lg:h-60'
+              >
+                <div class='items-center flex w-[404px] max-w-full flex-col bg-neutral-50 -mt-0.5 p-1.5 rounded-md lg:h-56'>
+                  <div class='justify-center items-start self-stretch flex flex-row gap-1.5 max-md:max-w-full max-md:flex-wrap'>
+                    <img
+                      :src="'/'+ pictureUrl"
+                      :alt='name'
+                      class='aspect-square object-cover object-center w-16 shrink-0 rounded-md'
+                      onerror="this.onerror=null;this.src='/omni.png';"
+                    />
+                    <div class='items-start flex-[1_0_0] flex flex-col max-md:max-w-full'>
+                      <div
+                        x-text='name'
+                        class='max-w-full flex-[1_0_0] text-neutral-800 text-ellipsis text-base leading-6 w-[300px]'
+                      >
+                      </div>
+                      <div class='text-neutral-500 text-xs leading-3 w-[174px]' x-text='`Made by: ${author}`'>
+                      </div>
+                    </div>
+                    <svg
+                      xmlns='http://www.w3.org/2000/svg'
+                      width='17'
+                      height='15'
+                      viewBox='0 0 17 15'
+                      class='aspect-[1.15] object-cover object-center w-[15px] shrink-0 cursor-pointer'
+                      fill='none'
+                      @click="toggleFavorite(item, 'recipe')"
+                    >
+                      <path
+                        :class="{
+                              'fill-red-600 stroke-white': starred,
+                              'fill-white stroke-black': !starred
+                            }"
+                        d='M2.1095 7.70617L8.5 14.3333L14.8905 7.70617C15.6009 6.96942 16 5.97024 16 4.92838C16 2.75879 14.304 1 12.2119 1C11.2073 1 10.2437 1.41388 9.53333 2.15059L8.5 3.22222L7.46667 2.15059C6.75624 1.41388 5.79273 1 4.78807 1C2.69597 1 1 2.75879 1 4.92838C1 5.97024 1.3991 6.96942 2.1095 7.70617Z'
+                        stroke-width='1.2'
+                        stroke-linecap='round'
+                        stroke-linejoin='round'
+                      />
+                    </svg>
+                  </div>
+                  <div
+                    x-text='description'
+                    class='self-stretch text-neutral-800 overflow-hidden text-ellipsis text-xs leading-4 w-[392px] max-w-full mt-1 lg:min-h-[68px] lg:max-h-[72px]'
+                  >
+                  </div>
+                  <div class='items-end self-stretch flex flex-col py-0.5 max-md:max-w-full'>
+                    <div class='justify-end items-start flex max-w-full flex-row gap-1 mt-0.5 h-5'>
+                      <template x-for='(tag, idx) in tags' :key='idx'>
+                        <div
+                          class='flex overflow-hidden text-neutral-500 text-ellipsis text-xs leading-3 self-stretch justify-center items-center bg-amber-100 px-1.5 py-1 rounded-2xl cursor-pointer'
+                          x-text='tag'
+                          @click='search = tag'
+                        ></div>
+                      </template>
+                    </div>
+                    <div class='items-end flex w-[245px] max-w-full flex-row justify-end gap-1 mr-1 mt-1 -mb-0.5'>
+                      <svg
+                        width='14'
+                        height='14'
+                        viewBox='0 0 14 14'
+                        fill='none'
+                        xmlns='http://www.w3.org/2000/svg'
+                        class='cursor-pointer'
+                        x-tooltip:reactive='id'
+                      >
+                        <path
+                          d='M7 3.67333V3.66667M7 10.3333V5.66667M13 7C13 10.3137 10.3137 13 7 13C3.68629 13 1 10.3137 1 7C1 3.68629 3.68629 1 7 1C10.3137 1 13 3.68629 13 7Z'
+                          stroke='#737373'
+                          stroke-linecap='round'
+                          stroke-linejoin='round'
+                        />
+                      </svg>
+                      <div
+                        x-text='`Last update: ${updatedDate}`'
+                        class='overflow-hidden text-neutral-500 text-ellipsis text-xs leading-3 self-stretch'
+                      >
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class='justify-end items-center flex w-full max-w-full flex-row gap-1 mt-1.5 mb-0.5'>
+                  <button
+                    x-show='canDelete'
+                    class='group justify-between items-start border-[color:var(--default-red-500,#EF4444)] self-stretch flex w-[81px] flex-row gap-1.5 px-2 py-1 rounded-lg border-[1.6px] border-solid cursor-pointer hover:bg-red-500'
+                    @click='await deleteItem(item)'
+                  >
+                    <svg class="group-hover:stroke-white"
+                      width='18'
+                      height='18'
+                      viewBox='0 0 18 18'
+                      fill='none'
+                      xmlns='http://www.w3.org/2000/svg'
+                    >
+                      <path class="group-hover:stroke-white"
+                        d='M7 7.58824V13.2353M11 7.58824V13.2353M15 3.82353V15.1176C15 16.1573 14.1046 17 13 17H5C3.89543 17 3 16.1573 3 15.1176V3.82353M1 3.82353H17M12 3.82353V2.88235C12 1.84276 11.1046 1 10 1H8C6.89543 1 6 1.84276 6 2.88235V3.82353'
+                        stroke='#EF4444'
+                        stroke-width='1.6'
+                        stroke-linecap='round'
+                        stroke-linejoin='round'
+                      />
+                    </svg>
+                    <div class='text-red-500 text-sm leading-5 self-center my-auto group-hover:text-white' >
+                      Delete
+                    </div>
+                  </button>
+                  <button
+                    @click='await addToCanvas(id)'
+                    class='justify-between items-center self-stretch flex flex-row gap-1.5 bg-red-300 px-2 py-1 rounded-lg cursor-pointer hover:bg-red-400'
+                  >
+                    <svg width='18' height='18' viewBox='0 0 18 18' fill='none' xmlns='http://www.w3.org/2000/svg'>
+                      <path
+                        d='M14.1147 7.55356L14.1148 3.52977C14.1148 2.13263 12.9404 1.00002 11.4918 1.00001L3.62302 1C2.1744 0.999997 1.00006 2.13261 1.00006 3.52975L1 10.9107C0.999996 12.3078 2.17433 13.4405 3.62295 13.4405H8.00214M11.2295 13.4405H14.1148M14.1148 13.4405H17M14.1148 13.4405V10.6577M14.1148 13.4405V16.7291'
+                        stroke='#F5F5F5'
+                        stroke-width='1.6'
+                        stroke-linecap='round'
+                      />
+                    </svg>
+                    <div class='text-neutral-50 text-sm leading-5 self-center my-auto'>
+                      Add to Canvas
+                    </div>
+                  </button>
+                  <button
+                    class='justify-between items-center self-stretch flex flex-row gap-1.5 bg-amber-500 px-2 py-1 rounded-lg cursor-pointer hover:bg-amber-600'
+                    @click="await clickToAction(item, 'recipe');"
+                  >
+                    <svg xmlns='http://www.w3.org/2000/svg' width='13' height='14' viewBox='0 0 13 14' fill='none'>
+                      <path
+                        d='M12.5 7.75V11.5C12.5 12.3284 11.8284 13 11 13H2C1.17157 13 0.5 12.3284 0.5 11.5V7.75M9.5 4L6.5 1M6.5 1L3.5 4M6.5 1V10'
+                        stroke='white'
+                        stroke-width='0.96'
+                        stroke-linecap='round'
+                        stroke-linejoin='round'
+                      />
+                    </svg>
+                    <div class='text-neutral-50 text-sm leading-5 self-center my-auto'>
+                      Load
+                    </div>
+                  </button>
+                </div>
+              </div>
+            </div>         </template>
+         <template x-if="item.type === 'extension' && item.value">
+            <div @mouseenter='hoverItem = item.value' @mouseleave='hoverItem = null' @contextmenu.prevent="selectItem(item.value)"
+              :class="{ 'border-2 border-yellow-300': multiSelectedItems.includes(item.value), ' border-white': focusedItem === item.value.value }"
+              alt="item.value.meta.fileName">
+              <div class="collection-extension" class="flex" x-data="collection" x-effect="setData(item.type, item.value)">
+                <div class="collection-extension-header">
+                  <div class="collection-extension-cover">
+                    <img :src="'/extensions/'+id+'/logo.png'" @error="$event.target.src='/omni.png'" />
+                  </div>
+                  <div class="collection-extension-action">
+                    <div class="collection-extension-title">
+                      <div class="text-sm font-semibold" x-text="title"></div>
+                      <div class="favorite" @click="toggleFavorite(item, 'extension')">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="17" height="15" viewBox="0 0 17 15"
+                          fill="none">
+                          <path :class="{
+                              'fill-red-600 stroke-white': starred,
+                              'fill-white stroke-black': !starred
+                            }"
+                            d="M2.1095 7.70617L8.5 14.3333L14.8905 7.70617C15.6009 6.96942 16 5.97024 16 4.92838C16 2.75879 14.304 1 12.2119 1C11.2073 1 10.2437 1.41388 9.53333 2.15059L8.5 3.22222L7.46667 2.15059C6.75624 1.41388 5.79273 1 4.78807 1C2.69597 1 1 2.75879 1 4.92838C1 5.97024 1.3991 6.96942 2.1095 7.70617Z"
+                            stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" />
+                        </svg>
+                      </div>
+                    </div>
+                    <div class="btn-group">
+                      <button class="btn" :class=" { ' btn-open': installed && canOpen, ' btn-primary': !installed, '' : installed && !canOpen }"
+                        @click="await clickToAction(item, 'extension');">
+                        <span x-text="installed && canOpen ? 'Open' : !installed ? 'Install' : 'Installed'"></span></button>
+                      <button x-show="installed" class="btn btn-secondary" @click="update(item, 'extension')"><span>Update</span></button>
+                    </div>
+                  </div>
+                </div>
+                <div class="collection-extension-description">
+                  <span>Author:</span>
+                  <div x-text="author"></div>
+                  <span>Description: </span>
+                  <div x-text="description"></div>
+                </div>
+              </div>
+            </div>         </template>
+         <template x-if="item.type === 'block' && item.value">
+            <div @mouseenter="hoverItem = item.value" @mouseleave="hoverItem = null" @contextmenu.prevent="selectItem(item.value)"
+              :class="{ ' border-2 border-yellow-300': multiSelectedItems.includes(item.value), ' border-white': focusedItem === item.value.value }">
+            <div class="collection-block" x-data="collection" x-effect="setData(item.type, item.value)">
+              <div class="collection-block-header">
+                <div class="favorite" @click="toggleFavorite(item, 'block')">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="17" height="15" viewBox="0 0 17 15"
+                          fill="none">
+                          <path :class="{
+                              'fill-red-600 stroke-white': starred,
+                              'fill-white stroke-black': !starred
+                            }"
+                            d="M2.1095 7.70617L8.5 14.3333L14.8905 7.70617C15.6009 6.96942 16 5.97024 16 4.92838C16 2.75879 14.304 1 12.2119 1C11.2073 1 10.2437 1.41388 9.53333 2.15059L8.5 3.22222L7.46667 2.15059C6.75624 1.41388 5.79273 1 4.78807 1C2.69597 1 1 2.75879 1 4.92838C1 5.97024 1.3991 6.96942 2.1095 7.70617Z"
+                            stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" />
+                        </svg>
+                </div>
+              </div>
+              <div class="collection-block-title" x-text="title">
+              </div>
+              <div class="collection-block-tags">
+                <template x-for="(name, index) in name?.split('.')" :key="index">
+                  <div class="tag namespace" x-text="name" @click.stop.prevent="search = name; $refs.search.focus();">
+                  </div>
+                </template>
+                <div class="tag default" @click.stop.prevent="search = category; $refs.search.focus();"
+                  x-text="category">
+                </div>
+              </div>
+              <div class="collection-block-description" x-text="description">
+              </div>
+              <div class="btn-group">
+                <button class="btn btn-primary" @click="await clickToAction(item, 'block');"><svg width="13" height="14"
+                    viewBox="0 0 13 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path
+                      d="M10.2689 5.95853L10.2689 3.0614C10.2689 2.05545 9.45863 1.23997 8.45908 1.23997L3.02961 1.23996C2.03006 1.23996 1.21977 2.05544 1.21977 3.06138L1.21973 8.37566C1.21972 9.38161 2.03002 10.1971 3.02956 10.1971H6.05121M8.27809 10.1971H10.2689M10.2689 10.1971H12.2597M10.2689 10.1971V8.19352M10.2689 10.1971V12.5649"
+                      stroke="white" stroke-width="0.96" stroke-linecap="round" />
+                  </svg> <span>Add Block</span></button>
+              </div>
+            </div>
+            </div>         </template>
+         <template x-if="item.type === 'api' && item.value">
+            <div @mouseenter='hoverItem = item.value' @mouseleave='hoverItem = null' @contextmenu.prevent="selectItem(item)"
+              :class="{ ' border-2 rounded-md border-yellow-300': multiSelectedItems.includes(item), ' border-white': focusedItem === item.value.value }"
+              alt="item.value.meta.fileName">
+              <div class="collection-api" x-data="collection" x-effect="setData(item.type, item.value)">
+                <div class="collection-api-header">
+                  <div class="collection-api-cover">
+                    <img :src="'/logos/'+ namespace + '.png'" :alt="name"
+                      onerror="this.onerror=null;this.src='/omni.png';">
+                  </div>
+                  <div class="collection-api-action">
+                    <form @submit.prevent x-id="['api-key']" x-cloak class="flex flex-row w-full content-center">
+                      <label :for="$id('api-key')" x-text="title" class="w-24"></label>
+                      <template x-if="key.type !== 'oauth2' && hasKey !== true">
+                        <div class="w-full">
+                          <input type="password" :id="$id('api-key')" x-bind:placeholder="key.displayName || key.id"
+                            x-model="key.secret"
+                            class=" text-gray-600 rounded-md border-gray-200 py-2.5 pe-10 shadow-sm sm:text-sm disabled:cursor-not-allowed disabled:bg-gray-50 disabled:text-gray-500"
+                            autocomplete="off" :disabled="hasKey === true" />
+                        </div>
+                      </template>
+                      <template x-if="key.type === 'oauth2' && hasKey !== true">
+                        <div class="w-full">
+                          <a :href="'/api/v1/auth/oauth2?ns=' + namespace" target="_blank"
+                            class="flex items-center justify-center space-x-2 text-gray-600 my-2 py-2 bg-gray-100 hover:bg-gray-200 rounded">
+                            <span text="Link your account">Link your account</span>
+                          </a>
+                        </div>
+                      </template>
+                    </form>
+                    <div class="btn-group">
+                      <button x-show="key.type !== 'oauth2' || hasKey" class="btn " :class="{' btn-open' : !hasKey, ' btn-delete': hasKey}" @click="await clickToAction(item, 'api');"><span x-text="hasKey ? 'Revoke' : 'Add Credential'"></span></button>
+                      <a :href="signUpUrl" target="_blank"><button class="btn btn-secondary"><span>Sign Up</span></button></a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>         </template>
+      </div>
+   </template>
+</div>
+ </template>
+              <div class="flex justify-center p-4 cursor-pointer" x-show="totalPages !== currentPage">
+                  <button class="loadmore" @click="loadMore()">Load More</button>
+              </div>            </div>
+            <div
+              class="absolute bottom-0 left-0 right-0 p-2 gap-5 z-10 font-semibold drop-shadow shadow-white bg-white bg-opacity-50 text-sm flex justify-between items-center h-8">
+              <span class="font-semibold"></span>
+              <span x-text="items.length+' items.'"></span>
+              <span x-text="multiSelectedItems.length+' selected'"></span>
+              <span class="flex-grow"></span>
 
-            <span class="pr-4" x-text="hoverItem?.ticket?.fid"></span>
+              <span class="pr-4" x-text="hoverItem?.ticket?.fid"></span>
+            </div>
           </div>
         </div>
       </div>
-
     </div>
-  </div>
-</body>
-
+  </body>
 </html>
