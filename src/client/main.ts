@@ -341,7 +341,7 @@ document.addEventListener('alpine:init', async () => {
       this.type = type;
       this.category = data.category;
       this.author = data.meta?.author ?? data.author;
-      this.tags = data.meta?.tags ?? data.tags;
+      this.tags = data.meta?.tags ?? data.tags ?? data.name?.split('.');
 
       const key = getFavoriteKey(type, data)
       this.starred = window.localStorage.getItem(key) ? true : false;
