@@ -243,6 +243,17 @@ const createGallery = function (itemsPerPage: number, itemApi: string) {
         sdk.runClientScript('extensions',['update', item.value.id]);
       }
     },
+    getIconPath(item: CollectionItem) {
+      if (item.type === 'recipe') {
+        return '/'+ item.value.pictureUrl;
+      } else if (item.type === 'extension') {
+        return '/extensions/'+item.value.id+'/logo.png';
+      } else if (item.type === 'block') {
+        return null;
+      } else if (item.type === 'api') {
+        return '/logos/'+ item.value.namespace + '.png';
+      }
+    },
     async toggleFavorite(item: CollectionItem, type: CollectionType) {
       const key = getFavoriteKey(type, item.value)
       sdk.runClientScript('toggleFavorite', [key])

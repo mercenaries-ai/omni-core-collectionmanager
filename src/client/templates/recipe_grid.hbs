@@ -17,7 +17,7 @@
     <div class='justify-end items-center flex w-full max-w-full flex-row gap-1 mt-1.5'>
       <button
         x-show='canDelete'
-        class='group justify-between items-start border-red-500 self-stretch flex flex-row gap-1.5 px-2 py-1 rounded-lg border-[1.6px] border-solid cursor-pointer hover:bg-red-500'
+        class='group justify-between items-start border-red-500 self-stretch flex flex-row gap-1.5 px-2.5 py-2 rounded-lg border-[1.6px] border-solid cursor-pointer hover:bg-red-500'
         @click='await deleteItem(item)'
       >
         <svg class="group-hover:stroke-white"
@@ -41,7 +41,7 @@
       </button>
       <button
         @click='await addAsBlock(id)'
-        class='justify-between items-center self-stretch flex flex-row gap-1.5 bg-red-300 px-2 py-1 rounded-lg cursor-pointer hover:bg-red-400'
+        class='justify-between items-center self-stretch flex flex-row gap-1.5 bg-red-300 px-2.5 py-2 rounded-lg cursor-pointer hover:bg-red-400'
       >
         <svg width='18' height='18' viewBox='0 0 18 18' fill='none' xmlns='http://www.w3.org/2000/svg'>
           <path
@@ -56,18 +56,14 @@
         </div>
       </button>
       <button
-        class='justify-between items-center self-stretch flex flex-row gap-1.5 bg-amber-500 px-2 py-1 rounded-lg cursor-pointer hover:bg-amber-600'
+        class='justify-between items-center self-stretch flex flex-row gap-1.5 bg-amber-500 px-2.5 py-2 rounded-lg cursor-pointer hover:bg-amber-600'
         @click="await clickToAction(item, 'recipe');"
       >
-        <svg xmlns='http://www.w3.org/2000/svg' width='13' height='14' viewBox='0 0 13 14' fill='none'>
-          <path
-            d='M12.5 7.75V11.5C12.5 12.3284 11.8284 13 11 13H2C1.17157 13 0.5 12.3284 0.5 11.5V7.75M9.5 4L6.5 1M6.5 1L3.5 4M6.5 1V10'
-            stroke='white'
-            stroke-width='0.96'
-            stroke-linecap='round'
-            stroke-linejoin='round'
-          />
-        </svg>
+        <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-4 h-4">
+            <path
+              d="M16.3606 9.91965V14.5196C16.3606 15.5359 15.5369 16.3596 14.5206 16.3596H3.48062C2.46442 16.3596 1.64062 15.5359 1.64062 14.5196V9.91965M12.6806 5.31965L9.00062 1.63965M9.00062 1.63965L5.32062 5.31965M9.00062 1.63965V12.6796"
+              stroke="#F5F5F5" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
         <div class='text-neutral-50 text-sm leading-5 self-center my-auto'>
           Load
         </div>
