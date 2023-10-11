@@ -1,14 +1,14 @@
-<div class='items-center flex w-full flex-col bg-neutral-50 -mt-0.5 p-1.5 rounded-md md:h-56'>
+<div class='items-center flex w-full flex-col bg-neutral-50 -mt-0.5 p-1.5 rounded-md'>
   <!-- Header -->
-  <div class='justify-center items-start self-stretch flex flex-row gap-1.5 max-md:max-w-full max-md:flex-wrap'>
+  <div class='justify-center items-start self-stretch flex flex-row gap-1.5 max-md:max-w-full max-md:flex-wrap '>
     <img x-show="item.type !== 'block'"
       :src='getIconPath(item)'
       :alt='name'
       class='aspect-square object-cover object-center w-16 shrink-0 rounded-md'
       onerror="this.onerror=null;this.src='/omni.png';"
     />
-    <div class='items-start flex-[1_0_0] flex flex-col max-md:max-w-full'>
-      <div x-text='name ?? title' class='max-w-full flex-[1_0_0] text-neutral-800 text-ellipsis text-base leading-6 w-[300px]'>
+    <div class='items-start flex-[1_0_auto] flex flex-col max-md:max-w-full'>
+      <div x-text='title ?? name' class='max-w-full flex-[1_0_0] text-neutral-800 text-ellipsis text-base leading-6 w-[300px] font-semibold'>
       </div>
       <div x-show='author !== undefined' class='text-neutral-500 text-xs leading-3 w-[174px]' x-text='`Made by: ${author}`'>
       </div>
@@ -45,14 +45,14 @@
     <div class='justify-end items-start flex max-w-full flex-row gap-1 h-5'>
       <template x-for='(tag, idx) in tags' :key='idx'>
         <div
-          class='flex overflow-hidden text-neutral-500 text-ellipsis text-xs leading-3 self-stretch justify-center items-center bg-amber-100 px-1.5 py-1 rounded-2xl cursor-pointer'
+          class='flex overflow-hidden text-neutral-500 text-ellipsis text-xs leading-3 self-stretch justify-center items-center bg-gray-200 px-1.5 py-1 rounded-2xl cursor-pointer'
           x-text='tag'
           @click='search = tag; $refs.search.focus();'
         ></div>
       </template>
       <template x-if="item.type === 'block'">
         <div
-          class='flex overflow-hidden text-neutral-500 text-ellipsis text-xs leading-3 self-stretch justify-center items-center bg-amber-100 px-1.5 py-1 rounded-2xl cursor-pointer'
+          class='flex overflow-hidden text-neutral-500 text-ellipsis text-xs leading-3 self-stretch justify-center items-center bg-gray-200 px-1.5 py-1 rounded-2xl cursor-pointer'
           x-text='category'
           @click='search = category; $refs.search.focus();'
         ></div>
