@@ -3,7 +3,7 @@
   @mouseenter='hoverItem = item.value'
   @mouseleave='hoverItem = null' @click='selectItem(item, $event)'
   @contextmenu.prevent='selectItem(item, $event)'
-  :class="{ ' border-2 rounded-md border-yellow-300': multiSelectedItems.includes(item), ' border-white': focusedItem === item.value.value }"
+  :class="{ ' border-2 rounded-lg border-yellow-300': multiSelectedItems.includes(item), ' border-white': focusedItem === item.value.value }"
   alt='item.value.meta.fileName'>
 <!-- Collection -->
   <div
@@ -17,7 +17,7 @@
     <div class='justify-end items-center flex w-full max-w-full flex-row gap-1 mt-1.5'>
       <button x-show='window.parent.client.workbench.canEdit'
         @click='await addAsBlock(id)'
-        class='justify-between items-center self-stretch flex flex-row gap-1.5 bg-red-300 px-2.5 py-2 rounded-lg cursor-pointer hover:bg-red-400'
+        class='justify-between items-center self-stretch flex flex-row gap-1.5 bg-red-300 px-5 py-2 rounded-full cursor-pointer hover:drop-shadow-md'
       >
         <svg width='18' height='18' viewBox='0 0 18 18' fill='none' xmlns='http://www.w3.org/2000/svg'>
           <path
@@ -32,7 +32,7 @@
         </div>
       </button>
       <button
-        class='justify-between items-center self-stretch flex flex-row gap-1.5 bg-amber-500 px-2.5 py-2 rounded-lg cursor-pointer hover:bg-amber-600'
+        class='justify-between items-center self-stretch flex flex-row gap-1.5 bg-amber-500 px-5 py-2 rounded-full cursor-pointer hover:drop-shadow-md'
         @click="await clickToAction(item, 'recipe');"
       >
         <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-4 h-4">
