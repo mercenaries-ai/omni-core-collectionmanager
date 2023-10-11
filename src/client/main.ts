@@ -168,7 +168,7 @@ const createGallery = function (itemsPerPage: number, itemApi: string) {
         this.totalPages = (data.items.length === limit) ? this.currentPage + 1 : this.currentPage
       }
     },
-    selectItem(item: CollectionItem) {
+    selectItem(item: CollectionItem, event?: MouseEvent) {
       if (item.onclick) {
         return;
       }
@@ -176,7 +176,11 @@ const createGallery = function (itemsPerPage: number, itemApi: string) {
       if (idx > -1) {
         this.multiSelectedItems.splice(idx, 1); // Deselect the item if it's already selected
       } else {
-        this.multiSelectedItems.push(item); // Select the item
+        if (event && event.type === 'contextmenu') { // multi select
+          this.multiSelectedItems.push(item);
+        } else if (event && event.type === 'click') { // select 
+          this.multiSelectedItems = [item]; 
+        }
       }
     },
     paginate() {
@@ -245,7 +249,7 @@ const createGallery = function (itemsPerPage: number, itemApi: string) {
     },
     getIconPath(item: CollectionItem) {
       if (item.type === 'recipe') {
-        return '/'+ item.value.pictureUrl;
+        return '/'+ item.value.meta.pictureUrl;
       } else if (item.type === 'extension') {
         return '/extensions/'+item.value.id+'/logo.png';
       } else if (item.type === 'block') {

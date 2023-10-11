@@ -1,8 +1,8 @@
 <!-- For multiselect-->
 <div
   @mouseenter='hoverItem = item.value'
-  @mouseleave='hoverItem = null'
-  @contextmenu.prevent='selectItem(item)'
+  @mouseleave='hoverItem = null' @click='selectItem(item, $event)'
+  @contextmenu.prevent='selectItem(item, $event)'
   :class="{ ' border-2 rounded-md border-yellow-300': multiSelectedItems.includes(item), ' border-white': focusedItem === item.value.value }"
   alt='item.value.meta.fileName'>
 <!-- Collection -->
