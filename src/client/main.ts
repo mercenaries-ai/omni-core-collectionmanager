@@ -348,7 +348,7 @@ document.addEventListener('alpine:init', async () => {
       this.description = data.meta?.description ?? data.description;
       this.pictureUrl = data.meta?.pictureUrl ?? data.pictureUrl;
       this.type = type;
-      this.category = data.category;
+      this.category = data.category ?? data.meta?.category;
       this.author = data.meta?.author ?? data.author;
       if(type === 'block') {
         this.tags = data.name?.split('.');

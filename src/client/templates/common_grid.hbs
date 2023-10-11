@@ -50,13 +50,11 @@
           @click='search = tag; $refs.search.focus();'
         ></div>
       </template>
-      <template x-if="item.type === 'block'">
-        <div
-          class='flex overflow-hidden text-neutral-500 text-ellipsis text-xs leading-3 self-stretch justify-center items-center bg-gray-200 px-1.5 py-1 rounded-2xl cursor-pointer'
-          x-text='category'
-          @click='search = category; $refs.search.focus();'
-        ></div>
-      </template>
+    <div x-show='category && category.length > 0'
+        class='flex overflow-hidden text-neutral-500 text-ellipsis text-xs leading-3 self-stretch justify-center items-center bg-gray-200 px-1.5 py-1 rounded-2xl cursor-pointer'
+        x-text='category'
+        @click='search = category; $refs.search.focus();'
+    ></div>
     </div>
     <div class='items-end flex w-[245px] max-w-full flex-row justify-end gap-1 mr-1 mt-0.5'  x-show="updatedDate !== null">
       <svg

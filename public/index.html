@@ -12,7 +12,7 @@
       }
     </style>
     
-    <script type="module" crossorigin src="/extensions/omni-core-collectionmanager/assets/main-bd30e37d.js"></script>
+    <script type="module" crossorigin src="/extensions/omni-core-collectionmanager/assets/main-fe7edc1c.js"></script>
     <link rel="stylesheet" href="/extensions/omni-core-collectionmanager/assets/index-b845b874.css">
   </head>
 
@@ -20,7 +20,7 @@
     <div
       class="m-h-screen bg-white"
       x-data="appState"
-      @keydown.window.prevent.stop.ctrl.shift.f="window.parent.client.workbench.activeExtension ? close() :  window.parent.client.workbench.showExtension('omni-core-filemanager', {})">
+    >
       <div
         id="container"
         class="bg-white"
@@ -303,13 +303,11 @@
                         @click='search = tag; $refs.search.focus();'
                       ></div>
                     </template>
-                    <template x-if="item.type === 'block'">
-                      <div
-                        class='flex overflow-hidden text-neutral-500 text-ellipsis text-xs leading-3 self-stretch justify-center items-center bg-gray-200 px-1.5 py-1 rounded-2xl cursor-pointer'
-                        x-text='category'
-                        @click='search = category; $refs.search.focus();'
-                      ></div>
-                    </template>
+                  <div x-show='category && category.length > 0'
+                      class='flex overflow-hidden text-neutral-500 text-ellipsis text-xs leading-3 self-stretch justify-center items-center bg-gray-200 px-1.5 py-1 rounded-2xl cursor-pointer'
+                      x-text='category'
+                      @click='search = category; $refs.search.focus();'
+                  ></div>
                   </div>
                   <div class='items-end flex w-[245px] max-w-full flex-row justify-end gap-1 mr-1 mt-0.5'  x-show="updatedDate !== null">
                     <svg
@@ -430,13 +428,11 @@
                           @click='search = tag; $refs.search.focus();'
                         ></div>
                       </template>
-                      <template x-if="item.type === 'block'">
-                        <div
-                          class='flex overflow-hidden text-neutral-500 text-ellipsis text-xs leading-3 self-stretch justify-center items-center bg-gray-200 px-1.5 py-1 rounded-2xl cursor-pointer'
-                          x-text='category'
-                          @click='search = category; $refs.search.focus();'
-                        ></div>
-                      </template>
+                    <div x-show='category && category.length > 0'
+                        class='flex overflow-hidden text-neutral-500 text-ellipsis text-xs leading-3 self-stretch justify-center items-center bg-gray-200 px-1.5 py-1 rounded-2xl cursor-pointer'
+                        x-text='category'
+                        @click='search = category; $refs.search.focus();'
+                    ></div>
                     </div>
                     <div class='items-end flex w-[245px] max-w-full flex-row justify-end gap-1 mr-1 mt-0.5'  x-show="updatedDate !== null">
                       <svg
@@ -566,13 +562,11 @@
                         @click='search = tag; $refs.search.focus();'
                       ></div>
                     </template>
-                    <template x-if="item.type === 'block'">
-                      <div
-                        class='flex overflow-hidden text-neutral-500 text-ellipsis text-xs leading-3 self-stretch justify-center items-center bg-gray-200 px-1.5 py-1 rounded-2xl cursor-pointer'
-                        x-text='category'
-                        @click='search = category; $refs.search.focus();'
-                      ></div>
-                    </template>
+                  <div x-show='category && category.length > 0'
+                      class='flex overflow-hidden text-neutral-500 text-ellipsis text-xs leading-3 self-stretch justify-center items-center bg-gray-200 px-1.5 py-1 rounded-2xl cursor-pointer'
+                      x-text='category'
+                      @click='search = category; $refs.search.focus();'
+                  ></div>
                   </div>
                   <div class='items-end flex w-[245px] max-w-full flex-row justify-end gap-1 mr-1 mt-0.5'  x-show="updatedDate !== null">
                     <svg
