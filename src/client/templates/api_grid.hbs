@@ -1,5 +1,6 @@
 <div @mouseenter='hoverItem = item.value' @mouseleave='hoverItem = null' @contextmenu.prevent="selectItem(item)"
-  :class="{ ' border-2 rounded-md border-yellow-300': multiSelectedItems.includes(item), ' border-white': focusedItem === item.value.value }"
+class="border-2 rounded-lg border-transparent"
+  :class="{ ' border-yellow-300': multiSelectedItems.includes(item), ' border-white': focusedItem === item.value.value }"
   alt="item.value.meta.fileName">
   <div class="collection-api" x-data="collection" x-effect="setData(item.type, item.value)">
     <div class="collection-api-header">

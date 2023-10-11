@@ -3,7 +3,8 @@
   @mouseenter='hoverItem = item.value'
   @mouseleave='hoverItem = null' @click='selectItem(item, $event)'
   @contextmenu.prevent='selectItem(item, $event)'
-  :class="{ ' border-2 rounded-md border-yellow-300': multiSelectedItems.includes(item), ' border-white': focusedItem === item.value.value }"
+  class="border-2 rounded-lg border-transparent"
+  :class="{ 'border-yellow-300': multiSelectedItems.includes(item), ' border-white': focusedItem === item.value.value }"
   alt='item.value.meta.fileName'>
 <!-- Collection -->
   <div
