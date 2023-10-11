@@ -1,3 +1,8 @@
+/**
+ * Copyright (c) 2023 MERCENARIES.AI PTE. LTD.
+ * All rights reserved.
+ */
+
 import path from 'path';
 import fs from 'fs/promises';
 import yaml from 'js-yaml';
