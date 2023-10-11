@@ -1,6 +1,6 @@
 title: Collection Manager
-version: 0.0.1
-description: A flexible UI to allow graphical management of collections
+version: 0.0.2
+description: Provides the interface for Recipe, Block and Namespace management
 author: Mercenaries.ai team
 origin: https://github.com/mercenaries-ai/omni-core-collectionmanager.git
 client:
