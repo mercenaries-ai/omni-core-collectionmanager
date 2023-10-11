@@ -350,8 +350,12 @@ document.addEventListener('alpine:init', async () => {
       this.type = type;
       this.category = data.category;
       this.author = data.meta?.author ?? data.author;
-      this.tags = data.meta?.tags ?? data.tags ?? data.name?.split('.');
-
+      if(type === 'block') {
+        this.tags = data.name?.split('.');
+      } else {
+        this.tags = data.meta?.tags ?? data.tags;
+      }
+      
       const key = getFavoriteKey(type, data)
       this.starred = window.localStorage.getItem(key) ? true : false;
       this.canDelete = data.canDelete;
