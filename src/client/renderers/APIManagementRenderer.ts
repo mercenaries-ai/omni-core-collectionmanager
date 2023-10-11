@@ -1,3 +1,8 @@
+/**
+ * Copyright (c) 2023 MERCENARIES.AI PTE. LTD.
+ * All rights reserved.
+ */
+
 import CollectionRenderer from './CollectionRenderer'
 
 class APIManagementRenderer extends CollectionRenderer {

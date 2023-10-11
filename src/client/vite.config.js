@@ -1,3 +1,8 @@
+/**
+ * Copyright (c) 2023 MERCENARIES.AI PTE. LTD.
+ * All rights reserved.
+ */
+
 // vite.config.js
 import handlebars from 'vite-plugin-handlebars'
 import path from 'path'
