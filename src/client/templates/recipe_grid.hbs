@@ -15,7 +15,7 @@
   {{>common_grid}}
     <!-- Collection Actions -->
     <div class='justify-end items-center flex w-full max-w-full flex-row gap-1 mt-1.5'>
-      <button 
+      <button x-show='window.parent.client.workbench.canEdit'
         @click='await addAsBlock(id)'
         class='justify-between items-center self-stretch flex flex-row gap-1.5 bg-red-300 px-2.5 py-2 rounded-lg cursor-pointer hover:bg-red-400'
       >
