@@ -8,29 +8,6 @@ import fs from 'fs/promises';
 import yaml from 'js-yaml';
 import { User } from 'omni-shared'
 
-const getKnownFile = async () => {
-  try {
-    const knownFilePath = path.join(process.cwd(), 'etc', 'extensions', 'known_extensions.yaml');
-    const knownFileContents = await fs.readFile(knownFilePath, 'utf8');
-    return yaml.load(knownFileContents);
-  } catch (error) {
-    console.error('Error reading the known file:', error);
-    throw error;
-  }
-};
-
-const getPrivateExtensions = (allExtensions, knownKeysSet) => {
-  return allExtensions
-    .map(({ config }) => ({ ...config }))
-    .filter(({ id }) => !knownKeysSet.has(id));
-};
-
-const getAllExtensions = (knownFile, privateExtensions) => {
-  return knownFile.known_extensions
-    .concat(privateExtensions)
-    .sort((a, b) => a.title.localeCompare(b.title));
-};
-
 const script = {
   name: 'collection',
 
