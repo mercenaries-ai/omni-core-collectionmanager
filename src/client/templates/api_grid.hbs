@@ -29,7 +29,7 @@ class="border-2 rounded-lg border-transparent"
           </template>
         </form>
         <div class="btn-group">
-          <button x-show="key.type !== 'oauth2' || hasKey" class="btn " :class="{' btn-open' : !hasKey, ' btn-delete': hasKey}" @click="await clickToAction(item, 'api');"><span x-text="hasKey ? 'Revoke' : 'Add Credential'"></span></button>
+          <button x-show="key.type !== 'oauth2' || hasKey" class="btn " :class="{' btn-open' : !hasKey, ' btn-delete': hasKey}" @click="await clickToAction(item, 'api');"><span x-text="hasKey ? 'Revoke' : 'Add'"></span></button>
           <a :href="signUpUrl" target="_blank"><button class="btn btn-secondary"><span>Sign Up</span></button></a>
         </div>
       </div>
