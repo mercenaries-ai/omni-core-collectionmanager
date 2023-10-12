@@ -106,7 +106,13 @@ const createGallery = function (itemsPerPage: number, itemApi: string) {
     async init() {
       await this.loadMore()
     },
-
+    openChat(item: CollectionItem) {
+      if (item.type === 'recipe')
+      {
+        //@ts-ignore
+        sdk.showExtension('omni-extension-wa-chat-ui', { chat:{id: item.value.id, name: item.value.meta.name, description: item.value.meta.description, image: this.getIconPath(item) }});
+      }
+    },
     close() {
       sdk.close();
     },
@@ -123,7 +129,7 @@ const createGallery = function (itemsPerPage: number, itemApi: string) {
     async addAsBlock(id: string) {
       return await sdk.runClientScript('add', ["omnitool.loop_recipe", {recipe_id: id}]);
     },
-    
+
     async addItems(items: Array<CollectionItem>, replace = false) {
       if (replace) {
         this.items = new Array<CollectionItem>()
@@ -183,8 +189,8 @@ const createGallery = function (itemsPerPage: number, itemApi: string) {
       } else {
         if (event && event.type === 'contextmenu') { // multi select
           this.multiSelectedItems.push(item);
-        } else if (event && event.type === 'click') { // select 
-          this.multiSelectedItems = [item]; 
+        } else if (event && event.type === 'click') { // select
+          this.multiSelectedItems = [item];
         }
       }
     },
@@ -212,7 +218,7 @@ const createGallery = function (itemsPerPage: number, itemApi: string) {
             deletedItemList.push(...result);
           }
         });
-        if( deletedItemList?.length > 0 ) { 
+        if( deletedItemList?.length > 0 ) {
           this.needRefresh = true;
           return deletedItemList
         } else {
@@ -230,8 +236,8 @@ const createGallery = function (itemsPerPage: number, itemApi: string) {
       const type = item.type;
       const payload = Alpine.raw(item.value);
       try {
-        const result = await sdk.runExtensionScript('delete', { type: type, id: payload.id }); 
-        if( result?.length > 0 ) { 
+        const result = await sdk.runExtensionScript('delete', { type: type, id: payload.id });
+        if( result?.length > 0 ) {
           this.needRefresh = true;
           return result
         } else {
@@ -282,11 +288,11 @@ const createGallery = function (itemsPerPage: number, itemApi: string) {
           await (window.parent.client.workbench as any).loadRecipe(item.value.id, item.value.version);
           sdk.close();
           break;
-    
+
         case 'block':
           console.log(await sdk.runClientScript('add', [item.value.name]));
           break;
-    
+
         case 'extension':
           if (item.value.installed) {
             sdk.signalIntent("show", item.value.id);
@@ -294,7 +300,7 @@ const createGallery = function (itemsPerPage: number, itemApi: string) {
             await sdk.runClientScript('extensions', ['add', item.value.url]);
           }
           break;
-    
+
         case 'api':
           if (this.hasKey) {
             this.hasKey = !this.hasKey // Toggle on click
@@ -306,7 +312,7 @@ const createGallery = function (itemsPerPage: number, itemApi: string) {
             this.hasKey = response.answer // Set to server value
           }
           break;
-    
+
         // Optional: Add a default case if there's a possibility of unknown types.
         default:
           console.error(`Unknown type: ${type}`);
@@ -355,14 +361,14 @@ document.addEventListener('alpine:init', async () => {
       } else {
         this.tags = data.meta?.tags ?? data.tags;
       }
-      
+
       const key = getFavoriteKey(type, data)
       this.starred = window.localStorage.getItem(key) ? true : false;
       this.canDelete = data.canDelete;
       this.created = data.meta?.created;
-      this.updated = data.meta?.updated;   
+      this.updated = data.meta?.updated;
       this.installed = data.installed;
-      this.canOpen = data.canOpen;   
+      this.canOpen = data.canOpen;
 
       this.namespace = data.namespace;
       this.basePath = data.api?.basePath;

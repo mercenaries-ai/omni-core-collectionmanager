@@ -12,7 +12,7 @@
       }
     </style>
     
-    <script type="module" crossorigin src="/extensions/omni-core-collectionmanager/assets/main-0b8f43ba.js"></script>
+    <script type="module" crossorigin src="/extensions/omni-core-collectionmanager/assets/main-97863963.js"></script>
     <link rel="stylesheet" href="/extensions/omni-core-collectionmanager/assets/index-7c03c83a.css">
   </head>
 
@@ -272,7 +272,7 @@
             <!-- For multiselect-->
             <div
               @mouseenter='hoverItem = item.value'
-              @mouseleave='hoverItem = null' 
+              @mouseleave='hoverItem = null'
               @contextmenu.prevent='selectItem(item, $event)'
               class="border-2 rounded-lg border-transparent"
               :class="{ 'border-yellow-300': multiSelectedItems.includes(item), ' border-white': focusedItem === item.value.value }"
@@ -375,7 +375,7 @@
                   >
                     <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path  class="stroke-white" d="M7 7.58824V13.2353M11 7.58824V13.2353M15 3.82353V15.1176C15 16.1573 14.1046 17 13 17H5C3.89543 17 3 16.1573 3 15.1176V3.82353M1 3.82353H17M12 3.82353V2.88235C12 1.84276 11.1046 1 10 1H8C6.89543 1 6 1.84276 6 2.88235V3.82353" stroke="transparent" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg> 
+            </svg>
                     <div class='text-transparent text-sm leading-5 self-center my-auto text-white' >
                       Delete
                     </div>
@@ -406,9 +406,23 @@
                           stroke="#F5F5F5" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" />
                       </svg>
                     <div class='text-neutral-50 text-sm leading-5 self-center my-auto'>
-                      Load
+                      Edit
                     </div>
                   </button>
+                   <button
+                    class='justify-between items-center self-stretch flex flex-row gap-1.5 bg-amber-500 px-3 py-1.5 rounded-lg cursor-pointer hover:drop-shadow-md'
+                    @click="openChat(item);"
+                  >
+                    <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-4 h-4">
+                        <path
+                          d="M16.3606 9.91965V14.5196C16.3606 15.5359 15.5369 16.3596 14.5206 16.3596H3.48062C2.46442 16.3596 1.64062 15.5359 1.64062 14.5196V9.91965M12.6806 5.31965L9.00062 1.63965M9.00062 1.63965L5.32062 5.31965M9.00062 1.63965V12.6796"
+                          stroke="#F5F5F5" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" />
+                      </svg>
+                    <div class='text-neutral-50 text-sm leading-5 self-center my-auto'>
+                      Chat
+                    </div>
+                  </button>
+            
                 </div>
               </div>
             </div>         </template>
