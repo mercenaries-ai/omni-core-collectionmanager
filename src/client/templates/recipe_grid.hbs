@@ -17,14 +17,14 @@
     <!-- Collection Actions -->
     <div class='justify-end items-center flex w-full max-w-full flex-row gap-1.5 mt-1.5'>
        <button
-        x-show='canDelete'
-        class='group justify-between items-start self-stretch flex flex-row gap-1.5 px-3 py-1.5 rounded-lg cursor-pointer hover:bg-red-500'
+        x-show='canDelete && hoverItem === item.value'
+        class='group justify-between items-start self-stretch flex flex-row gap-1.5 px-3 py-1.5 rounded-lg cursor-pointer bg-red-500 hover:drop-shadow-lg'
         @click='await deleteItem(item)'
       >
         <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
-<path  class="group-hover:stroke-white" d="M7 7.58824V13.2353M11 7.58824V13.2353M15 3.82353V15.1176C15 16.1573 14.1046 17 13 17H5C3.89543 17 3 16.1573 3 15.1176V3.82353M1 3.82353H17M12 3.82353V2.88235C12 1.84276 11.1046 1 10 1H8C6.89543 1 6 1.84276 6 2.88235V3.82353" stroke="transparent" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+<path  class="stroke-white" d="M7 7.58824V13.2353M11 7.58824V13.2353M15 3.82353V15.1176C15 16.1573 14.1046 17 13 17H5C3.89543 17 3 16.1573 3 15.1176V3.82353M1 3.82353H17M12 3.82353V2.88235C12 1.84276 11.1046 1 10 1H8C6.89543 1 6 1.84276 6 2.88235V3.82353" stroke="transparent" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
 </svg> 
-        <div class='text-transparent text-sm leading-5 self-center my-auto group-hover:text-white' >
+        <div class='text-transparent text-sm leading-5 self-center my-auto text-white' >
           Delete
         </div>
       </button>
