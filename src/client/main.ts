@@ -260,7 +260,14 @@ const createGallery = function (itemsPerPage: number, itemApi: string) {
     },
     getIconPath(item: CollectionItem) {
       if (item.type === 'recipe') {
-        return '/'+ item.value.meta.pictureUrl;
+        if (item.value.meta.pictureUrl)
+        {
+          return '/'+ item.value.meta.pictureUrl;
+        }
+        else
+        {
+          return '/omni.png';
+        }
       } else if (item.type === 'extension') {
         return '/extensions/'+item.value.id+'/logo.png';
       } else if (item.type === 'block') {
