@@ -272,7 +272,7 @@
             <!-- For multiselect-->
             <div
               @mouseenter='hoverItem = item.value'
-              @mouseleave='hoverItem = null' @click='selectItem(item, $event)'
+              @mouseleave='hoverItem = null' 
               @contextmenu.prevent='selectItem(item, $event)'
               class="border-2 rounded-lg border-transparent"
               :class="{ 'border-yellow-300': multiSelectedItems.includes(item), ' border-white': focusedItem === item.value.value }"
@@ -414,7 +414,7 @@
             </div>         </template>
          <template x-if="item.type === 'extension' && item.value">
             <!-- For multiselect-->
-            <div @mouseenter='hoverItem = item.value' @mouseleave='hoverItem = null' @contextmenu.prevent='selectItem(item, $event)' @click='selectItem(item, $event)'
+            <div @mouseenter='hoverItem = item.value' @mouseleave='hoverItem = null' @contextmenu.prevent='selectItem(item, $event)'
               class="border-2 rounded-lg border-transparent"
               :class="{ ' border-yellow-300': multiSelectedItems.includes(item), ' border-white': focusedItem === item.value }"
               alt="item.value.meta.fileName">
@@ -545,7 +545,7 @@
             <!-- For multiselect-->
             <div
               @mouseenter='hoverItem = item.value'
-              @mouseleave='hoverItem = null' @click='selectItem(item, $event)'
+              @mouseleave='hoverItem = null' 
               @contextmenu.prevent='selectItem(item, $event)'
               class="border-2 rounded-lg border-transparent"
               :class="{ 'border-yellow-300': multiSelectedItems.includes(item), ' border-white': focusedItem === item.value.value }"
