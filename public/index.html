@@ -12,8 +12,8 @@
       }
     </style>
     
-    <script type="module" crossorigin src="/extensions/omni-core-collectionmanager/assets/main-aeb280e0.js"></script>
-    <link rel="stylesheet" href="/extensions/omni-core-collectionmanager/assets/index-a6e22953.css">
+    <script type="module" crossorigin src="/extensions/omni-core-collectionmanager/assets/main-0b8f43ba.js"></script>
+    <link rel="stylesheet" href="/extensions/omni-core-collectionmanager/assets/index-7c03c83a.css">
   </head>
 
   <body class="p-6 overflow-hidden bg-white">
@@ -666,34 +666,47 @@
               :class="{ ' border-yellow-300': multiSelectedItems.includes(item), ' border-white': focusedItem === item.value.value }"
               alt="item.value.meta.fileName">
               <div class="collection-api" x-data="collection" x-effect="setData(item.type, item.value)">
+                <div x-text="title[0].toUpperCase()+title.slice(1)"
+                  class="rounded-md drop-shadow-md"
+                  style="width: 100%; background-color: #666666 ; color: #ffffff !important; height: 1.75rem; font-weight:500; font-size: 1rem; padding-bottom: 4px; padding-top: 4px; padding-left:5px;"
+                ></div>
+            
                 <div class="collection-api-header">
-                  <div class="collection-api-cover">
-                    <img :src="'/logos/'+ namespace + '.png'" :alt="name"
+            
+                  <div>
+                    <img :src="'/logos/'+ namespace + '.png'" :alt="name" width="64px" height="64px" class="rounded-full"
                       onerror="this.onerror=null;this.src='/omni.png';">
                   </div>
                   <div class="collection-api-action">
-                    <form @submit.prevent x-id="['api-key']" x-cloak class="flex flex-row w-full content-center">
-                      <label :for="$id('api-key')" x-text="title" class="w-24"></label>
+            
+                    <form @submit.prevent x-id="['api-key']" x-cloak class="flex flex-row w-full content-center" style="min-height: 70px;">
+            
                       <template x-if="key.type !== 'oauth2' && hasKey !== true">
                         <div class="w-full">
                           <input type="password" :id="$id('api-key')" x-bind:placeholder="key.displayName || key.id"
                             x-model="key.secret"
-                            class=" text-gray-600 rounded-md border-gray-200 py-2.5 pe-10 shadow-sm sm:text-sm disabled:cursor-not-allowed disabled:bg-gray-50 disabled:text-gray-500"
+                            class="p-2 text-gray-600 rounded-md border-gray-200 text-sm font-normal py-2.5 pe-10 shadow-sm disabled:cursor-not-allowed disabled:bg-gray-50 disabled:text-gray-500"
                             autocomplete="off" :disabled="hasKey === true" />
                         </div>
                       </template>
                       <template x-if="key.type === 'oauth2' && hasKey !== true">
                         <div class="w-full">
                           <a :href="'/api/v1/auth/oauth2?ns=' + namespace" target="_blank"
-                            class="flex items-center justify-center space-x-2 text-gray-600 my-2 py-2 bg-gray-100 hover:bg-gray-200 rounded">
+                            class="flex items-center justify-center space-x-2 text-gray-600 my-2 py-2  bg-gray-100 hover:bg-gray-200 rounded">
                             <span text="Link your account">Link your account</span>
                           </a>
                         </div>
                       </template>
                     </form>
                     <div class="btn-group">
-                      <button x-show="key.type !== 'oauth2' || hasKey" class="btn " :class="{' btn-open' : !hasKey, ' btn-delete': hasKey}" @click="await clickToAction(item, 'api');"><span x-text="hasKey ? 'Revoke' : 'Add Credential'"></span></button>
-                      <a :href="signUpUrl" target="_blank"><button class="btn btn-secondary"><span>Sign Up</span></button></a>
+                      <button x-show="key.type !== 'oauth2' || hasKey" class="btn " :class="{' btn-open' : !hasKey, ' btn-delete': hasKey}" @click="await clickToAction(item, 'api');"><span x-text="hasKey ? 'Revoke' : 'Add'"
+                      style="width:60px;"
+                      ></span></button>
+                      <a :href="signUpUrl"
+            
+                       target="_blank"><button class="btn btn-secondary"
+                       style="width:60px;"
+                       ><span>Sign Up</span></button></a>
                     </div>
                   </div>
                 </div>
