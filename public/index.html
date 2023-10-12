@@ -12,8 +12,8 @@
       }
     </style>
     
-    <script type="module" crossorigin src="/extensions/omni-core-collectionmanager/assets/main-f225ae50.js"></script>
-    <link rel="stylesheet" href="/extensions/omni-core-collectionmanager/assets/index-ea25f9e6.css">
+    <script type="module" crossorigin src="/extensions/omni-core-collectionmanager/assets/main-aeb280e0.js"></script>
+    <link rel="stylesheet" href="/extensions/omni-core-collectionmanager/assets/index-a6e22953.css">
   </head>
 
   <body class="p-6 overflow-hidden bg-white">
@@ -36,7 +36,7 @@
             style="width: 98vw; height: 98.9vh">
             <div
               class="absolute p-2 flex justify-between items-center gap-2 h-12 text-black w-full">
-              <div class="inline-flex rounded-lg border border-gray-100 bg-gray-100 p-1">
+              <div x-show="type !== 'api'" class="inline-flex rounded-lg border border-gray-100 bg-gray-100 p-1">
                 <button
                   class="inline-flex items-center gap-2 rounded-md px-4 py-2 text-sm text-gray-500 hover:text-gray-700 focus:relative"
                   :class="viewType !== 'grid' ? 'bg-white' : ''"
@@ -222,12 +222,44 @@
         </template>
         <td class="px-4 py-2 font-medium text-gray-900"><span x-text="description"> </span></td>
         <td class="px-4 py-2 font-medium text-gray-900">
-          <button class="btn color-primary cursor-pointer h-6 w-10 pt-2" @click="await clickToAction(item, item.type)">
-            <svg viewBox='0 0 13 14' fill='none' xmlns='http://www.w3.org/2000/svg'>
-              <path
-                d='M10.2689 5.95853L10.2689 3.0614C10.2689 2.05545 9.45863 1.23997 8.45908 1.23997L3.02961 1.23996C2.03006 1.23996 1.21977 2.05544 1.21977 3.06138L1.21973 8.37566C1.21972 9.38161 2.03002 10.1971 3.02956 10.1971H6.05121M8.27809 10.1971H10.2689M10.2689 10.1971H12.2597M10.2689 10.1971V8.19352M10.2689 10.1971V12.5649'
-                stroke='white' stroke-width='0.96' stroke-linecap='round' />
-            </svg></button>
+          <template x-if="item.type === 'block'">
+            <button x-tooltip="Add Block" class="flex cursor-pointer p-2.5 justify-center rounded-md bg-amber-500 hover:drop-shadow-lg" @click="await clickToAction(item, item.type)">
+              <svg width='18' height='18' viewBox='0 0 18 18' fill='none' xmlns='http://www.w3.org/2000/svg' class="w-4 h-4">
+                <path
+                  d='M14.1147 7.55356L14.1148 3.52977C14.1148 2.13263 12.9404 1.00002 11.4918 1.00001L3.62302 1C2.1744 0.999997 1.00006 2.13261 1.00006 3.52975L1 10.9107C0.999996 12.3078 2.17433 13.4405 3.62295 13.4405H8.00214M11.2295 13.4405H14.1148M14.1148 13.4405H17M14.1148 13.4405V10.6577M14.1148 13.4405V16.7291'
+                  stroke='#F5F5F5'
+                  stroke-width='1.6'
+                  stroke-linecap='round'
+                />
+              </svg>
+            </button>
+          </template>
+          <template x-if="item.type === 'recipe'">
+            <button x-tooltip="Load" class="flex cursor-pointer p-2.5 justify-center rounded-md bg-amber-500 hover:drop-shadow-lg" @click="await clickToAction(item, item.type)">
+              <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-4 h-4">
+                  <path
+                    d="M16.3606 9.91965V14.5196C16.3606 15.5359 15.5369 16.3596 14.5206 16.3596H3.48062C2.46442 16.3596 1.64062 15.5359 1.64062 14.5196V9.91965M12.6806 5.31965L9.00062 1.63965M9.00062 1.63965L5.32062 5.31965M9.00062 1.63965V12.6796"
+                    stroke="#F5F5F5" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+            </button>
+          </template>
+          <template x-if="item.type === 'extension' && !installed">
+            <button x-tooltip="Install" class="flex cursor-pointer p-2.5 justify-center rounded-md bg-amber-500 hover:drop-shadow-lg" @click="await clickToAction(item, item.type)">
+              <svg width="16" height="17" viewBox="0 0 16 17" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-4 h-4">
+                  <path d="M8.00156 1.28027V15.3603M1.60156 8.00027H14.4016" stroke="#FAFAFA" stroke-width="1.6"
+                    stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+            </button>
+          </template>
+          <template x-if="item.type === 'extension' && installed && canOpen">
+            <button x-tooltip="Open" class="flex cursor-pointer p-2.5 justify-center rounded-md bg-green-500 hover:drop-shadow-lg" @click="await clickToAction(item, item.type)">
+              <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-4 h-4">
+                  <path
+                    d="M16.3606 9.91965V14.5196C16.3606 15.5359 15.5369 16.3596 14.5206 16.3596H3.48062C2.46442 16.3596 1.64062 15.5359 1.64062 14.5196V9.91965M12.6806 5.31965L9.00062 1.63965M9.00062 1.63965L5.32062 5.31965M9.00062 1.63965V12.6796"
+                    stroke="#F5F5F5" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+            </button>
+          </template>
         </td>
       </tr>   </template>
    </tbody>
