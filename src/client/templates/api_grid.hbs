@@ -1,51 +1,43 @@
 <div @mouseenter='hoverItem = item.value' @mouseleave='hoverItem = null' @contextmenu.prevent="selectItem(item)"
-class="border-2 rounded-lg border-transparent"
+  class="border-2 rounded-lg border-transparent"
   :class="{ ' border-yellow-300': multiSelectedItems.includes(item), ' border-white': focusedItem === item.value.value }"
   alt="item.value.meta.fileName">
-  <div class="collection-api" x-data="collection" x-effect="setData(item.type, item.value)">
+  <div class="items-center flex w-[500px] flex-col bg-neutral-200 px-1.5 py-2 rounded-lg"
+    x-data="collection" x-effect="setData(item.type, item.value)">
+    <!-- Collection Actions -->
     <div x-text="title[0].toUpperCase()+title.slice(1)"
-      class="rounded-md drop-shadow-md"
-      style="width: 100%; background-color: #666666 ; color: #ffffff !important; height: 1.75rem; font-weight:500; font-size: 1rem; padding-bottom: 4px; padding-top: 4px; padding-left:5px;"
-    ></div>
-
-    <div class="collection-api-header">
-
-      <div>
-        <img :src="'/logos/'+ namespace + '.png'" :alt="name" width="64px" height="64px" class="rounded-full"
-          onerror="this.onerror=null;this.src='/omni.png';">
-      </div>
-      <div class="collection-api-action">
-
-        <form @submit.prevent x-id="['api-key']" x-cloak class="flex flex-row w-full content-center" style="min-height: 70px;">
-
-          <template x-if="key.type !== 'oauth2' && hasKey !== true">
-            <div class="w-full">
-              <input type="password" :id="$id('api-key')" x-bind:placeholder="key.displayName || key.id"
-                x-model="key.secret"
-                class="p-2 text-gray-600 rounded-md border-gray-200 text-sm font-normal py-2.5 pe-10 shadow-sm disabled:cursor-not-allowed disabled:bg-gray-50 disabled:text-gray-500"
-                autocomplete="off" :disabled="hasKey === true" />
+      class="flex w-full flex-col p-1.5 rounded-md bg-gray-500 text-white font-semibold">
+    </div>
+    <div class="items-center flex w-full max-w-full flex-row gap-1.5 mt-1.5">
+    <img x-show="item.type !== 'block'"
+      :src='getIconPath(item)'
+      :alt='name'
+      class='aspect-square object-cover object-center w-16 shrink-0 rounded-full'
+      onerror="this.onerror=null;this.src='/omni.png';"
+    />
+      <form @submit.prevent x-id="['api-key']" x-cloak class="flex flex-row w-full content-center items-center min-h-8">
+        <template x-if="key.type !== 'oauth2' && hasKey !== true">
+            <input type="password" :id="$id('api-key')" x-bind:placeholder="key.displayName || key.id"
+              x-model="key.secret"
+              class="flex w-full p-2 text-gray-600 rounded-md border-gray-200 text-sm font-normal pe-10 shadow-sm disabled:cursor-not-allowed disabled:bg-gray-50 disabled:text-gray-500"
+              autocomplete="off" :disabled="hasKey === true" />
+        </template>
+        <template x-if="key.type === 'oauth2' && hasKey !== true">
+            <a :href="'/api/v1/auth/oauth2?ns=' + namespace" target="_blank"
+              class="flex w-full items-center justify-center space-x-2 text-gray-600 my-2 py-2  bg-gray-100 hover:bg-gray-200 rounded">
+              <span text="Link your account">Link your account</span>
+            </a>
+        </template>
+      </form>
+      <div class="w-64 flex flex-row gap-1.5 items-center justify-stretch">
+      <button x-show="key.type !== 'oauth2' || hasKey"
+        class="justify-between items-center px-3 py-1.5 rounded-lg"
+        :class="{'bg-green-500 hover:drop-shadow-lg cursor-pointer' : !hasKey, 'bg-red-500 hover:drop-shadow-lg cursor-pointer': hasKey}"
+        @click="await clickToAction(item, 'api');"><span class="text-xs text-white font-semibold" x-text="hasKey ? 'Revoke' : 'Add'"></span></button>
+      <a :href="signUpUrl" target="_blank"><button
+          class="justify-between items-center px-3 py-1.5 rounded-lg bg-gray-300"><span class="text-xs text-black font-semibold">Sign
+            Up</span></button></a>
             </div>
-          </template>
-          <template x-if="key.type === 'oauth2' && hasKey !== true">
-            <div class="w-full">
-              <a :href="'/api/v1/auth/oauth2?ns=' + namespace" target="_blank"
-                class="flex items-center justify-center space-x-2 text-gray-600 my-2 py-2  bg-gray-100 hover:bg-gray-200 rounded">
-                <span text="Link your account">Link your account</span>
-              </a>
-            </div>
-          </template>
-        </form>
-        <div class="btn-group">
-          <button x-show="key.type !== 'oauth2' || hasKey" class="btn " :class="{' btn-open' : !hasKey, ' btn-delete': hasKey}" @click="await clickToAction(item, 'api');"><span x-text="hasKey ? 'Revoke' : 'Add'"
-          style="width:60px;"
-          ></span></button>
-          <a :href="signUpUrl"
-
-           target="_blank"><button class="btn btn-secondary"
-           style="width:60px;"
-           ><span>Sign Up</span></button></a>
-        </div>
-      </div>
     </div>
   </div>
 </div>
