@@ -12,8 +12,8 @@
       }
     </style>
     
-    <script type="module" crossorigin src="/extensions/omni-core-collectionmanager/assets/main-2b0481da.js"></script>
-    <link rel="stylesheet" href="/extensions/omni-core-collectionmanager/assets/index-15ad59d1.css">
+    <script type="module" crossorigin src="/extensions/omni-core-collectionmanager/assets/main-82924abc.js"></script>
+    <link rel="stylesheet" href="/extensions/omni-core-collectionmanager/assets/index-0a07796d.css">
   </head>
 
   <body class="p-6 overflow-hidden bg-white">
@@ -235,18 +235,15 @@
             </button>
           </template>
           <template x-if="item.type === 'recipe'">
-            <button x-tooltip="Load" class="flex cursor-pointer p-2.5 justify-center rounded-md bg-amber-500 hover:drop-shadow-lg" @click="await clickToAction(item, item.type)">
-              <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-4 h-4">
-                  <path
-                    d="M16.3606 9.91965V14.5196C16.3606 15.5359 15.5369 16.3596 14.5206 16.3596H3.48062C2.46442 16.3596 1.64062 15.5359 1.64062 14.5196V9.91965M12.6806 5.31965L9.00062 1.63965M9.00062 1.63965L5.32062 5.31965M9.00062 1.63965V12.6796"
-                    stroke="#F5F5F5" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" />
-                </svg>
+            <button x-tooltip="Edit" class="flex cursor-pointer p-2.5 justify-center rounded-md bg-amber-500 hover:drop-shadow-lg" @click="await clickToAction(item, item.type)">
+              <svg  viewBox="0 0 18 19" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" stroke="#F5F5F5"  stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" >
+              <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
             </button>
           </template>
           <template x-if="item.type === 'extension' && !installed">
             <button x-tooltip="Install" class="flex cursor-pointer p-2.5 justify-center rounded-md bg-amber-500 hover:drop-shadow-lg" @click="await clickToAction(item, item.type)">
               <svg width="16" height="17" viewBox="0 0 16 17" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-4 h-4">
-                  <path d="M8.00156 1.28027V15.3603M1.60156 8.00027H14.4016" stroke="#FAFAFA" stroke-width="1.6"
+                  <path d="M8.00156 1.28027V15.3603M1.60156 8.00027H14.4016" stroke="#F5F5F5" stroke-width="1.6"
                     stroke-linecap="round" stroke-linejoin="round" />
                 </svg>
             </button>
@@ -402,7 +399,7 @@
                     @click="await clickToAction(item, 'recipe');"
                   >
             
-                  <svg  viewBox="0 0 18 19" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" stroke="white"  stroke-width="1" stroke-linecap="round" stroke-linejoin="round" >
+                  <svg  viewBox="0 0 18 19" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" stroke="#F5F5F5"  stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" >
                     <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
             
                     <div class='text-neutral-50 text-sm leading-5 self-center my-auto'>
