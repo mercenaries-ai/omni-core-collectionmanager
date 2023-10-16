@@ -262,7 +262,7 @@ const createGallery = function (itemsPerPage: number, itemApi: string) {
       if (item.type === 'recipe') {
         if (item.value.meta.pictureUrl)
         {
-          return '/'+ item.value.meta.pictureUrl;
+          return '/extensions/omni-core-recipes/assets/recipe-cover/'+ item.value.meta.pictureUrl;
         }
         else
         {
