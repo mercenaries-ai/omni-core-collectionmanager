@@ -241,61 +241,6 @@ h2 {
   margin-left: 0.5rem;
 }
 
-.collection-api {
-  display: flex;
-  width: 33rem;
-  padding: var(--spacing-2, 0.5rem);
-  flex-direction: column;
-
-  gap: var(--spacing-1, 0.25rem);
-  border-radius: 0.375rem;
-  border: 1px solid var(--greys-light-grey-200, #E8E9EB);
-  background: var(--colour-grey-old-grey-1, #F7F7F8);
-
-  &-header {
-    display: flex;
-    width: 100%;
-    align-items: center;
-    gap: 0.5rem;
-
-    @extend .omni-font-s-medium;
-
-    .collection-api-action {
-      display: flex;
-      flex-direction: row;
-      gap: 0.5rem;
-      padding-top: 0rem;
-      width: 100%;
-      align-content: center;
-      align-items: center;
-    }
-  }
-  &-title,
-  &-description {
-    @include common-text;
-    display: flex;
-    align-self: stretch;
-  }
-
-  &-title {
-    -webkit-line-clamp: 2;
-    flex-direction: row;
-    @extend .omni-font-l-medium;
-  }
-
-  &-description {
-    flex-direction: column;
-    -webkit-line-clamp: 3;
-    flex: 1 0 0;
-    font-feature-settings: 'clig' off, 'liga' off;
-    @extend .omni-font-s-regular;
-
-    .desc-title {
-      @extend .omni-font-s-medium;
-    }
-  }
-}
-
 .color-primary {
   background: var(--accent-colour, #F19100);
 }
