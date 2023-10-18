@@ -31,7 +31,7 @@ const script = {
         console.log('no result')
         return {items: []}
       }
-      const items = result.data.map((item) => {
+      let items = result.data.map((item) => {
         return {
           value: { ...item },
           type: 'recipe',
@@ -39,6 +39,7 @@ const script = {
           totalPages: result.totalPage,
         };
       });
+      items = items.filter((item) => item.value.meta?.visible !== false);
       return {
         items,
       };
