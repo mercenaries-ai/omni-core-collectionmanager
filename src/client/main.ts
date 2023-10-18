@@ -292,7 +292,7 @@ const createGallery = function (itemsPerPage: number, itemApi: string) {
       switch (type) {
         case 'recipe':
           // Assuming the error here is known and is because of external typings
-          await (window.parent.client.workbench as any).loadRecipe(item.value.id, item.value.version);
+          await sdk.openRecipeInEditor(item.value.id, item.value.version);
           sdk.close();
           break;
 
