@@ -44,7 +44,7 @@
   <div class='items-end w-full self-end flex flex-col py-0.5 max-md:max-w-full'>
     <div class='justify-end items-start flex max-w-full flex-row gap-1 h-5'>
       <template x-for='(tag, idx) in tags' :key='idx'>
-        <div
+        <div x-show="!tag.includes(':')"
           class='flex overflow-hidden text-neutral-500 text-ellipsis text-xs leading-3 self-stretch justify-center items-center bg-gray-200 px-1.5 py-1 rounded-2xl cursor-pointer'
           x-text='tag.charAt(0).toUpperCase()
   + tag.slice(1)'
