@@ -64,11 +64,26 @@
         @click="openChat(item);"
       >
 
-        <svg  viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-54 h-5" stroke="white"  stroke-width="2" stroke-linecap="round" stroke-linejoin="round" >
+        <svg  viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" stroke="white"  stroke-width="2" stroke-linecap="round" stroke-linejoin="round" >
             <path xmlns="http://www.w3.org/2000/svg" d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/>
           </svg>
         <div class='text-neutral-50 text-sm leading-5 self-center my-auto'>
           Chat
+        </div>
+      </button>
+       <button
+        x-show="item.value.ui?.formIO?.enabled"
+        class='justify-between items-center self-stretch flex flex-row gap-1.5 bg-teal-500 px-2 py-1.5 rounded-lg cursor-pointer hover:drop-shadow-md'
+        @click="openFormIO(item);"
+      >
+
+        <svg  viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" stroke="green"  stroke-width="2" stroke-linecap="round" stroke-linejoin="round" >
+              <path
+                        d="M17.3442 9.22382C18.6904 10.0253 18.6904 11.9747 17.3442 12.7762L3.2973 21.1396C1.91939 21.96 0.172634 20.9671 0.172634 19.3634V2.63657C0.172634 1.03292 1.91939 0.0400064 3.29731 0.860407L17.3442 9.22382Z"
+                        fill="#67BE61" />
+          </svg>
+        <div class='text-neutral-50 text-sm leading-5 self-center my-auto'>
+          Run
         </div>
       </button>
 
