@@ -271,6 +271,14 @@ const createGallery = function (itemsPerPage: number, itemApi: string) {
       } else if (item.type === 'extension') {
         return '/extensions/'+item.value.id+'/logo.png';
       } else if (item.type === 'block') {
+        const names = item.value?.name?.split('.')
+        if (names && names.length > 1 ) {
+          if (names[0].includes(':')) {
+            return '/extensions/'+ names[0].split(':')[0]+'/logo.png';
+          } else {
+            return '/logos/'+ names[0]+'.png';
+          }
+        }
         return null;
       } else if (item.type === 'api') {
         return '/logos/'+ item.value.namespace + '.png';

@@ -1,7 +1,7 @@
 <div class='items-center flex w-full flex-col bg-neutral-50 -mt-0.5 p-1.5 rounded-md'>
   <!-- Header -->
   <div class='justify-center items-start self-stretch flex flex-row gap-1.5 max-md:max-w-full max-md:flex-wrap '>
-    <img x-show="item.type !== 'block'" :src='getIconPath(item)' :alt='name'
+    <img :src='getIconPath(item)' :alt='name'
       class='aspect-square object-cover object-center w-16 shrink-0 rounded-md'
       onerror="this.onerror=null;this.src='/omni.png';" />
     <div class='items-start flex-[1_0_auto] flex flex-col max-md:max-w-full'>
