@@ -5,8 +5,13 @@
       class='aspect-square object-cover object-center w-16 shrink-0 rounded-md'
       onerror="this.onerror=null;this.src='/omni.png';" />
     <div class='items-start flex-[1_0_auto] flex flex-col max-md:max-w-full'>
-      <div x-text='title ?? name'
-        class='max-w-full flex-[1_0_0] text-neutral-800 text-ellipsis text-base leading-6 w-[300px] font-semibold'>
+      <div class="max-w-full flex-[1_0_0] flex flex-row gap-1 w-[300px] items-center">
+        <div x-text='title ?? name'
+          class='text-neutral-800 text-ellipsis text-base leading-6 font-semibold'>
+        </div>
+        <svg x-tooltip='Template' x-show='item.value.meta?.template === true' class="w-4 h-4 fill-amber-500 shrink-0" xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 28 28">
+            <path d="M26.4091 10.1521C25.8199 9.56285 25.499 8.78102 25.499 7.95251C25.499 4.94772 23.0543 2.50888 20.0553 2.50888C19.2268 2.50888 18.445 2.18215 17.8557 1.59869C15.7319 -0.525085 12.2779 -0.525085 10.1541 1.59869C9.5648 2.18798 8.78297 2.50888 7.95447 2.50888C4.94968 2.50888 2.51083 4.95356 2.51083 7.95251C2.51083 8.78102 2.1841 9.56285 1.60064 10.1521C-0.523131 12.2759 -0.523131 15.73 1.60064 17.8537C2.18993 18.443 2.51083 19.2249 2.51083 20.0534C2.51083 23.0582 4.95551 25.497 7.95447 25.497C8.78297 25.497 9.5648 25.8237 10.1541 26.4072C11.216 27.4691 12.6104 28 14.0049 28C15.3994 28 16.7938 27.4691 17.8557 26.4072C18.445 25.8179 19.2268 25.497 20.0553 25.497C23.0601 25.497 25.499 23.0523 25.499 20.0534C25.499 19.2249 25.8257 18.443 26.4091 17.8537C28.5329 15.73 28.5329 12.2759 26.4091 10.1521ZM21.9516 11.71L13.8065 19.855C13.579 20.0825 13.2814 20.1992 12.9838 20.1992C12.6863 20.1992 12.3887 20.0884 12.1612 19.855L7.66858 15.3624C7.24849 14.9423 7.1318 14.2538 7.49354 13.7754C7.93113 13.1919 8.75964 13.1511 9.25557 13.647L12.9605 17.352C12.9605 17.352 12.9955 17.3636 13.0072 17.352L20.3646 9.99461C20.8605 9.49867 21.689 9.53951 22.1266 10.123C22.4825 10.6014 22.3716 11.284 21.9516 11.71Z"/>
+          </svg>
       </div>
       <div x-show='author !== undefined' class='text-neutral-500 text-xs leading-3 w-[174px]'
         x-text='`Made by: ${author}`'>
