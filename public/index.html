@@ -12,7 +12,7 @@
       }
     </style>
     
-    <script type="module" crossorigin src="/extensions/omni-core-collectionmanager/assets/main-1bbb61b9.js"></script>
+    <script type="module" crossorigin src="/extensions/omni-core-collectionmanager/assets/main-85b31363.js"></script>
     <link rel="stylesheet" href="/extensions/omni-core-collectionmanager/assets/index-784cdcb6.css">
   </head>
 
@@ -329,8 +329,7 @@
                     <template x-for='(tag, idx) in tags' :key='idx'>
                       <div x-show="!tag.includes(':')"
                         class='flex overflow-hidden text-neutral-500 text-ellipsis text-xs leading-3 self-stretch justify-center items-center bg-gray-200 px-1.5 py-1 rounded-2xl cursor-pointer'
-                        x-text='tag.charAt(0).toUpperCase()
-                + tag.slice(1)'
+                        x-text='tag.charAt(0) === "#" ? tag.charAt(1).toUpperCase() + tag.slice(2) : tag.charAt(0).toUpperCase() + tag.slice(1)'
                         @click='search = tag; $refs.search.focus();'
                       ></div>
                     </template>
@@ -378,7 +377,7 @@
                       Delete
                     </div>
                   </button>
-                  <button x-show='window.parent.client.workbench.canEdit'
+                  <button
                     @click='await addAsBlock(id)'
                     class='justify-between items-center self-stretch flex flex-row gap-1.5 bg-zinc-500 px-2 py-1.5 rounded-lg cursor-pointer hover:drop-shadow-lg'
                   >
@@ -483,8 +482,7 @@
                       <template x-for='(tag, idx) in tags' :key='idx'>
                         <div x-show="!tag.includes(':')"
                           class='flex overflow-hidden text-neutral-500 text-ellipsis text-xs leading-3 self-stretch justify-center items-center bg-gray-200 px-1.5 py-1 rounded-2xl cursor-pointer'
-                          x-text='tag.charAt(0).toUpperCase()
-                  + tag.slice(1)'
+                          x-text='tag.charAt(0) === "#" ? tag.charAt(1).toUpperCase() + tag.slice(2) : tag.charAt(0).toUpperCase() + tag.slice(1)'
                           @click='search = tag; $refs.search.focus();'
                         ></div>
                       </template>
@@ -619,8 +617,7 @@
                     <template x-for='(tag, idx) in tags' :key='idx'>
                       <div x-show="!tag.includes(':')"
                         class='flex overflow-hidden text-neutral-500 text-ellipsis text-xs leading-3 self-stretch justify-center items-center bg-gray-200 px-1.5 py-1 rounded-2xl cursor-pointer'
-                        x-text='tag.charAt(0).toUpperCase()
-                + tag.slice(1)'
+                        x-text='tag.charAt(0) === "#" ? tag.charAt(1).toUpperCase() + tag.slice(2) : tag.charAt(0).toUpperCase() + tag.slice(1)'
                         @click='search = tag; $refs.search.focus();'
                       ></div>
                     </template>

@@ -1,44 +1,31 @@
 <div class='items-center flex w-full flex-col bg-neutral-50 -mt-0.5 p-1.5 rounded-md'>
   <!-- Header -->
   <div class='justify-center items-start self-stretch flex flex-row gap-1.5 max-md:max-w-full max-md:flex-wrap '>
-    <img x-show="item.type !== 'block'"
-      :src='getIconPath(item)'
-      :alt='name'
+    <img x-show="item.type !== 'block'" :src='getIconPath(item)' :alt='name'
       class='aspect-square object-cover object-center w-16 shrink-0 rounded-md'
-      onerror="this.onerror=null;this.src='/omni.png';"
-    />
+      onerror="this.onerror=null;this.src='/omni.png';" />
     <div class='items-start flex-[1_0_auto] flex flex-col max-md:max-w-full'>
-      <div x-text='title ?? name' class='max-w-full flex-[1_0_0] text-neutral-800 text-ellipsis text-base leading-6 w-[300px] font-semibold'>
+      <div x-text='title ?? name'
+        class='max-w-full flex-[1_0_0] text-neutral-800 text-ellipsis text-base leading-6 w-[300px] font-semibold'>
       </div>
-      <div x-show='author !== undefined' class='text-neutral-500 text-xs leading-3 w-[174px]' x-text='`Made by: ${author}`'>
+      <div x-show='author !== undefined' class='text-neutral-500 text-xs leading-3 w-[174px]'
+        x-text='`Made by: ${author}`'>
       </div>
     </div>
-    <svg
-      xmlns='http://www.w3.org/2000/svg'
-      width='17'
-      height='15'
-      viewBox='0 0 17 15'
-      class='aspect-[1.15] object-cover object-center w-[15px] shrink-0 cursor-pointer'
-      fill='none'
-      @click='toggleFavorite(item, item.type)'
-    >
-      <path
-        :class="{
+    <svg xmlns='http://www.w3.org/2000/svg' width='17' height='15' viewBox='0 0 17 15'
+      class='aspect-[1.15] object-cover object-center w-[15px] shrink-0 cursor-pointer' fill='none'
+      @click='toggleFavorite(item, item.type)'>
+      <path :class="{
                   'fill-red-600 stroke-white': starred,
                   'fill-white stroke-black': !starred
                 }"
         d='M2.1095 7.70617L8.5 14.3333L14.8905 7.70617C15.6009 6.96942 16 5.97024 16 4.92838C16 2.75879 14.304 1 12.2119 1C11.2073 1 10.2437 1.41388 9.53333 2.15059L8.5 3.22222L7.46667 2.15059C6.75624 1.41388 5.79273 1 4.78807 1C2.69597 1 1 2.75879 1 4.92838C1 5.97024 1.3991 6.96942 2.1095 7.70617Z'
-        stroke-width='1.2'
-        stroke-linecap='round'
-        stroke-linejoin='round'
-      />
+        stroke-width='1.2' stroke-linecap='round' stroke-linejoin='round' />
     </svg>
   </div>
   <!-- Description -->
-  <div 
-    x-text='description'
-    class='self-stretch text-neutral-800 overflow-hidden text-ellipsis text-xs leading-4 max-w-full mt-1 md:min-h-[68px] md:max-h-[70px]'
-  >
+  <div x-text='description'
+    class='self-stretch text-neutral-800 overflow-hidden text-ellipsis text-xs leading-4 max-w-full mt-1 md:min-h-[68px] md:max-h-[70px]'>
   </div>
   <!-- Footer -->
   <div class='items-end w-full self-end flex flex-col py-0.5 max-md:max-w-full'>
@@ -46,38 +33,23 @@
       <template x-for='(tag, idx) in tags' :key='idx'>
         <div x-show="!tag.includes(':')"
           class='flex overflow-hidden text-neutral-500 text-ellipsis text-xs leading-3 self-stretch justify-center items-center bg-gray-200 px-1.5 py-1 rounded-2xl cursor-pointer'
-          x-text='tag.charAt(0).toUpperCase()
-  + tag.slice(1)'
-          @click='search = tag; $refs.search.focus();'
-        ></div>
+          x-text='tag.charAt(0) === "#" ? tag.charAt(1).toUpperCase() + tag.slice(2) : tag.charAt(0).toUpperCase() + tag.slice(1)'
+          @click='search = tag; $refs.search.focus();'></div>
       </template>
-    <div x-show='category && category.length > 0'
+      <div x-show='category && category.length > 0'
         class='flex overflow-hidden text-neutral-500 text-ellipsis text-xs leading-3 self-stretch justify-center items-center bg-gray-200 px-1.5 py-1 rounded-2xl cursor-pointer'
-        x-text='category'
-        @click='search = category; $refs.search.focus();'
-    ></div>
+        x-text='category' @click='search = category; $refs.search.focus();'></div>
     </div>
-    <div class='items-end flex w-[245px] max-w-full flex-row justify-end gap-1 mr-1 mt-0.5'  x-show="updatedDate !== null">
-      <svg
-        width='14'
-        height='14'
-        viewBox='0 0 14 14'
-        fill='none'
-        xmlns='http://www.w3.org/2000/svg'
-        class='cursor-pointer items-end justify-end'
-        x-tooltip:reactive='id'
-      >
+    <div class='items-end flex w-[245px] max-w-full flex-row justify-end gap-1 mr-1 mt-0.5'
+      x-show="updatedDate !== null">
+      <svg width='14' height='14' viewBox='0 0 14 14' fill='none' xmlns='http://www.w3.org/2000/svg'
+        class='cursor-pointer items-end justify-end' x-tooltip:reactive='id'>
         <path
           d='M7 3.67333V3.66667M7 10.3333V5.66667M13 7C13 10.3137 10.3137 13 7 13C3.68629 13 1 10.3137 1 7C1 3.68629 3.68629 1 7 1C10.3137 1 13 3.68629 13 7Z'
-          stroke='#737373'
-          stroke-linecap='round'
-          stroke-linejoin='round'
-        />
+          stroke='#737373' stroke-linecap='round' stroke-linejoin='round' />
       </svg>
-      <div
-        x-text='`Last update: ${updatedDate}`'
-        class='overflow-hidden text-neutral-500 text-ellipsis text-xs leading-3'
-      >
+      <div x-text='`Last update: ${updatedDate}`'
+        class='overflow-hidden text-neutral-500 text-ellipsis text-xs leading-3'>
       </div>
     </div>
   </div>
