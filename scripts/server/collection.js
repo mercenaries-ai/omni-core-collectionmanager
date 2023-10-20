@@ -76,6 +76,24 @@ const script = {
       items = items.slice(cursor, cursor + limit)
       return { items };
     } else if (type === 'api') {
+      // TODO: move to block manager
+      const signUpUrlSet = {
+        'openai':'https://platform.openai.com/account/api-keys',
+        'civitai':'https://civitai.com/',
+        'd-id':'https://www.d-id.com/',
+        'deepl':'https://www.deepl.com/',
+        'elevenlabs':'https://elevenlabs.io/',
+        'getimg':'https://getimg.ai/tools/api',
+        'github':'https://github.com/',
+        'huggingface':'https://huggingface.co/',
+        'paperless':'',
+        'perplexity':'https://www.perplexity.ai/',
+        'replicate':'https://replicate.com/account/api-tokens',
+        'stability':'https://platform.stability.ai/account/keys',
+        'textsynth':'https://textsynth.com/',
+        'uberduck':'https://app.uberduck.ai/settings',
+        'unsplash':'https://unsplash.com/developers'
+      }
       let items = blockManager.getAllNamespaces();
       if(filter?.length > 0) {
         items = items.filter(n=>n.namespace.includes(filter))
@@ -90,8 +108,9 @@ const script = {
             // TODO: handle multiple keys
             const key = requiredKeys[0];
             const hasKey = keysSet.has(n.namespace);
+            const signUpUrl = signUpUrlSet[n.namespace] ?? null
             acc.push({
-              value: { ...n, key, hasKey },
+              value: { ...n, key, hasKey, signUpUrl },
               type: 'api',
             });
           }
