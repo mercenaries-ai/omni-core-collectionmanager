@@ -86,7 +86,7 @@ const script = {
         'getimg':'https://getimg.ai/tools/api',
         'github':'https://github.com/',
         'huggingface':'https://huggingface.co/',
-        'paperless':'',
+        'paperless':'https://docs.paperless-ngx.com/',
         'perplexity':'https://www.perplexity.ai/',
         'replicate':'https://replicate.com/account/api-tokens',
         'stability':'https://platform.stability.ai/account/keys',
