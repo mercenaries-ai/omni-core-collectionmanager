@@ -35,7 +35,7 @@
         :class="{'bg-green-500 hover:drop-shadow-lg cursor-pointer' : !hasKey, 'bg-red-500 hover:drop-shadow-lg cursor-pointer': hasKey}"
         @click="await clickToAction(item, 'api');"><span class="text-xs text-white font-semibold" x-text="hasKey ? 'Revoke' : 'Add'"></span></button>
       <a :href="signUpUrl" target="_blank"><button x-show="signUpUrl !== null"
-          class="justify-between items-center px-3 py-1.5 rounded-lg bg-gray-300 whitespace-nowrap"><span class="text-xs text-black font-semibold">Sign
+          class="justify-between items-center px-3 py-1.5 rounded-lg bg-gray-300 whitespace-nowrap hover:drop-shadow-lg cursor-pointer"><span class="text-xs text-black font-semibold">Sign
             Up</span></button></a>
             </div>
     </div>
