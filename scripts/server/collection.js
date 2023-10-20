@@ -76,11 +76,39 @@ const script = {
       items = items.slice(cursor, cursor + limit)
       return { items };
     } else if (type === 'api') {
+      // TODO: move to block manager
+      const signUpUrlSet = {
+        'openai':'https://platform.openai.com/account/api-keys',
+        'civitai':'https://civitai.com/',
+        'd-id':'https://www.d-id.com/',
+        'deepl':'https://www.deepl.com/',
+        'elevenlabs':'https://elevenlabs.io/',
+        'getimg':'https://getimg.ai/tools/api',
+        'github':'https://github.com/',
+        'huggingface':'https://huggingface.co/',
+        'paperless':'https://docs.paperless-ngx.com/',
+        'perplexity':'https://www.perplexity.ai/',
+        'replicate':'https://replicate.com/account/api-tokens',
+        'stability':'https://platform.stability.ai/account/keys',
+        'textsynth':'https://textsynth.com/',
+        'uberduck':'https://app.uberduck.ai/settings',
+        'unsplash':'https://unsplash.com/developers'
+      }
       let items = blockManager.getAllNamespaces();
       if(filter?.length > 0) {
         items = items.filter(n=>n.namespace.includes(filter))
       }
-      items.sort((a, b) => a.namespace.localeCompare(b.namespace));
+      const priority = ['openai', 'replicate']
+      items.sort((a, b) => {
+        const isAPriority = priority.includes(a.namespace)
+        const isBPriority = priority.includes(b.namespace)
+        // If a is one of the priority values and b is not, a should come first
+        if (isAPriority && !isBPriority) return -1;
+        // If b is one of the priority values and a is not, b should come first
+        if (isBPriority && !isAPriority) return 1;
+        // If neither or both a and b are priority values, use the original logic
+        a.namespace.localeCompare(b.namespace)
+      });
       const keys = await credentialService.listKeyMetadata(ctx.userId, User.modelName)
       if (items != null && Array.isArray(items) && items.length > 0) {
         const keysSet = new Set(keys.filter(k => k.meta?.revoked === false).map(key => key.apiNamespace));
@@ -90,8 +118,9 @@ const script = {
             // TODO: handle multiple keys
             const key = requiredKeys[0];
             const hasKey = keysSet.has(n.namespace);
+            const signUpUrl = signUpUrlSet[n.namespace] ?? null
             acc.push({
-              value: { ...n, key, hasKey },
+              value: { ...n, key, hasKey, signUpUrl },
               type: 'api',
             });
           }
