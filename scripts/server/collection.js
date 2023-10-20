@@ -98,7 +98,17 @@ const script = {
       if(filter?.length > 0) {
         items = items.filter(n=>n.namespace.includes(filter))
       }
-      items.sort((a, b) => a.namespace.localeCompare(b.namespace));
+      const priority = ['openai', 'replicate']
+      items.sort((a, b) => {
+        const isAPriority = priority.includes(a.namespace)
+        const isBPriority = priority.includes(b.namespace)
+        // If a is one of the priority values and b is not, a should come first
+        if (isAPriority && !isBPriority) return -1;
+        // If b is one of the priority values and a is not, b should come first
+        if (isBPriority && !isAPriority) return 1;
+        // If neither or both a and b are priority values, use the original logic
+        a.namespace.localeCompare(b.namespace)
+      });
       const keys = await credentialService.listKeyMetadata(ctx.userId, User.modelName)
       if (items != null && Array.isArray(items) && items.length > 0) {
         const keysSet = new Set(keys.filter(k => k.meta?.revoked === false).map(key => key.apiNamespace));
