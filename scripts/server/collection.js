@@ -40,6 +40,15 @@ const script = {
         };
       });
       items = items.filter((item) => item.value.meta?.visible !== false);
+      items = items.map((item) => {
+        if(!ctx.app.extensions.has("omni-extension-wa-chat-ui") && item.value?.ui?.chat?.enabled) {
+          item.value.ui.chat.enabled = false
+        }
+        if(!ctx.app.extensions.has("omni-extension-formio") && item.value?.ui?.chat?.enabled) {
+          item.value.ui.form.enabled = false
+        }
+        return item
+      })
       return {
         items,
       };
