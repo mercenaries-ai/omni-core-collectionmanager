@@ -430,11 +430,27 @@ document.addEventListener('alpine:init', async () => {
   Alpine.data('appState', () => ({
     createGallery,
     search: filter || '',
+    filterOption: '',
     needRefresh: false,
     async refresh() {
       await this.loadMore(true)
       this.multiSelectedItems=[]
       window.scrollTo({ top: 0, behavior: 'smooth' });
+    },
+    async applyFilter() {
+      await this.refresh()
+      if (this.filterOption === 'Favorites') {
+        this.items = this.items.filter((item) => {
+          const key = getFavoriteKey(item.type, item.value)
+          return window.localStorage.getItem(key) ? true : false;
+        });
+      } else if (this.filterOption === 'Template') {
+        this.items = this.items.filter((item) => {
+          return item.value.meta?.template ? true : false;
+        });
+      } else if (this.filterOption === 'All') {
+        // Do nothing
+      }
     },
     async filteredItems () {
       this.needRefresh = false
